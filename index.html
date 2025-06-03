@@ -1062,40 +1062,47 @@
 
     <script>
         function showPage(pageId, event) {
-	    // Update content
-	    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-	    document.getElementById(pageId)?.classList.add('active');
-	
-	    // Update nav styles
-	    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-	    event?.target?.classList.add('active');
-	
-	    // Scroll to top
-	    window.scrollTo({ top: 0 });
-	
-	    // Push hash to URL every time
-	    history.pushState({ pageId }, '', `#${pageId}`);
-}
-        
+        // Hide all pages
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(page => page.classList.remove('active'));
+
+        // Show selected page
+        const selectedPage = document.getElementById(pageId);
+        if (selectedPage) {
+            selectedPage.classList.add('active');
+        }
+
+        // Update navigation styling
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => link.classList.remove('active'));
+        if (event?.target) {
+            event.target.classList.add('active');
+        }
+		
+		// 🔽 Scroll to top
+        window.scrollTo(0, 0);
+		
+		// Push to browser history
+        history.pushState({ pageId }, '', `#${pageId}`);
     }
 
     // Back/Forward button handling
     window.addEventListener('popstate', (e) => {
         const pageId = e.state?.pageId || 'home';
-        const navLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
-        if (navLink) {
-            showPage(pageId, { target: navLink });
-        }
+		const navLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
+		if (navLink) {
+        showPage(pageId, { target: navLink }, false); // Don't push here either
+    }
     });
 
     // Load correct page on initial load based on URL hash
     window.addEventListener('DOMContentLoaded', () => {
-        const hash = window.location.hash.replace('#', '') || 'home';
-        const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
-        if (navLink) {
-            showPage(hash, { target: navLink });
-        }
-    });
+		const hash = window.location.hash.replace('#', '') || 'home';
+		const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
+		if (navLink) {
+			showPage(hash, { target: navLink }, false); // Don't push here
+		}
+	});
     </script>
 </body>
 </html>
