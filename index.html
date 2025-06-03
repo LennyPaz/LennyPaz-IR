@@ -1082,24 +1082,27 @@
 		// 🔽 Scroll to top
         window.scrollTo(0, 0);
 		
-		// Push clean URL (without #)
+		// Push to browser history
         if (push) {
-            history.pushState({ pageId }, '', `/${pageId}`);
+            history.pushState({ pageId }, '', `#${pageId}`);
         }
     }
 
-    // Handle browser back/forward buttons
-    window.addEventListener('popstate', function(event) {
-        const pageId = event.state?.pageId || 'home';
-        showPage(pageId, null, false);
+    // Back/Forward button handling
+    window.addEventListener('popstate', (e) => {
+        const pageId = e.state?.pageId || 'home';
+        const navLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
+        if (navLink) {
+            showPage(pageId, { target: navLink });
+        }
     });
 
-    // Load correct page on initial visit
-    window.addEventListener('DOMContentLoaded', function () {
-        const path = window.location.pathname.replace('/', '') || 'home';
-        const navLink = document.querySelector(`.nav-link[onclick*="${path}"]`);
+    // Load correct page on initial load based on URL hash
+    window.addEventListener('DOMContentLoaded', () => {
+        const hash = window.location.hash.replace('#', '') || 'home';
+        const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
         if (navLink) {
-            showPage(path, { target: navLink }, false);
+            showPage(hash, { target: navLink });
         }
     });
     </script>
