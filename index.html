@@ -1079,13 +1079,12 @@
             event.target.classList.add('active');
         }
 		
-		// 🔽 Scroll to top
+	// 🔽 Scroll to top
         window.scrollTo(0, 0);
 		
-		// Push to browser history
-        if (push) {
-            history.pushState({ pageId }, '', `#${pageId}`);
-        }
+	// Push to browser history
+        history.pushState({ pageId }, '', `#${pageId}`);
+        
     }
 
     // Back/Forward button handling
