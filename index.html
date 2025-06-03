@@ -116,6 +116,7 @@
         }
         
         .nav-menu {
+			list-style: none;
             padding: 20px 40px;
         }
         
@@ -564,22 +565,6 @@
             background-color: #3182ce;
         }
         
-        /* Decorative elements */
-        .decorative-dots {
-            position: absolute;
-            top: 100px;
-            right: 50px;
-        }
-        
-        .dot {
-            width: 6px;
-            height: 6px;
-            background-color: #bee3f8;
-            border-radius: 50%;
-            margin: 8px;
-            opacity: 0.6;
-        }
-        
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -613,28 +598,28 @@
             </div>
             
             <ul class="nav-menu">
-                <li class="nav-item">
-                    <a class="nav-link active" onclick="showPage('home')">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('career-goals')">Career Goals</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('education')">Education</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('technical-skills')">Technical Skills</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('experience')">Experience</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('contact')">Contact</a>
-                </li>
-            </ul>
+				<li class="nav-item">
+					<a class="nav-link active" onclick="showPage('home', event)">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" onclick="showPage('education', event)">Education</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" onclick="showPage('experience', event)">Experience</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" onclick="showPage('technical-skills', event)">Technical Skills</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" onclick="showPage('career-goals', event)">Career Goals</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" onclick="showPage('contact', event)">Contact</a>
+				</li>
+			</ul>
             
             <div class="contact-info">
-                <div class="contact-title">CONTACT</div>
+              <div class="contact-title">CONTACT</div>
                 <div class="contact-item">Tallahassee, FL</div>
                 <div class="contact-item">(786) 752-0883</div>
                 <div class="contact-item contact-email">Lenny.Paz123@gmail.com</div>
@@ -654,12 +639,7 @@
                         <span class="hero-badge">Multilingual Communicator</span>
                         <span class="hero-badge">CompTIA IT Fund+</span>
                     </div>
-                    <div class="decorative-dots">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
+</div>
                 
                 <div class="content-row">
                     <div class="content-card">
@@ -972,34 +952,34 @@
                 
                 <div class="section">
                     <div class="section-header">
-                        <h2 class="section-title">Leadership Experience</h2>
-                    </div>
-                    <div class="section-body">
-                        <div class="experience-item">
-                            <div class="item-title">Hardware Team Captain</div>
-                            <div class="item-subtitle">Institute of Electrical and Electronics Engineers (IEEE)</div>
-                            <div class="item-date">2022</div>
-                            <div class="item-description">
-                                Led hardware team in designing and creating technical projects while ensuring successful execution and adherence to planned objectives. Collaborated with software team to develop cohesive projects integrating both hardware and software components.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">Current Activities</h2>
-                    </div>
+                      <h2 class="section-title">Current Activities</h2>
+</div>
                     <div class="section-body">
                         <div class="experience-item">
                             <div class="item-title">Member</div>
                             <div class="item-subtitle">Connecting Girls to STEM</div>
                             <div class="item-date">October 2024 – Present</div>
                             <div class="item-description">
-                                Active member supporting initiatives to encourage young women's participation in Science, Technology, Engineering, and Mathematics fields. Participate in outreach programs and mentorship activities to promote STEM education and career awareness.
-                            </div>
-                        </div>
+                              Active member supporting initiatives to encourage young women's participation in Science, Technology, Engineering, and Mathematics fields. Participate in outreach programs and mentorship activities to promote STEM education and career awareness.
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-header">
+                      <h2 class="section-title">Leadership Experience</h2>
                     </div>
+                    <div class="section-body">
+                        <div class="experience-item">
+                            <div class="item-title">Hardware Team Captain&nbsp;</div>
+                            <div class="item-subtitle">Institute of Electrical and Electronics Engineers (IEEE)</div>
+                            <div class="item-date">2022</div>
+                            <div class="item-description">
+                              Led hardware team in designing and creating technical projects while ensuring successful execution and adherence to planned objectives. Collaborated with software team to develop cohesive projects integrating both hardware and software components.
+                          </div>
+                      </div>
+                  </div>
                 </div>
             </div>
 
@@ -1098,26 +1078,28 @@
         if (event?.target) {
             event.target.classList.add('active');
         }
-
-        // Push new state to history
-        history.pushState({ pageId }, '', `#${pageId}`);
+		
+		// 🔽 Scroll to top
+        window.scrollTo(0, 0);
+		
+		// Push clean URL (without #)
+        if (push) {
+            history.pushState({ pageId }, '', `/${pageId}`);
+        }
     }
 
-    // Back/Forward button handling
-    window.addEventListener('popstate', (e) => {
-        const pageId = e.state?.pageId || 'home';
-        const navLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
-        if (navLink) {
-            showPage(pageId, { target: navLink });
-        }
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function(event) {
+        const pageId = event.state?.pageId || 'home';
+        showPage(pageId, null, false);
     });
 
-    // Load correct page on initial load based on URL hash
-    window.addEventListener('DOMContentLoaded', () => {
-        const hash = window.location.hash.replace('#', '') || 'home';
-        const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
+    // Load correct page on initial visit
+    window.addEventListener('DOMContentLoaded', function () {
+        const path = window.location.pathname.replace('/', '') || 'home';
+        const navLink = document.querySelector(`.nav-link[onclick*="${path}"]`);
         if (navLink) {
-            showPage(hash, { target: navLink });
+            showPage(path, { target: navLink }, false);
         }
     });
     </script>
