@@ -633,7 +633,7 @@
                 <div class="hero-section">
                     <h1 class="hero-name">Lenny Paz</h1>
                     <div class="hero-title">Information Technology Student</div>
-                    <div class="hero-subtitle">Passionate about Networking & Cybersecurity</div>
+                    <div class="hero-subtitle">Passionate about Networking &amp; Cybersecurity</div>
                     <div class="hero-badges">
                         <span class="hero-badge">Peer Tutor</span>
                         <span class="hero-badge">Multilingual Communicator</span>
@@ -752,7 +752,7 @@
                             <div class="goal-description">Pursue a career as a network administrator with a focus on configuring, securing, and maintaining enterprise network infrastructure, while ensuring efficient performance, uptime, and data protection across systems.</div>
                         </div>
                         <div class="goal-item">
-                            <div class="goal-title">Advanced Certifications & Continuous Learning</div>
+                            <div class="goal-title">Advanced Certifications &amp; Continuous Learning</div>
                             <div class="goal-description">Pursue advanced certifications such as CISSP, CCNA, or specialized cybersecurity credentials while staying current with emerging technologies and security threats.</div>
                         </div>
                         <div class="goal-item">
@@ -809,7 +809,7 @@
                                 <span class="skill-item">Information Architecture</span>
                             </div>
                             <div class="skill-category">
-                                <div class="skill-category-title">Programming & Database</div>
+                                <div class="skill-category-title">Programming &amp; Database</div>
                                 <span class="skill-item">Java Programming</span>
                                 <span class="skill-item">Introduction to C++ Programming</span>
                                 <span class="skill-item">Database Concepts</span>
@@ -856,21 +856,21 @@
                                 <span class="skill-item">HTML/CSS</span>
                             </div>
                             <div class="skill-category">
-                                <div class="skill-category-title">Networking & Security</div>
+                                <div class="skill-category-title">Networking &amp; Security</div>
                                 <span class="skill-item">Network Configuration</span>
                                 <span class="skill-item">Cybersecurity Fundamentals</span>
                                 <span class="skill-item">Network Security Protocols</span>
                                 <span class="skill-item">Information Security</span>
                             </div>
                             <div class="skill-category">
-                                <div class="skill-category-title">Database & Systems</div>
+                                <div class="skill-category-title">Database &amp; Systems</div>
                                 <span class="skill-item">MySQL</span>
                                 <span class="skill-item">Database Design</span>
                                 <span class="skill-item">Information Architecture</span>
                                 <span class="skill-item">System Administration</span>
                             </div>
                         <div class="skill-category">
-<div class="skill-category-title">Software & Tools</div>
+<div class="skill-category-title">Software &amp; Tools</div>
 <span class="skill-item">Microsoft Office Suite</span>
                               <span class="skill-item">Word</span>
                               <span class="skill-item">Excel</span>
@@ -1033,7 +1033,7 @@
                         </div>
                         <div class="card-body">
                             <div class="card-text"><strong>Primary Focus:</strong></div>
-                            <div class="card-text muted">Networking & Cybersecurity</div>
+                            <div class="card-text muted">Networking &amp; Cybersecurity</div>
                             <div class="card-text"><strong>Career Goal:</strong></div>
                             <div class="card-text muted">IT Professional specializing in secure systems</div>
                             <div class="card-text"><strong>Graduation:</strong></div>
@@ -1044,7 +1044,7 @@
                 
                 <div class="contact-form">
                     <h2 class="section-title">Send a Message</h2>
-                    <form>
+                    <form onsubmit="handleSubmit(event)">
                   <div class="form-group">
                             <label class="form-label" for="name">Name</label>
                             <input type="text" id="name" class="form-input" placeholder="Your full name">
@@ -1062,7 +1062,6 @@
                             <textarea id="message" class="form-textarea" placeholder="Your message here..."></textarea>
                         </div>
                         <button type="submit" class="form-button">Send Message</button>
-						<form onsubmit="handleSubmit(event)">
                     </form>
                 </div>
             </div>
@@ -1070,69 +1069,77 @@
     </div>
 
     <script>
-		function handleSubmit(event) {
-			event.preventDefault(); // Prevent form from reloading the page
+	  function handleSubmit(event) {
+		event.preventDefault(); // Prevent form from reloading the page
 
-			// Get the form values (optional: you can use these later)
-			const name = document.getElementById('name').value.trim();
-			const email = document.getElementById('email').value.trim();
-			const subject = document.getElementById('subject').value.trim();
-			const message = document.getElementById('message').value.trim();
+		// Get the form values
+		const name = document.getElementById('name').value.trim();
+		const email = document.getElementById('email').value.trim();
+		const subject = document.getElementById('subject').value.trim();
+		const message = document.getElementById('message').value.trim();
 
-			// Simple validation (optional)
-			if (!name || !email || !subject || !message) {
-			  alert("Please fill in all fields before submitting.");
-			  return;
-			}
-				}
+		// Simple validation
+		if (!name || !email || !subject || !message) {
+		  alert("Please fill in all fields before submitting.");
+		  return;
+		}
 
-    // Show thank you pop-up
-    alert("Thanks for your submission, " + name + "!");
+		// Show thank you pop-up
+		alert("Thanks for your submission, " + name + "!");
 
-    // Optionally clear the form
-    event.target.reset();
-      function showPage(pageId, event) {
-        // Hide all pages
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(page => page.classList.remove('active'));
+		// Clear the form
+		event.target.reset();
+	  }
 
-        // Show selected page
-        const selectedPage = document.getElementById(pageId);
-        if (selectedPage) {
-            selectedPage.classList.add('active');
-        }
+	  function showPage(pageId, event = {}, push = true) {
+		  // Hide all pages
+		  const pages = document.querySelectorAll('.page');
+		  pages.forEach(page => {
+			page.classList.remove('active');
+		  });
 
-        // Update navigation styling
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => link.classList.remove('active'));
-        if (event?.target) {
-            event.target.classList.add('active');
-        }
-		
-		// 🔽 Scroll to top
-        window.scrollTo(0, 0);
-		
-		// Push to browser history
-        history.pushState({ pageId }, '', `#${pageId}`);
-    }
+		  // Show selected page
+		  const selectedPage = document.getElementById(pageId);
+		  if (selectedPage) {
+			selectedPage.classList.add('active');
+		  }
 
-    // Back/Forward button handling
-    window.addEventListener('popstate', (e) => {
-        const pageId = e.state?.pageId || 'home';
+		  // Update navigation styling
+		  const navLinks = document.querySelectorAll('.nav-link');
+		  navLinks.forEach(link => {
+			link.classList.remove('active');
+		  });
+		  if (event?.target) {
+			event.target.classList.add('active');
+		  }
+
+		  // Scroll to top
+		  window.scrollTo(0, 0);
+
+		  // Push to browser history
+		  if (push) {
+			history.pushState({ pageId }, '', `#${pageId}`);
+		  }
+	  }
+
+	  // Back/Forward button handling
+	  window.addEventListener('popstate', (e) => {
+		const pageId = e.state?.pageId || 'home';
 		const navLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
 		if (navLink) {
-        showPage(pageId, { target: navLink }, false); // Don't push here either
-    }
-    });
+		  showPage(pageId, { target: navLink }, false);
+		}
+	  });
 
-    // Load correct page on initial load based on URL hash
-    window.addEventListener('DOMContentLoaded', () => {
+	  // Load correct page on initial load based on URL hash
+	  window.addEventListener('DOMContentLoaded', () => {
 		const hash = window.location.hash.replace('#', '') || 'home';
 		const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
 		if (navLink) {
-			showPage(hash, { target: navLink }, false); // Don't push here
+		  showPage(hash, { target: navLink }, false);
 		}
-	});
-    </script>
+	  });
+</script>
+
 </body>
 </html>
