@@ -1146,22 +1146,35 @@
     <script>
 	  function handleSubmit(event) {
 			event.preventDefault();
+
 			const name = document.getElementById('name').value.trim();
 			const email = document.getElementById('email').value.trim();
 			const subject = document.getElementById('subject').value.trim();
 			const message = document.getElementById('message').value.trim();
 
 			if (!name || !email || !subject || !message) {
-				showCustomAlert("Please fill in all fields before submitting.", "error");
-				return;
+			  showCustomAlert("Please fill in all fields before submitting.", "error");
+			  return;
 			}
 
-			// Send to Telegram
-			sendToTelegram(name, email, subject, message);
-
-			showCustomAlert(`Thanks for your submission, ${name}! I'll get back to you soon.`, "success");
-			event.target.reset();
-		}
+			fetch("https://telegram-worker.lenny-paz123.workers.dev", {
+			  method: "POST",
+			  headers: { "Content-Type": "application/json" },
+			  body: JSON.stringify({ name, email, subject, message })
+			})
+			.then(res => {
+			  if (res.ok) {
+				showCustomAlert(`Thanks for your submission, ${name}! I'll get back to you soon.`, "success");
+				event.target.reset();
+			  } else {
+				showCustomAlert("Something went wrong. Please try again.", "error");
+			  }
+			})
+			.catch(error => {
+			  console.error("Error:", error);
+			  showCustomAlert("There was a network error. Please try again later.", "error");
+			});
+		  }
 
 		function showCustomAlert(message, type = "success") {
 			// Remove existing alerts
@@ -1184,39 +1197,6 @@
 			setTimeout(() => {
 				if (alert.parentNode) alert.remove();
 			}, 5000);
-		}
-
-		async function sendToTelegram(name, email, subject, message) {
-			const BOT_TOKEN = '8113202782:AAGB0VEUoaSoJOr5yrGRatilY92keR0B4V8'; 
-			const CHAT_ID = '7901623965';     
-
-			const text = `🔔 New Contact Form Submission\n\n` +
-						`👤 Name: ${name}\n` +
-						`📧 Email: ${email}\n` +
-						`📋 Subject: ${subject}\n` +
-						`💬 Message: ${message}\n\n` +
-						`🕒 Time: ${new Date().toLocaleString()}`;
-
-			try {
-				const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						chat_id: CHAT_ID,
-						text: text,
-						parse_mode: 'HTML'
-					})
-				});
-
-				if (!response.ok) {
-					throw new Error('Failed to send message');
-				}
-			} catch (error) {
-				console.log('Error sending to Telegram:', error);
-				// Don't show error to user, just log it
-			}
 		}
 
 	  function showPage(pageId, event = {}, push = true) {
