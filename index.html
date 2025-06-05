@@ -589,58 +589,30 @@ transform: translateX(0);
 opacity: 1;
 }
 }
-.project-card {
-  position: relative;
-}
-
 .project-image {
   position: relative;
   overflow: hidden;
 }
 
-.project-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* The full-size preview image */
-.project-image::after {
-  content: '';
-  display: none;
+.project-image .preview-full {
   position: absolute;
-  top: -10px;
+  top: -220px; /* adjust based on image size */
   left: 50%;
   transform: translateX(-50%);
   width: auto;
   max-width: 90vw;
-  max-height: 80vh;
+  max-height: 200px;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
   background: white;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  padding: 8px;
-  z-index: 10;
-  border-radius: 4px;
 }
 
-.project-image:hover::after {
+.project-image:hover .preview-full {
   display: block;
-  content: attr(data-full);
-  background-image: attr(data-full url);
 }
 
-/* Use an actual image instead of background: use this approach below */
-.project-image:hover::after {
-  display: block;
-  content: '';
-  background-image: var(--hover-image);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 600px;
-  height: auto;
-  aspect-ratio: 16/9;
-}
-	
 </style>
 </head>
 <body>
@@ -720,23 +692,30 @@ opacity: 1;
         </div>
         <div class="projects-grid">
           <div class="project-card">
-            <div class="project-image" style="--hover-image: url('../Web Project Images/IR Web.png')">
-			  <img src="../Web Project Images/IR Web.png" width="400" height="240" alt=""/>
-			</div>
+            <div class="project-image">
+				  <img class="preview-thumb" src="../Web Project Images/IR Web.png" alt=""/>
+  				  <img class="preview-full" src="../Web Project Images/IR Web.png" alt=""/>
+			  </div>
             <div class="project-content">
               <h3 class="project-title">Interactive Resume Website</h3>
               <div class="project-description">Modern, responsive personal portfolio website featuring dynamic navigation and professional presentation of skills and experience.</div>
               <span class="project-tag tag-design">UI/UX Design</span> </div>
           </div>
           <div class="project-card">
-            <div class="project-image"><img src="../Web Project Images/IR SQL.png" width="991" height="816" alt=""/> </div>
+            <div class="project-image">
+				  <img class="preview-thumb" src="../Web Project Images/IR SQL.png" alt=""/>
+  				  <img class="preview-full" src="../Web Project Images/IR SQL.png" alt=""/>
+			  </div>
             <div class="project-content">
               <h3 class="project-title">Database Management System</h3>
               <div class="project-description">Comprehensive MySQL database design and implementation for academic coursework demonstrating data modeling and query optimization.</div>
               <span class="project-tag tag-database">Database</span> </div>
           </div>
           <div class="project-card">
-            <div class="project-image"><img src="../Web Project Images/IR Wire.png" width="1920" height="1380" alt=""/> </div>
+            <div class="project-image">
+				<img class="preview-thumb" src="../Web Project Images/IR Wire.png" alt=""/>
+  				<img class="preview-full" src="../Web Project Images/IR Wire.png" alt=""/>
+			  </div>
             <div class="project-content">
               <h3 class="project-title">All American Inc. Wireframe</h3>
               <div class="project-description">Developed a wireframe for a real window tinting company in an Information Architecture course, focusing on content structure, service clarity, and user flow.</div>
