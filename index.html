@@ -599,38 +599,43 @@ body {
 	color: #4a5568;
 }
 .project-card {
-	position: relative; /* Make each card the positioning context */
+  position: relative; /* Make each card the positioning context */
 }
+
 .project-image {
   position: relative;
-  display: inline-block;
+  /* Don't use overflow: hidden or it'll clip the popup */
 }
 
-.preview-thumb {
+.project-image .preview-thumb {
   width: 100%;
   height: auto;
-  border-radius: 8px;
   display: block;
+  border-radius: 8px;
 }
 
-.image-popup {
+#image-preview-popup {
   display: none;
-  position: absolute;
-  top: -10px;
+  position: fixed;
+  top: 80px;
   left: 50%;
   transform: translateX(-50%);
-  max-width: 600px;
-  max-height: 400px;
-  padding: 4px;
-  background: white;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
   border-radius: 8px;
-  z-index: 999;
+  max-width: 90vw;
+  max-height: 70vh;
+  background-color: white;
+  padding: 8px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
 }
 
-.project-image:hover .image-popup {
+#image-preview-popup img {
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
   display: block;
 }
+
 .resume-button {
   display: inline-block;
   padding: 10px 9px 10px 9px;
@@ -727,45 +732,59 @@ body {
           <h2 class="projects-title">Featured Academic Projects</h2>
         </div>
         <div class="projects-grid">
-          <div class="project-card">
-            <div class="project-image">
-			  <img class="preview-thumb" src="../Web Project Images/IR Web.png" alt="Project Thumbnail" />
-			  <div class="image-popup">
-				<img src="../Web Project Images/IR Web.png" alt="Full Image" />
-			  </div>
+		  <!-- Project 1 -->
+		  <div class="project-card">
+			<div class="project-image" 
+				 onmouseover="showPreview(event, '../Web Project Images/IR Web.png')" 
+				 onmouseout="hidePreview()">
+			  <img class="preview-thumb" src="../Web Project Images/IR Web.png" alt=""/>
 			</div>
-            <div class="project-content">
-              <h3 class="project-title"><a href="https://lennypaz.com">Interactive Resume Website</a></h3>
-              <div class="project-description">Modern, responsive personal portfolio website featuring dynamic navigation and professional presentation of skills and experience.</div>
-              <span class="project-tag tag-design">UI/UX Design</span> </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">
-			  <img class="preview-thumb" src="../Web Project Images/IR SQL.png" alt="Project Thumbnail" />
-			  <div class="image-popup">
-				<img src="../Web Project Images/IR SQL.png" alt="Full Image" />
+			<div class="project-content">
+			  <h3 class="project-title"><a href="https://lennypaz.com">Interactive Resume Website</a></h3>
+			  <div class="project-description">
+				Modern, responsive personal portfolio website featuring dynamic navigation and professional presentation of skills and experience.
 			  </div>
+			  <span class="project-tag tag-design">UI/UX Design</span>
 			</div>
-            <div class="project-content">
-              <h3 class="project-title">Database Management System</h3>
-              <div class="project-description">Comprehensive MySQL database design and implementation for academic coursework demonstrating data modeling and query optimization.</div>
-              <span class="project-tag tag-database">Database</span> </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">
-			  <img class="preview-thumb" src="../Web Project Images/IR Wire.png" alt="Project Thumbnail" />
-			  <div class="image-popup">
-				<img src="../Web Project Images/IR Wire.png" alt="Full Image" />
+		  </div>
+
+		  <!-- Project 2 -->
+		  <div class="project-card">
+			<div class="project-image" 
+				 onmouseover="showPreview(event, '../Web Project Images/IR SQL.png')" 
+				 onmouseout="hidePreview()">
+			  <img class="preview-thumb" src="../Web Project Images/IR SQL.png" alt=""/>
+			</div>
+			<div class="project-content">
+			  <h3 class="project-title">Database Management System</h3>
+			  <div class="project-description">
+				Comprehensive MySQL database design and implementation for academic coursework demonstrating data modeling and query optimization.
 			  </div>
+			  <span class="project-tag tag-database">Database</span>
 			</div>
-            <div class="project-content">
-              <h3 class="project-title"><a href="https://www.figma.com/proto/AqGlnlsOnpBRGlhp9GpLA8/All-American-Inc.-Wireframe?node-id=13-145&p=f&t=HLNd2DCuExkHlaG4-0&scaling=scale-down-width&content-scaling=fixed&page-id=0%3A1">All American Inc. Wireframe</a></h3>
-              <div class="project-description">Developed a wireframe for a real window tinting company in an Information Architecture course, focusing on content structure, service clarity, and user flow.</div>
-              <span class="project-tag tag-design">UI/UX Design</span> </div>
-          </div>
-        </div>
-      </div>
-    </div>	
+		  </div>
+
+		  <!-- Project 3 -->
+		  <div class="project-card">
+			<div class="project-image" 
+				 onmouseover="showPreview(event, '../Web Project Images/IR Wire.png')" 
+				 onmouseout="hidePreview()">
+			  <img class="preview-thumb" src="../Web Project Images/IR Wire.png" alt=""/>
+			</div>
+			<div class="project-content">
+			  <h3 class="project-title">
+				<a href="https://www.figma.com/proto/AqGlnlsOnpBRGlhp9GpLA8/All-American-Inc.-Wireframe?node-id=13-145&p=f&t=HLNd2DCuExkHlaG4-0&scaling=scale-down-width&content-scaling=fixed&page-id=0%3A1">
+				  All American Inc. Wireframe
+				</a>
+			  </h3>
+			  <div class="project-description">
+				Developed a wireframe for a real window tinting company in an Information Architecture course, focusing on content structure, service clarity, and user flow.
+			  </div>
+			  <span class="project-tag tag-design">UI/UX Design</span>
+			</div>
+		  </div>
+		</div>
+	  </div>	
     
     <!-- Career Goals Page -->
     <div id="career-goals" class="page">
@@ -1061,30 +1080,18 @@ body {
         </form>
       </div>
     </div>
-  </main>
-</div>
 <script>
 	  
-	  let previewTimeout;
-
 	  function showPreview(event, imageUrl) {
-		  clearTimeout(previewTimeout); // Cancel any pending hide
 		  const popup = document.getElementById('image-preview-popup');
-
 		  popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
 		  popup.style.display = 'block';
-		  popup.style.opacity = '1';
 		}
 
-	  function startHidePreviewTimeout() {
-		  previewTimeout = setTimeout(() => {
-			const popup = document.getElementById('image-preview-popup');
-			popup.style.opacity = '0';
-			setTimeout(() => {
-			  popup.style.display = 'none';
-			  popup.innerHTML = '';
-			}, 300); // match fade out duration
-		  }, 100); // slight delay to avoid flicker
+	  function hidePreview() {
+		  const popup = document.getElementById('image-preview-popup');
+		  popup.style.display = 'none';
+		  popup.innerHTML = '';
 		}
 	  function handleSubmit(event) {
 		  event.preventDefault();
