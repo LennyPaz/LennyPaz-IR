@@ -360,6 +360,14 @@ body {
 	font-size: 16px;
 	color: #bee3f8;
 }
+.page {
+  	opacity: 0;
+ 	transition: opacity 0.2s ease;
+}
+
+.page.active {
+  	opacity: 1;
+}
 .section {
 	background: white;
 	border: 1px solid #e2e8f0;
@@ -507,9 +515,14 @@ body {
 .form-button:hover {
 	background-color: #3182ce;
 }
+.input-error {
+  border: 2px solid #e74c3c;
+  background-color: #fff6f6;
+  transition: border-color 0.3s;
+}
 
 /* Responsive */
-@media (max-width : 1109px ){
+@media (max-width : 1109px ) {
 .sidebar {
 	width: 280px;
 }
@@ -590,40 +603,53 @@ opacity: 1;
 }
 }
 .project-card {
-  position: relative; /* Make each card the positioning context */
+	position: relative; /* Make each card the positioning context */
 }
-
 .project-image {
-  position: relative;
-  /* Don't use overflow: hidden or it'll clip the popup */
+	position: relative;/* Don't use overflow: hidden or it'll clip the popup */
 }
-
 .project-image .preview-thumb {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 8px;
+	width: 100%;
+	height: auto;
+	display: block;
+	border-radius: 8px;
 }
-
 #image-preview-popup {
-  display: none;
-  position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999;
-  max-width: 90vw;
-  max-height: 70vh;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+	display: none;
+	position: fixed;
+	top: 80px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 9999;
+	max-width: 90vw;
+	max-height: 70vh;
+	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+	transition: opacity 0.3s ease;
 }
-
 #image-preview-popup img {
-  width: auto;
-  max-width: 100%;
-  max-height: 100%;
-  display: block;
+	width: auto;
+	max-width: 100%;
+	max-height: 100%;
+	display: block;
+	opacity: 1;
 }
-
+.resume-button {
+  display: inline-block;
+  padding: 10px 9px 10px 9px;
+  background-color: #4A90E2;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+.resume-button:hover {
+  background-color: #357ABD;
+}
+.spacer-button {
+  display: block;
+  margin: 15px auto -25px auto;
+}
 </style>
 </head>
 <body>
@@ -643,6 +669,7 @@ opacity: 1;
       <li class="nav-item"> <a class="nav-link" onclick="showPage('technical-skills', event)">Technical Skills</a> </li>
       <li class="nav-item"> <a class="nav-link" onclick="showPage('career-goals', event)">Career Goals</a> </li>
       <li class="nav-item"> <a class="nav-link" onclick="showPage('contact', event)">Contact</a> </li>
+	  <li class="nav-item"> <a href="resume.pdf" download class="resume-button spacer-button"> <span>📄</span> Download PDF Resume</a> </li>
     </ul>
     <div class="contact-info">
       <div class="contact-title">CONTACT</div>
@@ -705,20 +732,16 @@ opacity: 1;
           <div class="project-card">
             <div class="project-image" 
        			  onmouseover="showPreview(event, '../Web Project Images/IR Web.png')" 
-       			  onmouseout="hidePreview()">
-				  <img class="preview-thumb" src="../Web Project Images/IR Web.png" alt=""/>
-			  </div>
+       			  onmouseout="hidePreview()"> <img class="preview-thumb" src="../Web Project Images/IR Web.png" alt=""/> </div>
             <div class="project-content">
               <h3 class="project-title"><a href="https://lennypaz.com">Interactive Resume Website</a></h3>
               <div class="project-description">Modern, responsive personal portfolio website featuring dynamic navigation and professional presentation of skills and experience.</div>
-            <span class="project-tag tag-design">UI/UX Design</span> </div>
+              <span class="project-tag tag-design">UI/UX Design</span> </div>
           </div>
           <div class="project-card">
             <div class="project-image" 
       			  onmouseover="showPreview(event, '../Web Project Images/IR SQL.png')" 
-       			  onmouseout="hidePreview()">
-				  <img class="preview-thumb" src="../Web Project Images/IR SQL.png" alt=""/>
-			  </div>
+       			  onmouseout="hidePreview()"> <img class="preview-thumb" src="../Web Project Images/IR SQL.png" alt=""/> </div>
             <div class="project-content">
               <h3 class="project-title">Database Management System</h3>
               <div class="project-description">Comprehensive MySQL database design and implementation for academic coursework demonstrating data modeling and query optimization.</div>
@@ -727,13 +750,11 @@ opacity: 1;
           <div class="project-card">
             <div class="project-image" 
        			onmouseover="showPreview(event, '../Web Project Images/IR Wire.png')" 
-       			onmouseout="hidePreview()">
-				<img class="preview-thumb" src="../Web Project Images/IR Wire.png" alt=""/>
-			  </div>
+       			onmouseout="hidePreview()"> <img class="preview-thumb" src="../Web Project Images/IR Wire.png" alt=""/> </div>
             <div class="project-content">
               <h3 class="project-title"><a href="https://www.figma.com/proto/AqGlnlsOnpBRGlhp9GpLA8/All-American-Inc.-Wireframe?node-id=13-145&p=f&t=HLNd2DCuExkHlaG4-0&scaling=scale-down-width&content-scaling=fixed&page-id=0%3A1">All American Inc. Wireframe</a></h3>
               <div class="project-description">Developed a wireframe for a real window tinting company in an Information Architecture course, focusing on content structure, service clarity, and user flow.</div>
-            <span class="project-tag tag-design">UI/UX Design</span> </div>
+              <span class="project-tag tag-design">UI/UX Design</span> </div>
           </div>
         </div>
       </div>
@@ -1049,36 +1070,55 @@ opacity: 1;
 			popup.innerHTML = '';
 		  }
 	  function handleSubmit(event) {
-			event.preventDefault();
+		  event.preventDefault();
 
-			const name = document.getElementById('name').value.trim();
-			const email = document.getElementById('email').value.trim();
-			const subject = document.getElementById('subject').value.trim();
-			const message = document.getElementById('message').value.trim();
+		  const nameField = document.getElementById('name');
+		  const emailField = document.getElementById('email');
+		  const subjectField = document.getElementById('subject');
+		  const messageField = document.getElementById('message');
 
-			if (!name || !email || !subject || !message) {
-			  showCustomAlert("Please fill in all fields before submitting.", "error");
-			  return;
-			}
+		  const name = nameField.value.trim();
+		  const email = emailField.value.trim();
+		  const subject = subjectField.value.trim();
+		  const message = messageField.value.trim();
 
-			fetch("https://telegram-worker.lenny-paz123.workers.dev/", {
-			  method: "POST",
-			  headers: { "Content-Type": "application/json" },
-			  body: JSON.stringify({ name, email, subject, message })
-			})
-			.then(res => {
-			  if (res.ok) {
-				showCustomAlert(`Thanks for your submission, ${name}! I'll get back to you soon.`, "success");
-				event.target.reset();
-			  } else {
-				showCustomAlert("Something went wrong. Please try again.", "error");
-			  }
-			})
-			.catch(error => {
-			  console.error("Error:", error);
-			  showCustomAlert("There was a network error. Please try again later.", "error");
-			});
+		  let valid = true;
+
+		  // Reset previous error styles
+		  [nameField, emailField, subjectField, messageField].forEach(field => {
+			field.classList.remove('input-error');
+		  });
+
+		  // Highlight missing fields
+		  if (!name) { nameField.classList.add('input-error'); valid = false; }
+		  if (!email) { emailField.classList.add('input-error'); valid = false; }
+		  if (!subject) { subjectField.classList.add('input-error'); valid = false; }
+		  if (!message) { messageField.classList.add('input-error'); valid = false; }
+
+		  if (!valid) {
+			showCustomAlert("Please fill in all fields before submitting.", "error");
+			return;
 		  }
+
+		  // Send to Telegram Worker
+		  fetch("https://telegram-worker.lenny-paz123.workers.dev/", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ name, email, subject, message })
+		  })
+		  .then(res => {
+			if (res.ok) {
+			  showCustomAlert(`Thanks for your submission, ${name}! I'll get back to you soon.`, "success");
+			  event.target.reset();
+			} else {
+			  showCustomAlert("Something went wrong. Please try again.", "error");
+			}
+		  })
+		  .catch(error => {
+			console.error("Error:", error);
+			showCustomAlert("There was a network error. Please try again later.", "error");
+		  });
+		}
 
 		function showCustomAlert(message, type = "success") {
 			// Remove existing alerts
@@ -1160,7 +1200,12 @@ opacity: 1;
 		  // Show selected page
 		  const selectedPage = document.getElementById(pageId);
 		  if (selectedPage) {
-			selectedPage.classList.add('active');
+			selectedPage.style.opacity = 0;
+			setTimeout(() => {
+			  selectedPage.classList.add('active');
+			  selectedPage.style.opacity = 1;
+			}, 10);
+			 selectedPage.classList.add('active');
 		  }
 
 		  // Update navigation styling
@@ -1199,6 +1244,6 @@ opacity: 1;
 		}
 	  });
 </script>
-	<div id="image-preview-popup"></div>
+<div id="image-preview-popup"></div>
 </body>
 </html>
