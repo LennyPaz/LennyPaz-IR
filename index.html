@@ -583,28 +583,64 @@ body {
 from {
 transform: translateX(100%);
 opacity: 0;
-	}
+}
 to {
 transform: translateX(0);
 opacity: 1;
-	}
 }
-.project-image {
-  overflow: hidden;
+}
+.project-card {
   position: relative;
 }
 
-.project-image img {
-  display: block;
-  width: 100%;
-  height: auto;
-  transition: transform 0.4s ease;
+.project-image {
+  position: relative;
+  overflow: hidden;
 }
 
-.project-image:hover img {
-  transform: scale(1.1); /* Zoom in */
-  cursor: zoom-in;
+.project-image img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
+
+/* The full-size preview image */
+.project-image::after {
+  content: '';
+  display: none;
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90vw;
+  max-height: 80vh;
+  background: white;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  padding: 8px;
+  z-index: 10;
+  border-radius: 4px;
+}
+
+.project-image:hover::after {
+  display: block;
+  content: attr(data-full);
+  background-image: attr(data-full url);
+}
+
+/* Use an actual image instead of background: use this approach below */
+.project-image:hover::after {
+  display: block;
+  content: '';
+  background-image: var(--hover-image);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 600px;
+  height: auto;
+  aspect-ratio: 16/9;
+}
+	
 </style>
 </head>
 <body>
@@ -684,7 +720,9 @@ opacity: 1;
         </div>
         <div class="projects-grid">
           <div class="project-card">
-            <div class="project-image"><img src="../Web Project Images/IR Web.png" width="1378" height="672" alt=""/> </div>
+            <div class="project-image" style="--hover-image: url('../Web Project Images/IR Web.png')">
+			  <img src="../Web Project Images/IR Web.png" width="400" height="240" alt=""/>
+			</div>
             <div class="project-content">
               <h3 class="project-title">Interactive Resume Website</h3>
               <div class="project-description">Modern, responsive personal portfolio website featuring dynamic navigation and professional presentation of skills and experience.</div>
