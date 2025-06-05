@@ -615,21 +615,26 @@ opacity: 1;
 	border-radius: 8px;
 }
 #image-preview-popup {
-  display: none;
   position: fixed;
   top: 80px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  max-width: 90vw;
-  max-height: 70vh;
-  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: white;
+  padding: 12px;
   border-radius: 10px;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s ease;
+  max-width: 90vw;
+  max-height: 80vh;
+  animation: fadeIn 0.3s ease;
 }
+
 #image-preview-popup img {
   max-width: 100%;
   max-height: 100%;
@@ -1067,20 +1072,26 @@ opacity: 1;
 	  
 	  function showPreview(event, imageUrl) {
 		  const popup = document.getElementById('image-preview-popup');
+
+		  // Avoid flickering or delays
+		  if (!popup) return;
+
 		  popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
-		  popup.style.display = 'block';
+		  popup.style.display = 'flex';
 
-		  // Force reflow before fade-in to trigger transition
-		  void popup.offsetWidth;
-
-		  popup.style.opacity = '1';
+		  // Force reflow before fading in
+		  requestAnimationFrame(() => {
+			popup.style.opacity = '1';
+		  });
 		}
 
-	  function hidePreview() {
+		function hidePreview() {
 		  const popup = document.getElementById('image-preview-popup');
+		  if (!popup) return;
+
 		  popup.style.opacity = '0';
 
-		  // Wait for transition to finish before hiding completely
+		  // After fade-out, hide fully and clear content
 		  setTimeout(() => {
 			popup.style.display = 'none';
 			popup.innerHTML = '';
