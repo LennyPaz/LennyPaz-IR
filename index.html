@@ -589,28 +589,43 @@ transform: translateX(0);
 opacity: 1;
 }
 }
+.project-card {
+  position: relative; /* Make each card the positioning context */
+}
+
 .project-image {
   position: relative;
-  overflow: hidden;
+  /* Don't use overflow: hidden or it'll clip the popup */
+}
+
+.project-image .preview-thumb {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
 }
 
 .project-image .preview-full {
   position: absolute;
-  top: -220px; /* adjust based on image size */
+  bottom: 100%; /* position it just above the thumbnail */
   left: 50%;
   transform: translateX(-50%);
   width: auto;
-  max-width: 90vw;
-  max-height: 200px;
+  max-width: 600px;
+  max-height: 300px;
   display: none;
   z-index: 1000;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   background: white;
+  padding: 4px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .project-image:hover .preview-full {
   display: block;
+  opacity: 1;
 }
 
 </style>
