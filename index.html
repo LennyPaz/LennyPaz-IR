@@ -1308,7 +1308,18 @@ body {
 		this.setupVisibilityTracking();
 		setInterval(() => this.sendAnalytics(), 30000);
 		window.addEventListener('beforeunload', () => this.sendAnalytics());
-	  }
+		window.addEventListener('beforeunload', () => {
+	    this.isActive = false;
+	    this.sendAnalytics(true); // Send final data
+	  });
+
+	  document.addEventListener('visibilitychange', () => {
+	    if (document.visibilityState === 'hidden') {
+		  this.isActive = false;
+		  this.sendAnalytics(true);
+	    }
+	  });
+	    }
 
 	  setupActivityTracking() {
 		let lastActivity = Date.now();
@@ -1370,24 +1381,25 @@ body {
 		};
 	  }
 
-	  async sendAnalytics() {
-		const metrics = this.getEngagementMetrics();
-		console.log('📊 Analytics Data:', metrics);
-		try {
-		  await fetch('https://ir-analytics.lenny-paz123.workers.dev/', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-			  type: 'analytics',
-			  metrics: metrics,
-			  events: this.events.slice(-50)
-			})
-		  });
-		  this.events = [];
-		} catch (error) {
-		  console.log('Analytics send failed:', error);
+	  async sendAnalytics(final = false) {
+		  const metrics = this.getEngagementMetrics();
+		  if (!final && !this.isActive) return; // Don't send idle data repeatedly
+
+		  try {
+			await fetch('https://ir-analytics.lenny-paz123.workers.dev/', {
+			  method: 'POST',
+			  headers: { 'Content-Type': 'application/json' },
+			  body: JSON.stringify({
+				type: 'analytics',
+				metrics: { ...metrics, isActive: final ? false : this.isActive },
+				events: this.events.slice(-50)
+			  })
+			});
+			this.events = [];
+		  } catch (error) {
+			console.log('Analytics send failed:', error);
+		  }
 		}
-	  }
 	}
 
 	let analytics;
