@@ -1287,7 +1287,144 @@ body {
 			showCustomAlert("There was a network error. Please try again later.", "error");
 		  });
 		}
+	  // Analytics & Visitor Tracking
+	class VisitorAnalytics {
+	  constructor() {
+		this.sessionId = this.generateSessionId();
+		this.startTime = Date.now();
+		this.pageViews = {};
+		this.events = [];
+		this.isActive = true;
+		this.init();
+	  }
 
+	  generateSessionId() {
+		return Date.now().toString(36) + Math.random().toString(36).substr(2);
+	  }
+
+	  init() {
+		this.trackPageView('home');
+		this.setupActivityTracking();
+		this.setupVisibilityTracking();
+		setInterval(() => this.sendAnalytics(), 30000);
+		window.addEventListener('beforeunload', () => this.sendAnalytics());
+	  }
+
+	  setupActivityTracking() {
+		let lastActivity = Date.now();
+		['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+		  document.addEventListener(event, () => {
+			lastActivity = Date.now();
+			this.isActive = true;
+		  }, { passive: true });
+		});
+		
+		setInterval(() => {
+		  if (Date.now() - lastActivity > 30000) {
+			this.isActive = false;
+		  }
+		}, 30000);
+	  }
+
+	  setupVisibilityTracking() {
+		document.addEventListener('visibilitychange', () => {
+		  if (document.hidden) {
+			this.trackEvent('page_blur');
+		  } else {
+			this.trackEvent('page_focus');
+		  }
+		});
+	  }
+
+	  trackPageView(pageId) {
+		const now = Date.now();
+		if (this.currentPage && this.pageStartTime) {
+		  const timeSpent = now - this.pageStartTime;
+		  this.pageViews[this.currentPage] = (this.pageViews[this.currentPage] || 0) + timeSpent;
+		}
+		this.currentPage = pageId;
+		this.pageStartTime = now;
+		this.trackEvent('page_view', { page: pageId });
+	  }
+
+	  trackEvent(eventName, data = {}) {
+		this.events.push({ event: eventName, timestamp: Date.now(), data });
+	  }
+
+	  getEngagementMetrics() {
+		const totalTime = Date.now() - this.startTime;
+		const activePages = Object.keys(this.pageViews).length;
+		const averageTimePerPage = activePages > 0 ? Object.values(this.pageViews).reduce((a, b) => a + b, 0) / activePages : 0;
+
+		return {
+		  sessionId: this.sessionId,
+		  totalSessionTime: totalTime,
+		  activePages: activePages,
+		  averageTimePerPage: Math.round(averageTimePerPage / 1000),
+		  totalEvents: this.events.length,
+		  isActive: this.isActive,
+		  userAgent: navigator.userAgent,
+		  referrer: document.referrer,
+		  screenResolution: `${screen.width}x${screen.height}`,
+		  timestamp: new Date().toISOString()
+		};
+	  }
+
+	  async sendAnalytics() {
+		const metrics = this.getEngagementMetrics();
+		console.log('📊 Analytics Data:', metrics);
+		try {
+		  await fetch('https://ir-analytics.lenny-paz123.workers.dev/', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+			  type: 'analytics',
+			  metrics: metrics,
+			  events: this.events.slice(-50)
+			})
+		  });
+		  this.events = [];
+		} catch (error) {
+		  console.log('Analytics send failed:', error);
+		}
+	  }
+	}
+
+	let analytics;
+	function trackEvent(eventName, data = {}) {
+	  if (analytics) {
+		analytics.trackEvent(eventName, data);
+	  }
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		  loadTheme();
+		  analytics = new VisitorAnalytics();
+
+		  // Load correct page on initial load based on URL hash
+		  const hash = window.location.hash.replace('#', '') || 'home';
+		  const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
+		  if (navLink) {
+			showPage(hash, { target: navLink }, false);
+		  }
+
+		  // Track form interactions
+		  document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
+			input.addEventListener('focus', () => trackEvent('form_field_focus', { field: input.id }));
+			input.addEventListener('blur', () => trackEvent('form_field_blur', { field: input.id }));
+		  });
+
+		  // Track link clicks
+		  document.querySelectorAll('a[href^="http"]').forEach(link => {
+			link.addEventListener('click', () => trackEvent('external_link_click', { url: link.href }));
+		  });
+
+		  // Track project card interactions
+		  document.querySelectorAll('.project-card').forEach((card, index) => {
+			card.addEventListener('mouseenter', () => trackEvent('project_hover', { project: index }));
+			card.addEventListener('click', () => trackEvent('project_click', { project: index }));
+		  });
+		});
 	  function showCustomAlert(message, type = "success") {
 			// Remove existing alerts
 			const existingAlert = document.querySelector('.custom-alert');
@@ -1387,20 +1524,20 @@ body {
 
 		  // Show selected page
 		  const selectedPage = document.getElementById(pageId);
-		  if (selectedPage) {
-			selectedPage.style.opacity = 0;
-			setTimeout(() => {
-			  selectedPage.classList.add('active');
-			  selectedPage.style.opacity = 1;
-			}, 10);
-			 selectedPage.classList.add('active');
-		  }
+			  if (selectedPage) {
+				selectedPage.style.opacity = 0;
+				setTimeout(() => {
+				  selectedPage.classList.add('active');
+				  selectedPage.style.opacity = 1;
+				}, 10);
+				selectedPage.classList.add('active');
+			  }
 
 		  // Update navigation styling
 		  const navLinks = document.querySelectorAll('.nav-link');
-		  navLinks.forEach(link => {
-			link.classList.remove('active');
-		  });
+			  navLinks.forEach(link => {
+				link.classList.remove('active');
+			  });
 		  if (event?.target) {
 			event.target.classList.add('active');
 		  }
@@ -1411,6 +1548,9 @@ body {
 		  // Push to browser history
 		  if (push) {
 			history.pushState({ pageId }, '', `#${pageId}`);
+		  }
+		  if (analytics) {
+			analytics.trackPageView(pageId);
 		  }
 	  }
 
@@ -1423,14 +1563,6 @@ body {
 		}
 	  });
 
-	  // Load correct page on initial load based on URL hash
-	  window.addEventListener('DOMContentLoaded', () => {
-		const hash = window.location.hash.replace('#', '') || 'home';
-		const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
-		if (navLink) {
-		  showPage(hash, { target: navLink }, false);
-		}
-	  });
 </script>
 </body>
 </html>
