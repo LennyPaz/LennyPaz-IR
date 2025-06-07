@@ -4,7 +4,6 @@
 <title>Lenny Paz - Interactive Resume</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lenny Paz - Interactive Resume</title>
 
 <!-- SEO Description -->
 <meta name="description" content="Interactive resume of Lenny Paz, an IT student specializing in cybersecurity and networking.">
@@ -15,19 +14,12 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://yourdomain.com">
 <meta property="og:image" content="https://yourdomain.com/preview-image.png">
-<meta charset="utf-8">
-<link rel="icon" href="favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
+
+<!-- Optimized favicon setup -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
+
 <style>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
-/* Dark Mode Variables */
+/* CSS Variables for consistent theming */
 :root {
   --bg-primary: #f7fafc;
   --bg-secondary: #ffffff;
@@ -38,6 +30,8 @@
   --border-color: #e2e8f0;
   --sidebar-bg: #1a202c;
   --sidebar-profile: #2d3748;
+  --accent-primary: #4299e1;
+  --accent-secondary: #3182ce;
 }
 
 [data-theme="dark"] {
@@ -52,688 +46,684 @@
   --sidebar-profile: #1a202c;
 }
 
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-	background-color: var(--bg-primary);
-  	color: var(--text-primary);
-  	transition: background-color 0.3s ease, color 0.3s ease;
-	overflow-x: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  min-height: 100vh;
+  line-height: 1.6;
 }
+
+/* Container */
 .container {
-	display: flex;
-	min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
 }
-/* Sidebar */
+
+/* Sidebar - FIXED positioning issues */
 .sidebar {
-	width: 320px;
-	background-color: #1a202c;
-	position: fixed;
-	height: 100vh;
-	overflow-y: auto;
-	z-index: 100;
-}
-.profile-section {
-	background-color: #2d3748;
-	margin: 40px;
-	padding: 40px 20px;
-	border-radius: 12px;
-	text-align: center;
-}
-.profile-photo {
-	width: 90px;
-	height: 90px;
-	background-color: #4a5568;
-	border: 3px solid #e2e8f0;
-	border-radius: 50%;
-	margin: 0 auto 20px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: #e2e8f0;
-	font-size: 12px;
-	font-weight: 500;
-	overflow: hidden;
-}
-.profile-photo img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 50%;
-}
-.profile-name {
-	color: #ffffff;
-	font-size: 24px;
-	font-weight: 700;
-	font-style: italic;
-	margin-bottom: 8px;
-}
-.profile-title {
-	color: #a0aec0;
-	font-size: 14px;
-	font-weight: 500;
-	margin-bottom: 4px;
-}
-.profile-university {
-	color: #a0aec0;
-	font-size: 12px;
-	margin-bottom: 15px;
-}
-.gpa-badge {
-	background-color: #38b2ac;
-	color: white;
-	padding: 6px 16px;
-	border-radius: 12px;
-	font-size: 11px;
-	font-weight: 600;
-	display: inline-block;
-}
-.nav-menu {
-	list-style: none;
-	padding: 20px 40px;
-}
-.nav-item {
-	margin-bottom: 12px;
-}
-.nav-link {
-	display: block;
-	padding: 12px 20px;
-	color: #a0aec0;
-	text-decoration: none;
-	border-radius: 8px;
-	font-size: 14px;
-	font-weight: 500;
-	transition: all 0.3s ease;
-	cursor: pointer;
-}
-.nav-link:hover {
-	background-color: #2d3748;
-	color: #ffffff;
-}
-.nav-link.active {
-	background-color: #4299e1;
-	color: #ffffff;
-	font-weight: 600;
-}
-.contact-info {
-	padding: 20px 60px;
-	color: #a0aec0;
-}
-.contact-title {
-	font-size: 12px;
-	font-weight: 600;
-	margin-bottom: 10px;
-}
-.contact-item {
-	font-size: 11px;
-	margin-bottom: 5px;
-}
-.contact-email {
-	color: #4299e1;
-}
-/* Main Content */
-.main-content {
-	margin-left: 320px;
-	flex: 1;
-	background-color: var(--bg-secondary);
-}
-.page {
-	display: none;
-	padding: 40px;
-	min-height: 100vh;
-}
-.page.active {
-	display: block;
-}
-/* Hero Section */
-.hero-section {
-	background-image: url('light-pattern.svg'); /* make sure it's very subtle */
-  	background-size: cover;
- 	background-blend-mode: overlay;
-	background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-	color: white;
-	padding: 40px 30px;
-	border-radius: 16px;
-	margin-bottom: 30px;
-	text-align: center;
-	position: relative;
-	overflow: hidden;
-}
-.hero-name {
-	font-size: 48px;
-	font-weight: 800;
-	margin-bottom: 12px;
-	font-style: italic;
-}
-.hero-title {
-	font-size: 20px;
-	font-weight: 500;
-	color: #e6fffa;
-	margin-bottom: 8px;
-}
-.hero-subtitle {
-	font-size: 18px;
-	color: #bee3f8;
-	margin-bottom: 30px;
-}
-.hero-badges {
-	display: flex;
-	justify-content: center;
-	gap: 20px;
-	flex-wrap: wrap;
-	gap: 12px;
-  	margin-top: 10px;
-  	justify-content: center;
-}
-.hero-badge {
-	background-color: rgba(255,255,255,0.2);
-	padding: 8px 16px;
-	border-radius: 14px;
-	font-size: 12px;
-	font-weight: 600;
-}
-/* Content Cards */
-.content-row {
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	gap: 20px;
-	margin-bottom: 40px;
-}
-.content-card {
-	background: var(--bg-card);
-    border-color: var(--border-color);
-	border: 1px solid #e2e8f0;
-	border-radius: 12px;
-	overflow: hidden;
-}
-.card-header {
-	background-color: var(--bg-primary);
-	padding: 20px;
-	border-bottom: 1px solid var(--border-color);
-}
-.card-title {
-	font-size: 18px;
-	font-weight: 700;
-	color: var(--text-primary);
-	font-style: italic;
-}
-.card-body {
-	padding: 20px;
-}
-.card-text {
-	font-size: 14px;
-	line-height: 1.6;
-	color: var(--text-secondary);
-	margin-bottom: 8px;
-}
-.card-text.muted {
-	color: var(--text-muted);
-	font-size: 13px;
-}
-.status-item {
-	margin-bottom: 8px;
-	font-size: 14px;
-	font-weight: 600;
-}
-.status-active {
-	color: #38a169;
-}
-.status-community {
-	color: #3182ce;
-}
-.status-project {
-	color: #805ad5;
-}
-.status-seeking {
-	color: #d69e2e;
-}
-/* Projects Section */
-.projects-section {
-	background: white;
-	border: 1px solid #e2e8f0;
-	border-radius: 12px;
-	overflow: hidden;
-}
-.projects-header {
-	background-color: var(--bg-primary);
-	padding: 20px;
-	border-bottom: 1px solid var(--border-color);
-}
-.projects-title {
-	font-size: 20px;
-	font-weight: 700;
-	color: var(--text-primary);
-	font-style: italic;
-}
-.projects-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	gap: 30px;
-	background-color: var(--bg-primary);
-    border-color: var(--border-color);
-	padding: 30px;
-}
-.project-card {
-	background: var(--bg-card);
-	border: 1px solid var(--border-color);
-	border-radius: 8px;
-	overflow: hidden;
-}
-.project-image {
-	background-color: #edf2f7;
-	height: 120px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: #a0aec0;
-	font-size: 12px;
-	overflow: hidden;
-}
-.project-image img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-.project-content {
-	padding: 20px;
-}
-.project-title {
-	font-size: 16px;
-	font-weight: 600;
-	color: #2d3748;
-	margin-bottom: 8px;
-	font-style: italic;
-}
-.project-description {
-	color: var(--text-muted);
-	font-size: 12px;
-	line-height: 1.4;
-	margin-bottom: 15px;
-}
-.project-tag {
-	display: inline-block;
-	padding: 4px 12px;
-	border-radius: 10px;
-	font-size: 10px;
-	font-weight: 600;
-}
-.tag-design {
-	background-color: #e6fffa;
-	color: #38b2ac;
-}
-.tag-database {
-	background-color: #fef5e7;
-	color: #d69e2e;
-}
-.tag-ui {
-	background-color: #e6f3ff;
-	color: #3182ce;
-}
-.tag-certification {
-	background-color: #f0fff4;
-	color: #38a169;
-}
-.tag-programming {
-	background-color: #faf5ff;
-	color: #805ad5;
-}
-/* Page Styles */
-.page-header {
-	background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-	color: white;
-	padding: 40px;
-	border-radius: 16px;
-	margin-bottom: 30px;
-	text-align: center;
-}
-.page-title {
-	font-size: 36px;
-	font-weight: 800;
-	font-style: italic;
-	margin-bottom: 10px;
-}
-.page-subtitle {
-	font-size: 16px;
-	color: #bee3f8;
-}
-.page {
-  	opacity: 0;
- 	transition: opacity 0.2s ease;
-}
-
-.page.active {
-  	opacity: 1;
-}
-.section {
-	background: var(--bg-card);
-	border: 1px solid var(--border-color);
-	border-radius: 12px;
-	margin-bottom: 30px;
-	overflow: hidden;
-}
-.section-header {
-	background-color: var(--bg-primary);
-	padding: 20px;
-	border-bottom: 1px solid var(--border-color);
-}
-.section-title {
-	font-size: 20px;
-	font-weight: 700;
-	color: var(--text-primary);
-	font-style: italic;
-}
-.section-body {
-	padding: 30px;
-}
-.education-item, .experience-item, .award-item {
-	border-bottom: 1px solid #e2e8f0;
-	padding-bottom: 20px;
-	margin-bottom: 20px;
-}
-.education-item:last-child, .experience-item:last-child, .award-item:last-child {
-	border-bottom: none;
-	margin-bottom: 0;
-}
-.item-title {
-	font-size: 18px;
-	font-weight: 600;
-	color: var(--text-primary);
-	margin-bottom: 5px;
-	font-style: italic;
-}
-.item-subtitle {
-	font-size: 14px;
-	color: #4299e1;
-	font-weight: 600;
-	margin-bottom: 5px;
-}
-.item-date {
-	font-size: 13px;
-	color: #718096;
-	margin-bottom: 10px;
-}
-.item-description {
-	font-size: 14px;
-	color: var(--text-muted);
-	line-height: 1.6;
-}
-.skills-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 30px;
-}
-.skill-category {
-	background: var(--bg-card);
-	border: 1px solid var(--border-color);
-	border-radius: 8px;
-	padding: 20px;
-}
-.skill-category-title {
-	font-size: 16px;
-	font-weight: 600;
-	color: var(--text-primary);
-	margin-bottom: 15px;
-	font-style: italic;
-}
-.skill-item {
-	display: inline-block;
-	background-color: #e6f3ff;
-	color: #3182ce;
-	padding: 6px 12px;
-	border-radius: 12px;
-	font-size: 12px;
-	font-weight: 500;
-	margin: 4px;
-}
-.goal-item {
-	background: var(--bg-card);
-	border: 1px solid var(--border-color);
-	border-radius: 8px;
-	padding: 20px;
-	margin-bottom: 20px;
-}
-.goal-title {
-	font-size: 16px;
-	font-weight: 600;
-	color: var(--text-primary);
-	margin-bottom: 10px;
-	font-style: italic;
-}
-.goal-description {
-	font-size: 14px;
-	color: var(--text-muted);
-	line-height: 1.6;
-}
-.contact-form {
-	background: var(--bg-card);
-	border: 1px var(--border-color);
-	border-radius: 12px;
-	padding: 30px;
-}
-.form-group {
-	margin-bottom: 20px;
-}
-.form-label {
-	display: block;
-	font-size: 14px;
-	font-weight: 600;
-	color: var(--text-primary);
-	margin-bottom: 5px;
-}
-.form-input, .form-textarea {
-	width: 100%;
-	padding: 12px;
-	border: 1px solid var(--border-color);
-	border-radius: 8px;
-	font-size: 14px;
-	background-color: var(--bg-card);
-    color: var(--text-primary);
-	transition: border-color 0.3s ease;
-}
-.form-input:focus, .form-textarea:focus {
-	outline: none;
-	border-color: #4299e1;
-}
-.form-textarea {
-	resize: vertical;
-	min-height: 120px;
-}
-.form-button {
-	background-color: #4299e1;
-	color: white;
-	padding: 12px 30px;
-	border: none;
-	border-radius: 8px;
-	font-size: 14px;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-}
-.form-button:hover {
-	background-color: #3182ce;
-}
-.input-error {
-  border: 2px solid #e74c3c;
-  background-color: #fff6f6;
-  transition: border-color 0.3s;
-}
-
-/* Responsive */
-@media (max-width: 1109px) {
-.sidebar {
-	width: 280px;
-}
-.main-content {
-	margin-left: 280px;
-}
-.content-row, .projects-grid, .skills-grid {
-	grid-template-columns: 1fr;
-}
-.hero-name, .page-title {
-	font-size: 36px;
-}
-}
-
-@media (max-width: 768px) {
-.sidebar {
-	transform: translateX(-100%);
-	transition: transform 0.3s ease;
-	width: 280px;
-}
-.sidebar.open {
-	transform: translateX(0);
-}
-.main-content {
-	margin-left: 0;
-}
-.mobile-menu-btn {
-	display: block;
-	position: fixed;
-	top: 20px;
-	left: 20px;
-	z-index: 101;
-	background: #4299e1;
-	color: white;
-	border: none;
-	padding: 12px;
-	border-radius: 8px;
-	cursor: pointer;
-	font-size: 18px;
-}
-.mobile-overlay {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0,0,0,0.5);
-	z-index: 99;
-}
-.mobile-overlay.active {
-	display: block;
-}
-.theme-toggle {
-    top: 80px;
-    right: 20px;
-  }
-}
-
-@media (min-width: 769px) {
-.mobile-menu-btn {
-	display: none;
-}
-	
-}
-.custom-alert {
-	position: fixed;
-	top: 20px;
-	right: 20px;
-	z-index: 9999;
-	max-width: 400px;
-	animation: slideIn 0.3s ease;
-}
-.custom-alert-content {
-	background: white;
-	border-radius: 12px;
-	padding: 16px 20px;
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-	border-left: 4px solid #38a169;
-}
-.custom-alert-error .custom-alert-content {
-	border-left-color: #e53e3e;
-}
-.custom-alert-icon {
-	font-size: 18px;
-	font-weight: bold;
-}
-.custom-alert-success .custom-alert-icon {
-	color: #38a169;
-}
-.custom-alert-error .custom-alert-icon {
-	color: #e53e3e;
-}
-.custom-alert-message {
-	flex: 1;
-	font-size: 14px;
-	color: #2d3748;
-	line-height: 1.4;
-}
-.custom-alert-close {
-	background: none;
-	border: none;
-	font-size: 20px;
-	color: #a0aec0;
-	cursor: pointer;
-	padding: 0;
-	width: 24px;
-	height: 24px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 50%;
-	transition: all 0.2s;
-}
-.custom-alert-close:hover {
-	background-color: #f7fafc;
-	color: #4a5568;
-}
-.project-card {
-  position: relative; /* Make each card the positioning context */
-}
-
-.project-image {
-  position: relative;
-  /* Don't use overflow: hidden or it'll clip the popup */
-}
-
-.project-image .preview-thumb {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 8px;
-}
-
-#image-preview-popup {
-  display: none;
+  width: 320px;
+  background-color: var(--sidebar-bg);
   position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999;
-  border-radius: 8px;
-  max-width: 90vw;
-  max-height: 70vh;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+  top: 0;
+  left: 0;
 }
 
-#image-preview-popup img {
-  width: auto;
-  max-width: 100%;
-  max-height: 100%;
-  display: block;
+.sidebar::-webkit-scrollbar {
+  width: 6px;
 }
 
-.resume-button {
-  display: inline-block;
-  padding: 10px 9px 10px 9px;
-  background-color: #4A90E2;
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+}
+
+/* Profile section */
+.profile-section {
+  background-color: var(--sidebar-profile);
+  margin: 40px;
+  padding: 40px 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.profile-photo {
+  width: 90px;
+  height: 90px;
+  background-color: #4a5568;
+  border: 3px solid #e2e8f0;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 500;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.profile-photo:hover {
+  transform: scale(1.05);
+}
+
+.profile-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-name {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.profile-title {
+  color: #a0aec0;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.profile-university {
+  color: #a0aec0;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.gpa-badge {
+  background-color: #38b2ac;
   color: white;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s;
+  padding: 6px 16px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  transition: transform 0.2s ease;
 }
-.resume-button:hover {
-  background-color: #357ABD;
+
+.gpa-badge:hover {
+  transform: translateY(-2px);
 }
-.spacer-button {
+
+/* Navigation */
+.nav-menu {
+  list-style: none;
+  padding: 20px 40px;
+}
+
+.nav-item {
+  margin-bottom: 12px;
+}
+
+.nav-link {
   display: block;
-  margin: 15px auto -25px auto;
+  padding: 12px 20px;
+  color: #a0aec0;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
-/* Dark Mode Toggle Button */
+
+.nav-link:hover {
+  background-color: var(--sidebar-profile);
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.nav-link.active {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Contact info */
+.contact-info {
+  padding: 20px 60px;
+  color: #a0aec0;
+}
+
+.contact-title {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.contact-item {
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.contact-email {
+  color: var(--accent-primary);
+}
+
+/* Main content - FIXED margin */
+.main-content {
+  margin-left: 320px;
+  flex: 1;
+  background-color: var(--bg-secondary);
+  min-height: 100vh;
+}
+
+/* Page transitions */
+.page {
+  display: none;
+  padding: 40px;
+  min-height: 100vh;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.page.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Hero section */
+.hero-section {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: white;
+  padding: 40px 30px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-name {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.hero-title {
+  font-size: clamp(16px, 3vw, 20px);
+  font-weight: 500;
+  color: #e6fffa;
+  margin-bottom: 8px;
+}
+
+.hero-subtitle {
+  font-size: clamp(14px, 2.5vw, 18px);
+  color: #bee3f8;
+  margin-bottom: 30px;
+}
+
+.hero-badges {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.hero-badge {
+  background-color: rgba(255,255,255,0.2);
+  padding: 8px 16px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.hero-badge:hover {
+  transform: translateY(-2px);
+  background-color: rgba(255,255,255,0.3);
+}
+
+/* Content grid */
+.content-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.content-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.content-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card-header {
+  background-color: var(--bg-primary);
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.card-text.muted {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Status indicators */
+.status-item {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  position: relative;
+  padding-left: 12px;
+}
+
+.status-item::before {
+  content: '●';
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.status-active { color: #38a169; }
+.status-community { color: #3182ce; }
+.status-project { color: #805ad5; }
+.status-seeking { color: #d69e2e; }
+
+/* Projects section */
+.projects-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.projects-header {
+  background-color: var(--bg-primary);
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.projects-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  background-color: var(--bg-primary);
+  padding: 30px;
+}
+
+/* Project cards */
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 25px rgba(66, 153, 225, 0.15);
+}
+
+.project-image {
+  background-color: #edf2f7;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a0aec0;
+  font-size: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-image img {
+  transform: scale(1.05);
+}
+
+.project-content {
+  padding: 20px;
+}
+
+.project-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+.project-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.project-title a:hover {
+  color: var(--accent-primary);
+}
+
+.project-description {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 15px;
+}
+
+.project-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-right: 6px;
+  margin-bottom: 4px;
+}
+
+.tag-design { background-color: #e6fffa; color: #38b2ac; }
+.tag-database { background-color: #fef5e7; color: #d69e2e; }
+.tag-ui { background-color: #e6f3ff; color: #3182ce; }
+.tag-certification { background-color: #f0fff4; color: #38a169; }
+.tag-programming { background-color: #faf5ff; color: #805ad5; }
+
+/* Page headers */
+.page-header {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: white;
+  padding: 40px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.page-title {
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: #bee3f8;
+}
+
+/* Sections */
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.section-header {
+  background-color: var(--bg-primary);
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.section-body {
+  padding: 30px;
+}
+
+/* List items */
+.education-item, 
+.experience-item, 
+.award-item {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  transition: padding-left 0.3s ease;
+}
+
+.education-item:hover,
+.experience-item:hover,
+.award-item:hover {
+  padding-left: 10px;
+}
+
+.education-item:last-child, 
+.experience-item:last-child, 
+.award-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.item-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+  font-style: italic;
+}
+
+.item-subtitle {
+  font-size: 14px;
+  color: var(--accent-primary);
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.item-date {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.item-description {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Skills grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.skill-category {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.skill-category:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(66, 153, 225, 0.1);
+}
+
+.skill-category-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.skill-item {
+  display: inline-block;
+  background-color: #e6f3ff;
+  color: #3182ce;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 4px;
+  transition: all 0.3s ease;
+}
+
+.skill-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(49, 130, 206, 0.2);
+}
+
+/* Goals */
+.goal-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.goal-item:hover {
+  transform: translateX(8px);
+  box-shadow: 0 2px 8px rgba(66, 153, 225, 0.1);
+}
+
+.goal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.goal-description {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Forms */
+.contact-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.form-input, 
+.form-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input:focus, 
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-button {
+  background-color: var(--accent-primary);
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-button:hover {
+  background-color: var(--accent-secondary);
+  transform: translateY(-2px);
+}
+
+.form-button:active {
+  transform: translateY(0);
+}
+
+.input-error {
+  border: 2px solid #e74c3c !important;
+  background-color: #fff6f6;
+}
+
+/* Theme toggle - FIXED */
 .theme-toggle {
   position: fixed;
   top: 20px;
@@ -754,39 +744,316 @@ body {
 }
 
 .theme-toggle:hover {
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(180deg);
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
+/* Resume button */
+.resume-button {
+  display: inline-block;
+  padding: 10px 16px;
+  background-color: var(--accent-primary);
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.resume-button:hover {
+  background-color: var(--accent-secondary);
+  transform: translateY(-2px);
+}
+
+.spacer-button {
+  display: block;
+  margin: 15px auto -25px auto;
+}
+
+/* Image preview popup */
+#image-preview-popup {
+  display: none;
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 70vh;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#image-preview-popup.show {
+  opacity: 1;
+}
+
+#image-preview-popup img {
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  border-radius: 8px;
+}
+
+/* Alert system */
+.custom-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 400px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.custom-alert-content {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  border-left: 4px solid #38a169;
+}
+
+.custom-alert-error .custom-alert-content {
+  border-left-color: #e53e3e;
+}
+
+.custom-alert-icon {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.custom-alert-success .custom-alert-icon {
+  color: #38a169;
+}
+
+.custom-alert-error .custom-alert-icon {
+  color: #e53e3e;
+}
+
+.custom-alert-message {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.custom-alert-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.custom-alert-close:hover {
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+/* Dark mode specific styles */
 [data-theme="dark"] .theme-toggle {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .skill-item {
+  background-color: rgba(66, 153, 225, 0.2);
+  color: #90cdf4;
+}
+
+[data-theme="dark"] .form-input:focus,
+[data-theme="dark"] .form-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+/* Mobile optimizations */
+@media (max-width: 1200px) {
+  .content-row, 
+  .projects-grid, 
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 1109px) {
+  .sidebar {
+    width: 280px;
+  }
+  .main-content {
+    margin-left: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    width: 280px;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .page {
+    padding: 20px;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 101;
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+  }
+  
+  .mobile-menu-btn:hover {
+    background: var(--accent-secondary);
+  }
+  
+  .mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+    transition: opacity 0.3s ease;
+  }
+  
+  .mobile-overlay.active {
+    display: block;
+  }
+  
+  .theme-toggle {
+    top: 80px;
+    right: 20px;
+  }
+  
+  .content-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu-btn {
+    display: none;
+  }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Confetti animation */
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
 }
 </style>
 </head>
 <body>
 <div class="container"> 
   <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-	<div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
   <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
-  <span id="theme-icon">🌙</span>
-</button>
+    <span id="theme-icon">🌙</span>
+  </button>
+  
   <!-- Sidebar -->
   <nav class="sidebar">
     <div class="profile-section">
-      <div class="profile-photo"> <img src="" alt="Profile Photo" style="display: none;" onload="this.style.display='block'; this.parentNode.innerHTML=this.outerHTML;"> <span>PHOTO</span> </div>
+      <div class="profile-photo"> 
+        <img src="" alt="Profile Photo" style="display: none;" onload="this.style.display='block'; this.parentNode.innerHTML=this.outerHTML;"> 
+        <span>PHOTO</span> 
+      </div>
       <h1 class="profile-name">Lenny Paz</h1>
       <div class="profile-title">IT Student</div>
       <div class="profile-university">Florida State University</div>
-      <span class="gpa-badge">GPA 4.0/4.0</span> </div>
+      <span class="gpa-badge">GPA 4.0/4.0</span> 
+    </div>
+    
     <ul class="nav-menu">
-      <li class="nav-item"> <a class="nav-link active" onclick="showPage('home', event)">Home</a> </li>
-      <li class="nav-item"> <a class="nav-link" onclick="showPage('education', event)">Education</a> </li>
-      <li class="nav-item"> <a class="nav-link" onclick="showPage('experience', event)">Experience</a> </li>
-      <li class="nav-item"> <a class="nav-link" onclick="showPage('technical-skills', event)">Technical Skills</a> </li>
-      <li class="nav-item"> <a class="nav-link" onclick="showPage('career-goals', event)">Career Goals</a> </li>
-      <li class="nav-item"> <a class="nav-link" onclick="showPage('contact', event)">Contact</a> </li>
-	  <li class="nav-item"> <a href="Lenny Paz - Resume.pdf" download class="resume-button spacer-button"> <span>📄</span> Download PDF Resume</a> </li>
+      <li class="nav-item"> 
+        <a class="nav-link active" onclick="showPage('home', event)">Home</a> 
+      </li>
+      <li class="nav-item"> 
+        <a class="nav-link" onclick="showPage('education', event)">Education</a> 
+      </li>
+      <li class="nav-item"> 
+        <a class="nav-link" onclick="showPage('experience', event)">Experience</a> 
+      </li>
+      <li class="nav-item"> 
+        <a class="nav-link" onclick="showPage('technical-skills', event)">Technical Skills</a> 
+      </li>
+      <li class="nav-item"> 
+        <a class="nav-link" onclick="showPage('career-goals', event)">Career Goals</a> 
+      </li>
+      <li class="nav-item"> 
+        <a class="nav-link" onclick="showPage('contact', event)">Contact</a> 
+      </li>
+      <li class="nav-item"> 
+        <a href="Lenny Paz - Resume.pdf" download class="resume-button spacer-button"> 
+          <span>📄</span> Download PDF Resume
+        </a> 
+      </li>
     </ul>
+    
     <div class="contact-info">
       <div class="contact-title">CONTACT</div>
       <div class="contact-item">Tallahassee, FL</div>
@@ -803,7 +1070,11 @@ body {
         <h1 class="hero-name">Lenny Paz</h1>
         <div class="hero-title">Information Technology Student</div>
         <div class="hero-subtitle">Passionate about Networking &amp; Cybersecurity</div>
-        <div class="hero-badges"> <span class="hero-badge">Peer Tutor</span> <span class="hero-badge">Multilingual Communicator</span> <span class="hero-badge">CompTIA IT Fund+</span> </div>
+        <div class="hero-badges"> 
+          <span class="hero-badge">Peer Tutor</span> 
+          <span class="hero-badge">Multilingual Communicator</span> 
+          <span class="hero-badge">CompTIA IT Fund+</span> 
+        </div>
       </div>
       
       <div class="content-row">
@@ -842,64 +1113,75 @@ body {
         </div>
       </div>
       
-      <div class="projects-section">
+      <section class="projects-section">
         <div class="projects-header">
           <h2 class="projects-title">Featured Academic Projects</h2>
         </div>
         <div class="projects-grid">
-		  <!-- Project 1 -->
-		  <div class="project-card" data-project="IR Website">
-			<div class="project-image" 
-				 onmouseover="showPreview(event, '../Web Project Images/IR Web.png')" 
-				 onmouseout="hidePreview()">
-			  <img class="preview-thumb" src="../Web Project Images/IR Web.png" alt=""/>
-			</div>
-			<div class="project-content">
-			  <h3 class="project-title"><a href="https://lennypaz.com">Interactive Resume Website</a></h3>
-			  <div class="project-description">
-				Modern, responsive personal portfolio website featuring dynamic navigation and professional presentation of skills and experience.
-			  </div>
-			  <span class="project-tag tag-design">UI/UX Design</span>
-			</div>
-		  </div>
+          <!-- Project 1 -->
+          <article class="project-card" data-project="IR Website">
+            <div class="project-image" 
+                 onmouseenter="showPreview(event, '../Web Project Images/IR Web.png')" 
+                 onmouseleave="hidePreview()">
+              <img class="preview-thumb" 
+                   src="../Web Project Images/IR Web.png" 
+                   alt="Interactive Resume Website screenshot"/>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">
+                <a href="https://lennypaz.com" target="_blank" rel="noopener">
+                  Interactive Resume Website
+                </a>
+              </h3>
+              <div class="project-description">
+                Modern, responsive personal portfolio website featuring dynamic navigation and professional presentation of skills and experience.
+              </div>
+              <span class="project-tag tag-design">UI/UX Design</span>
+            </div>
+          </article>
 
-		  <!-- Project 2 -->
-		  <div class="project-card" data-project="DBMS SQL">
-			<div class="project-image" 
-				 onmouseover="showPreview(event, '../Web Project Images/IR SQL.png')" 
-				 onmouseout="hidePreview()">
-			  <img class="preview-thumb" src="../Web Project Images/IR SQL.png" alt=""/>
-			</div>
-			<div class="project-content">
-			  <h3 class="project-title">Database Management System</h3>
-			  <div class="project-description">
-				Comprehensive MySQL database design and implementation for academic coursework demonstrating data modeling and query optimization.
-			  </div>
-			  <span class="project-tag tag-database">Database</span>
-			</div>
-		  </div>
+          <!-- Project 2 -->
+          <article class="project-card" data-project="DBMS SQL">
+            <div class="project-image" 
+                 onmouseenter="showPreview(event, '../Web Project Images/IR SQL.png')" 
+                 onmouseleave="hidePreview()">
+              <img class="preview-thumb" 
+                   src="../Web Project Images/IR SQL.png" 
+                   alt="Database Management System screenshot"/>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Database Management System</h3>
+              <div class="project-description">
+                Comprehensive MySQL database design and implementation for academic coursework demonstrating data modeling and query optimization.
+              </div>
+              <span class="project-tag tag-database">Database</span>
+            </div>
+          </article>
 
-		  <!-- Project 3 -->
-		  <div class="project-card" data-project="Wireframe">
-			<div class="project-image" 
-				 onmouseover="showPreview(event, '../Web Project Images/IR Wire.png')" 
-				 onmouseout="hidePreview()">
-			  <img class="preview-thumb" src="../Web Project Images/IR Wire.png" alt=""/>
-			</div>
-			<div class="project-content">
-			  <h3 class="project-title">
-				<a href="https://www.figma.com/proto/AqGlnlsOnpBRGlhp9GpLA8/All-American-Inc.-Wireframe?node-id=13-145&p=f&t=HLNd2DCuExkHlaG4-0&scaling=scale-down-width&content-scaling=fixed&page-id=0%3A1">
-				  All American Inc. Wireframe
-				</a>
-			  </h3>
-			  <div class="project-description">
-				Developed a wireframe for a real window tinting company in an Information Architecture course, focusing on content structure, service clarity, and user flow.
-			  </div>
-			  <span class="project-tag tag-design">UI/UX Design</span>
-			</div>
-		  </div>
-		</div>
-	  </div>	
+          <!-- Project 3 -->
+          <article class="project-card" data-project="Wireframe">
+            <div class="project-image" 
+                 onmouseenter="showPreview(event, '../Web Project Images/IR Wire.png')" 
+                 onmouseleave="hidePreview()">
+              <img class="preview-thumb" 
+                   src="../Web Project Images/IR Wire.png" 
+                   alt="All American Inc. Wireframe screenshot"/>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">
+                <a href="https://www.figma.com/proto/AqGlnlsOnpBRGlhp9GpLA8/All-American-Inc.-Wireframe?node-id=13-145&p=f&t=HLNd2DCuExkHlaG4-0&scaling=scale-down-width&content-scaling=fixed&page-id=0%3A1" 
+                   target="_blank" rel="noopener">
+                  All American Inc. Wireframe
+                </a>
+              </h3>
+              <div class="project-description">
+                Developed a wireframe for a real window tinting company in an Information Architecture course, focusing on content structure, service clarity, and user flow.
+              </div>
+              <span class="project-tag tag-design">UI/UX Design</span>
+            </div>
+          </article>
+        </div>
+      </section>
     </div>
     
     <!-- Career Goals Page -->
@@ -908,7 +1190,8 @@ body {
         <h1 class="page-title">Career Goals</h1>
         <div class="page-subtitle">Building a Foundation for Success in Information Technology</div>
       </div>
-      <div class="section">
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Short-Term Objectives (1-2 Years)</h2>
         </div>
@@ -926,8 +1209,9 @@ body {
             <div class="goal-description">Build upon CompTIA IT Fundamentals+ certification by pursuing Network+ and Security+ certifications to strengthen cybersecurity and networking expertise.</div>
           </div>
         </div>
-      </div>
-      <div class="section">
+      </section>
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Long-Term Vision (3-5 Years)</h2>
         </div>
@@ -945,7 +1229,7 @@ body {
             <div class="goal-description">Leverage bilingual communication skills and tutoring experience to mentor junior IT professionals and contribute to diversity initiatives in technology.</div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
     
     <!-- Education Page -->
@@ -954,7 +1238,8 @@ body {
         <h1 class="page-title">Education</h1>
         <div class="page-subtitle">Academic Excellence and Continuous Learning</div>
       </div>
-      <div class="section">
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Formal Education</h2>
         </div>
@@ -963,17 +1248,18 @@ body {
             <div class="item-title">Bachelor of Science in Information Technology</div>
             <div class="item-subtitle">Florida State University, Tallahassee, Florida</div>
             <div class="item-date">Expected Graduation: May 2026 | GPA: 4.0/4.0</div>
-            <div class="item-description"> Comprehensive IT program focusing on networking technology, cybersecurity fundamentals, database concepts, and programming. Consistently recognized on President's List for academic excellence. </div>
+            <div class="item-description">Comprehensive IT program focusing on networking technology, cybersecurity fundamentals, database concepts, and programming. Consistently recognized on President's List for academic excellence.</div>
           </div>
           <div class="education-item">
             <div class="item-title">Associate in Arts</div>
             <div class="item-subtitle">Miami Dade College, Miami, Florida</div>
             <div class="item-date">Graduated: April 2024 | GPA: 4.0/4.0</div>
-            <div class="item-description"> Foundation coursework with consistent Dean's List recognition from Fall 2022 to Spring 2024. Strong academic performance in general education requirements. </div>
+            <div class="item-description">Foundation coursework with consistent Dean's List recognition from Fall 2022 to Spring 2024. Strong academic performance in general education requirements.</div>
           </div>
         </div>
-      </div>
-      <div class="section">
+      </section>
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Relevant Coursework</h2>
         </div>
@@ -981,14 +1267,23 @@ body {
           <div class="skills-grid">
             <div class="skill-category">
               <div class="skill-category-title">Core IT Courses</div>
-              <span class="skill-item">Information Security</span> <span class="skill-item">Cybersecurity Fundamentals</span> <span class="skill-item">Networking Technology</span> <span class="skill-item">Network Security</span> <span class="skill-item">Information Architecture</span> </div>
+              <span class="skill-item">Information Security</span> 
+              <span class="skill-item">Cybersecurity Fundamentals</span> 
+              <span class="skill-item">Networking Technology</span> 
+              <span class="skill-item">Network Security</span> 
+              <span class="skill-item">Information Architecture</span> 
+            </div>
             <div class="skill-category">
               <div class="skill-category-title">Programming &amp; Database</div>
-              <span class="skill-item">Java Programming</span> <span class="skill-item">Introduction to C++ Programming</span> <span class="skill-item">Database Concepts</span> </div>
+              <span class="skill-item">Java Programming</span> 
+              <span class="skill-item">Introduction to C++ Programming</span> 
+              <span class="skill-item">Database Concepts</span> 
+            </div>
           </div>
         </div>
-      </div>
-      <div class="section">
+      </section>
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Certifications</h2>
         </div>
@@ -997,10 +1292,10 @@ body {
             <div class="item-title">CompTIA IT Fundamentals+</div>
             <div class="item-subtitle">CompTIA Certification</div>
             <div class="item-date">Obtained: June 2021 | Status: Current</div>
-            <div class="item-description"> Foundation-level certification demonstrating understanding of basic IT concepts, software development, database fundamentals, and security concepts. </div>
+            <div class="item-description">Foundation-level certification demonstrating understanding of basic IT concepts, software development, database fundamentals, and security concepts.</div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
     
     <!-- Technical Skills Page -->
@@ -1009,7 +1304,8 @@ body {
         <h1 class="page-title">Technical Skills</h1>
         <div class="page-subtitle">IT Expertise and Professional Competencies</div>
       </div>
-      <div class="section">
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Technical Proficiencies</h2>
         </div>
@@ -1017,20 +1313,40 @@ body {
           <div class="skills-grid">
             <div class="skill-category">
               <div class="skill-category-title">Programming/Markup Languages</div>
-              <span class="skill-item">Java</span> <span class="skill-item">C++</span> <span class="skill-item">SQL</span> <span class="skill-item">HTML/CSS</span> </div>
+              <span class="skill-item">Java</span> 
+              <span class="skill-item">C++</span> 
+              <span class="skill-item">SQL</span> 
+              <span class="skill-item">HTML/CSS</span> 
+            </div>
             <div class="skill-category">
               <div class="skill-category-title">Networking &amp; Security</div>
-              <span class="skill-item">Network Configuration</span> <span class="skill-item">Cybersecurity Fundamentals</span> <span class="skill-item">Network Security Protocols</span> <span class="skill-item">Information Security</span> </div>
+              <span class="skill-item">Network Configuration</span> 
+              <span class="skill-item">Cybersecurity Fundamentals</span> 
+              <span class="skill-item">Network Security Protocols</span> 
+              <span class="skill-item">Information Security</span> 
+            </div>
             <div class="skill-category">
               <div class="skill-category-title">Database &amp; Systems</div>
-              <span class="skill-item">MySQL</span> <span class="skill-item">Database Design</span> <span class="skill-item">Information Architecture</span> <span class="skill-item">System Administration</span> </div>
+              <span class="skill-item">MySQL</span> 
+              <span class="skill-item">Database Design</span> 
+              <span class="skill-item">Information Architecture</span> 
+              <span class="skill-item">System Administration</span> 
+            </div>
             <div class="skill-category">
               <div class="skill-category-title">Software &amp; Tools</div>
-              <span class="skill-item">Microsoft Office Suite</span> <span class="skill-item">Word</span> <span class="skill-item">Excel</span> <span class="skill-item">PowerPoint</span><span class="skill-item">Figma</span><span class="skill-item">Adobe Dreamweaver (Intro)</span><span class="skill-item">Adobe Illustrator (Intro)</span> </div>
+              <span class="skill-item">Microsoft Office Suite</span> 
+              <span class="skill-item">Word</span> 
+              <span class="skill-item">Excel</span> 
+              <span class="skill-item">PowerPoint</span>
+              <span class="skill-item">Figma</span>
+              <span class="skill-item">Adobe Dreamweaver (Intro)</span>
+              <span class="skill-item">Adobe Illustrator (Intro)</span> 
+            </div>
           </div>
         </div>
-      </div>
-      <div class="section">
+      </section>
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Professional Skills</h2>
         </div>
@@ -1038,13 +1354,23 @@ body {
           <div class="skills-grid">
             <div class="skill-category">
               <div class="skill-category-title">Communication</div>
-              <span class="skill-item">Bilingual (English/Spanish)</span> <span class="skill-item">Technical Documentation</span> <span class="skill-item">User Training</span> <span class="skill-item">Problem Explanation</span><span class="skill-item">Instructional Support</span><span class="skill-item">Simplifying Concepts</span> </div>
+              <span class="skill-item">Bilingual (English/Spanish)</span> 
+              <span class="skill-item">Technical Documentation</span> 
+              <span class="skill-item">User Training</span> 
+              <span class="skill-item">Problem Explanation</span>
+              <span class="skill-item">Instructional Support</span>
+              <span class="skill-item">Simplifying Concepts</span> 
+            </div>
             <div class="skill-category">
               <div class="skill-category-title">Problem Solving</div>
-              <span class="skill-item">Troubleshooting</span> <span class="skill-item">Critical Thinking</span> <span class="skill-item">Root Cause Analysis</span> <span class="skill-item">Solution Implementation</span> </div>
+              <span class="skill-item">Troubleshooting</span> 
+              <span class="skill-item">Critical Thinking</span> 
+              <span class="skill-item">Root Cause Analysis</span> 
+              <span class="skill-item">Solution Implementation</span> 
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
     
     <!-- Experience Page -->
@@ -1053,7 +1379,8 @@ body {
         <h1 class="page-title">Experience</h1>
         <div class="page-subtitle">Professional and Volunteer Experience</div>
       </div>
-      <div class="section">
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Work Experience</h2>
         </div>
@@ -1064,15 +1391,16 @@ body {
             <div class="item-date">February 2025 – Present</div>
             <div class="item-description">
               <ul style="margin-left: 20px;">
-                <li> Provided personalized tutoring in Algebra 1, Geometry, and Algebra 2, simplifying complex mathematical concepts for diverse learning styles.&nbsp;</li>
-                <li>Analyzed student mistakes to identify patterns and adjust teaching approaches.&nbsp;</li>
-                <li>Effectively communicated problem-solving strategies to build student confidence and improve understanding.&nbsp;</li>
+                <li>Provided personalized tutoring in Algebra 1, Geometry, and Algebra 2, simplifying complex mathematical concepts for diverse learning styles.</li>
+                <li>Analyzed student mistakes to identify patterns and adjust teaching approaches.</li>
+                <li>Effectively communicated problem-solving strategies to build student confidence and improve understanding.</li>
               </ul>
             </div>
           </div>
         </div>
-      </div>
-      <div class="section">
+      </section>
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Volunteer Experience</h2>
         </div>
@@ -1083,15 +1411,16 @@ body {
             <div class="item-date">November – December 2022</div>
             <div class="item-description">
               <ul style="margin-left: 20px;">
-                <li> Installed computer hardware including a second monitors and printers to enhance workplace productivity.&nbsp;</li>
-                <li>Guided adult learners complete ESOL and GED registration, including those with limited English proficiency, supporting their educational advancement.&nbsp;</li>
-                <li>Assisted with document scanning and administrative tasks to support program operations. </li>
+                <li>Installed computer hardware including a second monitors and printers to enhance workplace productivity.</li>
+                <li>Guided adult learners complete ESOL and GED registration, including those with limited English proficiency, supporting their educational advancement.</li>
+                <li>Assisted with document scanning and administrative tasks to support program operations.</li>
               </ul>
             </div>
           </div>
         </div>
-      </div>
-      <div class="section">
+      </section>
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Current Activities</h2>
         </div>
@@ -1102,28 +1431,29 @@ body {
             <div class="item-date">October 2024 – Present</div>
             <div class="item-description">
               <ul style="margin-left: 20px;">
-                <li> Contributed to STEM-focused workshops for Girl Scouts, guiding them through hands-on activities like building bristle bots and creating DIY lava lamps.</li>
+                <li>Contributed to STEM-focused workshops for Girl Scouts, guiding them through hands-on activities like building bristle bots and creating DIY lava lamps.</li>
                 <li>Explained scientific concepts in an engaging way to inspire interest in technology and engineering.</li>
-                <li>Encouraged curiosity and creative thinking through structured yet fun experiments.&nbsp;</li>
-                <li>Helped create a positive learning environment that supported collaboration and built confidence in young learners. </li>
+                <li>Encouraged curiosity and creative thinking through structured yet fun experiments.</li>
+                <li>Helped create a positive learning environment that supported collaboration and built confidence in young learners.</li>
               </ul>
             </div>
           </div>
         </div>
-      </div>
-      <div class="section">
+      </section>
+      
+      <section class="section">
         <div class="section-header">
           <h2 class="section-title">Leadership Experience</h2>
         </div>
         <div class="section-body">
           <div class="experience-item">
-            <div class="item-title">Hardware Team Captain&nbsp;</div>
+            <div class="item-title">Hardware Team Captain</div>
             <div class="item-subtitle">Institute of Electrical and Electronics Engineers (IEEE)</div>
             <div class="item-date">2022</div>
-            <div class="item-description"> Led hardware team in designing and creating technical projects while ensuring successful execution and adherence to planned objectives. Collaborated with software team to develop cohesive projects integrating both hardware and software components. </div>
+            <div class="item-description">Led hardware team in designing and creating technical projects while ensuring successful execution and adherence to planned objectives. Collaborated with software team to develop cohesive projects integrating both hardware and software components.</div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
     
     <!-- Contact Page -->
@@ -1132,6 +1462,7 @@ body {
         <h1 class="page-title">Contact Information</h1>
         <div class="page-subtitle">Let's Connect and Discuss Opportunities</div>
       </div>
+      
       <div class="content-row">
         <div class="content-card">
           <div class="card-header">
@@ -1173,6 +1504,7 @@ body {
           </div>
         </div>
       </div>
+      
       <div class="contact-form">
         <h2 class="section-title">Send a Message</h2>
         <form onsubmit="handleSubmit(event)">
@@ -1196,402 +1528,417 @@ body {
         </form>
       </div>
     </div>
-</main>
-	<div id="image-preview-popup"></div>
+  </main>
+  
+  <div id="image-preview-popup"></div>
 </div>
+
 <script>
-	  // Dark Mode Implementation
-	  function toggleTheme() {
-		  const html = document.documentElement;
-		  const currentTheme = html.getAttribute('data-theme');
-		  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+// Theme management - FIXED
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? null : 'dark';
+  
+  if (newTheme) {
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', 'dark');
+    document.getElementById('theme-icon').textContent = '☀️';
+  } else {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('theme', 'light');
+    document.getElementById('theme-icon').textContent = '🌙';
+  }
+  
+  // Track theme change
+  trackEvent('theme_toggle', { theme: newTheme || 'light' });
+}
 
-		  html.setAttribute('data-theme', newTheme);
-		  localStorage.setItem('theme', newTheme);
+// Load saved theme on page load
+function loadTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = savedTheme === 'auto' ? (prefersDark ? 'dark' : 'light') : savedTheme;
+  
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-icon').textContent = '☀️';
+  } else {
+    document.getElementById('theme-icon').textContent = '🌙';
+  }
+}
 
-		  // Update icon
-		  const icon = document.getElementById('theme-icon');
-		  icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+// Image preview functions
+let previewTimeout;
+function showPreview(event, imageUrl) {
+  clearTimeout(previewTimeout);
+  const popup = document.getElementById('image-preview-popup');
+  
+  popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
+  popup.style.display = 'block';
+  popup.classList.add('show');
+}
 
-		  // Track theme change
-		  trackEvent('theme_toggle', { theme: newTheme });
-		}
+function hidePreview() {
+  previewTimeout = setTimeout(() => {
+    const popup = document.getElementById('image-preview-popup');
+    popup.classList.remove('show');
+    setTimeout(() => {
+      popup.style.display = 'none';
+      popup.innerHTML = '';
+    }, 300);
+  }, 100);
+}
 
-		// Load saved theme on page load
-	  function loadTheme() {
-		  const savedTheme = localStorage.getItem('theme') || 'light';
-		  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		  const theme = savedTheme === 'auto' ? (prefersDark ? 'dark' : 'light') : savedTheme;
-
-		  document.documentElement.setAttribute('data-theme', theme);
-		  document.getElementById('theme-icon').textContent = theme === 'dark' ? '☀️' : '🌙';
-		}
-	  function showPreview(event, imageUrl) {
-		  const popup = document.getElementById('image-preview-popup');
-		  popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
-		  popup.style.display = 'block';
-		}
-
-	  function hidePreview() {
-		  const popup = document.getElementById('image-preview-popup');
-		  popup.style.display = 'none';
-		  popup.innerHTML = '';
-		}
-	  function handleSubmit(event) {
-		  event.preventDefault();
-
-		  const nameField = document.getElementById('name');
-		  const emailField = document.getElementById('email');
-		  const subjectField = document.getElementById('subject');
-		  const messageField = document.getElementById('message');
-
-		  const name = nameField.value.trim();
-		  const email = emailField.value.trim();
-		  const subject = subjectField.value.trim();
-		  const message = messageField.value.trim();
-
-		  let valid = true;
-
-		  // Reset previous error styles
-		  [nameField, emailField, subjectField, messageField].forEach(field => {
-			field.classList.remove('input-error');
-		  });
-
-		  // Highlight missing fields
-		  if (!name) { nameField.classList.add('input-error'); valid = false; }
-		  if (!email) { emailField.classList.add('input-error'); valid = false; }
-		  if (!subject) { subjectField.classList.add('input-error'); valid = false; }
-		  if (!message) { messageField.classList.add('input-error'); valid = false; }
-
-		  if (!valid) {
-			showCustomAlert("Please fill in all fields before submitting.", "error");
-			return;
-		  }
-
-		  // Send to Telegram Worker
-		  fetch("https://telegram-worker.lenny-paz123.workers.dev/", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ name, email, subject, message })
-		  })
-		  .then(res => {
-			if (res.ok) {
-			  showCustomAlert(`Thanks for your submission, ${name}! I'll get back to you soon.`, "success");
-			  event.target.reset();
-			} else {
-			  showCustomAlert("Something went wrong. Please try again.", "error");
-			}
-		  })
-		  .catch(error => {
-			console.error("Error:", error);
-			showCustomAlert("There was a network error. Please try again later.", "error");
-		  });
-		}
-	  // Analytics & Visitor Tracking
-	class VisitorAnalytics {
-	  constructor() {
-		this.sessionId = this.generateSessionId();
-		this.startTime = Date.now();
-		this.pageViews = {};
-		this.events = [];
-		this.isActive = true;
-		this.init();
-	  }
-
-	  generateSessionId() {
-		return Date.now().toString(36) + Math.random().toString(36).substr(2);
-	  }
-
-	  init() {
-		this.setupActivityTracking();
-		this.setupVisibilityTracking();
-		setInterval(() => this.sendAnalytics(), 30000);
-		window.addEventListener('beforeunload', () => this.sendAnalytics());
-		window.addEventListener('beforeunload', () => {
-	    this.isActive = false;
-	    this.sendAnalytics(true); // Send final data
-	  });
-
-	  document.addEventListener('visibilitychange', () => {
-	    if (document.visibilityState === 'hidden') {
-		  this.isActive = false;
-		  this.sendAnalytics(true);
-	    }
-	  });
-	    }
-
-	  setupActivityTracking() {
-		let lastActivity = Date.now();
-		['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
-		  document.addEventListener(event, () => {
-			lastActivity = Date.now();
-			this.isActive = true;
-		  }, { passive: true });
-		});
-		
-		setInterval(() => {
-		  if (Date.now() - lastActivity > 30000) {
-			this.isActive = false;
-		  }
-		}, 30000);
-	  }
-
-	  setupVisibilityTracking() {
-		document.addEventListener('visibilitychange', () => {
-		  if (document.hidden) {
-			this.trackEvent('page_blur');
-		  } else {
-			this.trackEvent('page_focus');
-		  }
-		});
-	  }
-
-	  trackPageView(pageId) {
-		const now = Date.now();
-		if (this.currentPage && this.pageStartTime) {
-		  const timeSpent = now - this.pageStartTime;
-		  this.pageViews[this.currentPage] = (this.pageViews[this.currentPage] || 0) + timeSpent;
-		}
-		this.currentPage = pageId;
-		this.pageStartTime = now;
-		this.trackEvent('page_view', { page: pageId });
-	  }
-
-	  trackEvent(eventName, data = {}) {
-		this.events.push({ event: eventName, timestamp: Date.now(), data });
-	  }
-
-	  getEngagementMetrics() {
-		const totalTime = Date.now() - this.startTime;
-		const activePages = Object.keys(this.pageViews).length;
-		const averageTimePerPage = activePages > 0 ? Object.values(this.pageViews).reduce((a, b) => a + b, 0) / activePages : 0;
-
-		return {
-		  sessionId: this.sessionId,
-		  totalSessionTime: totalTime,
-		  activePages: activePages,
-		  averageTimePerPage: Math.round(averageTimePerPage / 1000),
-		  totalEvents: this.events.length,
-		  isActive: this.isActive,
-		  userAgent: navigator.userAgent,
-		  referrer: document.referrer,
-		  screenResolution: `${screen.width}x${screen.height}`,
-		  timestamp: new Date().toISOString()
-		};
-	  }
-
-	  async sendAnalytics(final = false) {
-		  const metrics = this.getEngagementMetrics();
-		  if (!final && !this.isActive) return; // Don't send idle data repeatedly
-
-		  try {
-			await fetch('https://ir-analytics.lenny-paz123.workers.dev/', {
-			  method: 'POST',
-			  headers: { 'Content-Type': 'application/json' },
-			  body: JSON.stringify({
-				type: 'analytics',
-				metrics: { ...metrics, isActive: final ? false : this.isActive },
-				events: this.events.slice(-50)
-			  })
-			});
-			this.events = [];
-		  } catch (error) {
-			console.log('Analytics send failed:', error);
-		  }
-		}
-	}
-
-	let analytics;
-	function trackEvent(eventName, data = {}) {
-	  if (analytics) {
-		analytics.trackEvent(eventName, data);
-	  }
-	}
-
-	document.addEventListener('DOMContentLoaded', () => {
-		  loadTheme();
-		  analytics = new VisitorAnalytics();
-
-		  // Load correct page on initial load based on URL hash
-		  const hash = window.location.hash.replace('#', '') || 'home';
-		  const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
-		  if (navLink) {
-			showPage(hash, { target: navLink }, false);
-		  }
-		const observedSections = new Set();
-		const sectionObserver = new IntersectionObserver(entries => {
-		  entries.forEach(entry => {
-			if (entry.isIntersecting) {
-			  const pageId = entry.target.dataset.page;
-			  if (!observedSections.has(pageId)) {
-				analytics.trackPageView(pageId);
-				observedSections.add(pageId);
-			  }
-			}
-		  });
-		}, { threshold: 0.6 });
-
-		  // Track form interactions
-		  document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
-			input.addEventListener('focus', () => trackEvent('form_field_focus', { field: input.id }));
-			input.addEventListener('blur', () => trackEvent('form_field_blur', { field: input.id }));
-		  });
-
-		  // Track link clicks
-		  document.querySelectorAll('a[href^="http"]').forEach(link => {
-			link.addEventListener('click', () => trackEvent('external_link_click', { url: link.href }));
-		  });
-
-		  // Track project card interactions
-		  document.querySelectorAll('.project-card').forEach(card => {
-		    const projectName = card.dataset.project; // use data-project="IR Website" in HTML
-
-		    card.addEventListener('mouseenter', () => trackEvent('project_hover', { project: projectName }));
-		    card.addEventListener('click', () => trackEvent('project_click', { project: projectName }));
-		  });
-		  document.querySelectorAll('[data-page]').forEach(section => {
-	      	sectionObserver.observe(section);
-	      });
-		
-		});
-	  function showCustomAlert(message, type = "success") {
-			// Remove existing alerts
-			const existingAlert = document.querySelector('.custom-alert');
-			if (existingAlert) existingAlert.remove();
-
-			const alert = document.createElement('div');
-			alert.className = `custom-alert custom-alert-${type}`;
-			alert.innerHTML = `
-				<div class="custom-alert-content">
-					<span class="custom-alert-icon">${type === 'success' ? '✓' : '⚠'}</span>
-					<span class="custom-alert-message">${message}</span>
-					<button class="custom-alert-close" onclick="this.parentElement.parentElement.remove()">×</button>
-				</div>
-			`;
-
-			document.body.appendChild(alert);
-
-			// Auto remove after 5 seconds
-			setTimeout(() => {
-				if (alert.parentNode) alert.remove();
-			}, 5000);
-		}
-		
-		const konamiCode = [
-				"ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
-				"ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
-				"b", "a"
-			  ];
-			  let keySequence = [];
-
-			  window.addEventListener("keydown", (e) => {
-				keySequence.push(e.key);
-				keySequence = keySequence.slice(-konamiCode.length);
-
-				if (keySequence.join(',') === konamiCode.join(',')) {
-				  launchEmojiConfetti();
-				}
-			  });
-
-			  function launchEmojiConfetti() {
-				const emojis = ["🎉", "✨", "🥳", "🎊", "💫", "🌟"];
-				const count = 30;
-
-				for (let i = 0; i < count; i++) {
-				  const confetti = document.createElement("div");
-				  confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-				  confetti.style.position = "fixed";
-				  confetti.style.left = `${Math.random() * 100}vw`;
-				  confetti.style.top = `-2rem`;
-				  confetti.style.fontSize = `${Math.random() * 20 + 20}px`;
-				  confetti.style.animation = `fall ${Math.random() * 3 + 2}s ease-out forwards`;
-				  confetti.style.zIndex = 9999;
-				  document.body.appendChild(confetti);
-
-				  setTimeout(() => confetti.remove(), 5000); // Clean up after 5s
-				}
-			  }
-	function toggleMobileMenu() {
-		const sidebar = document.querySelector('.sidebar');
-		const overlay = document.querySelector('.mobile-overlay');
-
-		sidebar.classList.toggle('open');
-		overlay.classList.toggle('active');
-	}
-
-	function closeMobileMenu() {
-		const sidebar = document.querySelector('.sidebar');
-		const overlay = document.querySelector('.mobile-overlay');
-
-		sidebar.classList.remove('open');
-		overlay.classList.remove('active');
-	}
-
-	// Close mobile menu when clicking nav links
-	document.querySelectorAll('.nav-link').forEach(link => {
-		link.addEventListener('click', closeMobileMenu);
-	});
-
-  // Add keyframe animation
-  const style = document.createElement("style");
-  style.textContent = `
-    @keyframes fall {
-      to {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-      }
+// Form handling
+function handleSubmit(event) {
+  event.preventDefault();
+  
+  const nameField = document.getElementById('name');
+  const emailField = document.getElementById('email');
+  const subjectField = document.getElementById('subject');
+  const messageField = document.getElementById('message');
+  
+  const name = nameField.value.trim();
+  const email = emailField.value.trim();
+  const subject = subjectField.value.trim();
+  const message = messageField.value.trim();
+  
+  let valid = true;
+  
+  // Reset previous error styles
+  [nameField, emailField, subjectField, messageField].forEach(field => {
+    field.classList.remove('input-error');
+  });
+  
+  // Highlight missing fields
+  if (!name) { nameField.classList.add('input-error'); valid = false; }
+  if (!email) { emailField.classList.add('input-error'); valid = false; }
+  if (!subject) { subjectField.classList.add('input-error'); valid = false; }
+  if (!message) { messageField.classList.add('input-error'); valid = false; }
+  
+  if (!valid) {
+    showCustomAlert("Please fill in all fields before submitting.", "error");
+    return;
+  }
+  
+  // Send to Telegram Worker
+  fetch("https://telegram-worker.lenny-paz123.workers.dev/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, subject, message })
+  })
+  .then(res => {
+    if (res.ok) {
+      showCustomAlert(`Thanks for your submission, ${name}! I'll get back to you soon.`, "success");
+      event.target.reset();
+    } else {
+      showCustomAlert("Something went wrong. Please try again.", "error");
     }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    showCustomAlert("There was a network error. Please try again later.", "error");
+  });
+}
+
+// Analytics & Visitor Tracking - Simplified
+class VisitorAnalytics {
+  constructor() {
+    this.sessionId = this.generateSessionId();
+    this.startTime = Date.now();
+    this.pageViews = {};
+    this.events = [];
+    this.isActive = true;
+    this.init();
+  }
+
+  generateSessionId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  }
+
+  init() {
+    this.setupActivityTracking();
+    this.setupVisibilityTracking();
+    setInterval(() => this.sendAnalytics(), 30000);
+    window.addEventListener('beforeunload', () => this.sendAnalytics(true));
+  }
+
+  setupActivityTracking() {
+    let lastActivity = Date.now();
+    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+      document.addEventListener(event, () => {
+        lastActivity = Date.now();
+        this.isActive = true;
+      }, { passive: true });
+    });
+    
+    setInterval(() => {
+      if (Date.now() - lastActivity > 30000) {
+        this.isActive = false;
+      }
+    }, 30000);
+  }
+
+  setupVisibilityTracking() {
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.trackEvent('page_blur');
+      } else {
+        this.trackEvent('page_focus');
+      }
+    });
+  }
+
+  trackPageView(pageId) {
+    const now = Date.now();
+    if (this.currentPage && this.pageStartTime) {
+      const timeSpent = now - this.pageStartTime;
+      this.pageViews[this.currentPage] = (this.pageViews[this.currentPage] || 0) + timeSpent;
+    }
+    this.currentPage = pageId;
+    this.pageStartTime = now;
+    this.trackEvent('page_view', { page: pageId });
+  }
+
+  trackEvent(eventName, data = {}) {
+    this.events.push({ event: eventName, timestamp: Date.now(), data });
+    // Limit events array size
+    if (this.events.length > 100) {
+      this.events = this.events.slice(-50);
+    }
+  }
+
+  getEngagementMetrics() {
+    const totalTime = Date.now() - this.startTime;
+    const activePages = Object.keys(this.pageViews).length;
+    const averageTimePerPage = activePages > 0 ? Object.values(this.pageViews).reduce((a, b) => a + b, 0) / activePages : 0;
+
+    return {
+      sessionId: this.sessionId,
+      totalSessionTime: totalTime,
+      activePages: activePages,
+      averageTimePerPage: Math.round(averageTimePerPage / 1000),
+      totalEvents: this.events.length,
+      isActive: this.isActive,
+      userAgent: navigator.userAgent,
+      referrer: document.referrer,
+      screenResolution: `${screen.width}x${screen.height}`,
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  async sendAnalytics(final = false) {
+    const metrics = this.getEngagementMetrics();
+    if (!final && !this.isActive) return;
+
+    try {
+      await fetch('https://ir-analytics.lenny-paz123.workers.dev/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'analytics',
+          metrics: { ...metrics, isActive: final ? false : this.isActive },
+          events: this.events.slice(-50)
+        })
+      });
+      this.events = [];
+    } catch (error) {
+      console.log('Analytics send failed:', error);
+    }
+  }
+}
+
+let analytics;
+function trackEvent(eventName, data = {}) {
+  if (analytics) {
+    analytics.trackEvent(eventName, data);
+  }
+}
+
+// Custom alert system
+function showCustomAlert(message, type = "success") {
+  // Remove existing alerts
+  const existingAlert = document.querySelector('.custom-alert');
+  if (existingAlert) existingAlert.remove();
+
+  const alert = document.createElement('div');
+  alert.className = `custom-alert custom-alert-${type}`;
+  alert.innerHTML = `
+    <div class="custom-alert-content">
+      <span class="custom-alert-icon">${type === 'success' ? '✓' : '⚠'}</span>
+      <span class="custom-alert-message">${message}</span>
+      <button class="custom-alert-close" onclick="this.parentElement.parentElement.remove()">×</button>
+    </div>
   `;
-  document.head.appendChild(style);
 
-	  function showPage(pageId, event = {}, push = true) {
-		  // Hide all pages
-		  const pages = document.querySelectorAll('.page');
-		  pages.forEach(page => {
-			page.classList.remove('active');
-		  });
+  document.body.appendChild(alert);
 
-		  // Show selected page
-		  const selectedPage = document.getElementById(pageId);
-			  if (selectedPage) {
-				selectedPage.style.opacity = 0;
-				setTimeout(() => {
-				  selectedPage.classList.add('active');
-				  selectedPage.style.opacity = 1;
-				}, 10);
-				selectedPage.classList.add('active');
-			  }
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (alert.parentNode) {
+      alert.style.opacity = '0';
+      setTimeout(() => alert.remove(), 300);
+    }
+  }, 5000);
+}
 
-		  // Update navigation styling
-		  const navLinks = document.querySelectorAll('.nav-link');
-			  navLinks.forEach(link => {
-				link.classList.remove('active');
-			  });
-		  if (event?.target) {
-			event.target.classList.add('active');
-		  }
+// Mobile menu functions
+function toggleMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.mobile-overlay');
 
-		  // Scroll to top
-		  window.scrollTo(0, 0);
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
 
-		  // Push to browser history
-		  if (push) {
-			history.pushState({ pageId }, '', `#${pageId}`);
-		  }
-		  if (analytics) {
-			analytics.trackPageView(pageId);
-		  }
-	  }
+  // Prevent body scroll when menu is open
+  document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
 
-	  // Back/Forward button handling
-	  window.addEventListener('popstate', (e) => {
-		const pageId = e.state?.pageId || 'home';
-		const navLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
-		if (navLink) {
-		  showPage(pageId, { target: navLink }, false);
-		}
-	  });
+  trackEvent('mobile_menu', { action: sidebar.classList.contains('open') ? 'open' : 'close' });
+}
 
+function closeMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.mobile-overlay');
+
+  sidebar.classList.remove('open');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Page navigation - FIXED
+function showPage(pageId, event = {}, push = true) {
+  // Hide all pages
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(page => {
+    page.classList.remove('active');
+  });
+
+  // Show selected page
+  const selectedPage = document.getElementById(pageId);
+  if (selectedPage) {
+    selectedPage.classList.add('active');
+  }
+
+  // Update navigation styling
+  const navLinks = document.querySelectorAll('.nav-link');
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+  });
+
+  if (event?.target) {
+    event.target.classList.add('active');
+  }
+
+  // Scroll to top
+  window.scrollTo(0, 0);
+
+  // Push to browser history
+  if (push && history.pushState) {
+    history.pushState({ pageId }, '', `#${pageId}`);
+  }
+
+  // Track page view
+  if (analytics) {
+    analytics.trackPageView(pageId);
+  }
+
+  // Close mobile menu
+  closeMobileMenu();
+}
+
+// Konami code easter egg
+const konamiCode = [
+  "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+  "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+  "KeyB", "KeyA"
+];
+let keySequence = [];
+
+function handleKonamiCode(e) {
+  keySequence.push(e.code);
+  keySequence = keySequence.slice(-konamiCode.length);
+
+  if (keySequence.join(',') === konamiCode.join(',')) {
+    launchEmojiConfetti();
+    trackEvent('konami_code', { activated: true });
+  }
+}
+
+function launchEmojiConfetti() {
+  const emojis = ["🎉", "✨", "🥳", "🎊", "💫", "🌟"];
+  const count = 30;
+
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const confetti = document.createElement("div");
+      confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      confetti.style.cssText = `
+        position: fixed;
+        left: ${Math.random() * 100}vw;
+        top: -2rem;
+        font-size: ${Math.random() * 20 + 20}px;
+        animation: fall ${Math.random() * 3 + 2}s ease-out forwards;
+        z-index: 9999;
+        pointer-events: none;
+      `;
+      document.body.appendChild(confetti);
+
+      setTimeout(() => confetti.remove(), 5000);
+    }, i * 100);
+  }
+}
+
+// Main initialization
+document.addEventListener('DOMContentLoaded', () => {
+  // Load theme first
+  loadTheme();
+
+  // Initialize analytics
+  analytics = new VisitorAnalytics();
+
+  // Handle initial page load
+  const hash = window.location.hash.replace('#', '') || 'home';
+  const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
+  if (navLink) {
+    showPage(hash, { target: navLink }, false);
+  }
+
+  // Track form interactions
+  document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
+    input.addEventListener('focus', () => trackEvent('form_field_focus', { field: input.id }));
+    input.addEventListener('blur', () => trackEvent('form_field_blur', { field: input.id }));
+  });
+
+  // Track external link clicks
+  document.querySelectorAll('a[href^="http"]').forEach(link => {
+    link.addEventListener('click', () => trackEvent('external_link_click', { url: link.href }));
+  });
+
+  // Track project interactions
+  document.querySelectorAll('.project-card').forEach(card => {
+    const projectName = card.dataset.project;
+    card.addEventListener('mouseenter', () => trackEvent('project_hover', { project: projectName }));
+    card.addEventListener('click', () => trackEvent('project_click', { project: projectName }));
+  });
+
+  // Setup konami code
+  document.addEventListener('keydown', handleKonamiCode);
+
+  // Close mobile menu when clicking nav links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+  });
+});
+
+// Back/Forward button handling
+window.addEventListener('popstate', (e) => {
+  const pageId = e.state?.pageId || window.location.hash.replace('#', '') || 'home';
+  const navLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
+  if (navLink) {
+    showPage(pageId, { target: navLink }, false);
+  }
+});
 </script>
 </body>
 </html>
