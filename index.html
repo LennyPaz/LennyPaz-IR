@@ -398,7 +398,50 @@ body {
   padding: 30px;
 }
 
-/* Project cards - Fixed hover flickering */
+/* Project image container - Fixed dimensions to prevent flickering */
+.project-image {
+  background-color: #edf2f7;
+  height: 120px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a0aec0;
+  font-size: 12px;
+  overflow: hidden;
+  position: relative;
+  /* Prevent any layout shifts */
+  flex-shrink: 0;
+  /* Ensure stable hover area regardless of content */
+  box-sizing: border-box;
+}
+
+.project-image img {
+  /* Fixed dimensions to prevent layout shifts */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Prevent image from interfering with hover events */
+  pointer-events: none;
+  /* Stable transform origin */
+  transform-origin: center center;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Ensure image doesn't cause reflow */
+  display: block;
+  /* Force GPU layer */
+  will-change: transform;
+  backface-visibility: hidden;
+  /* Prevent subpixel rendering issues */
+  transform: translateZ(0) scale(1);
+}
+
+.project-card:hover .project-image img {
+  /* Use scale instead of changing dimensions */
+  transform: translateZ(0) scale(1.08);
+}
+
+/* Ensure project card dimensions are fixed */
 .project-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -407,116 +450,102 @@ body {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  /* Fixed height to prevent layout shifts */
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  /* Force GPU acceleration */
   will-change: transform;
-  /* Ensure stable hover area */
   transform: translateZ(0);
+  /* Prevent margin collapse */
+  contain: layout style paint;
 }
 
 .project-card:hover {
+  /* Only transform, don't change any dimensions */
   transform: translateY(-8px) translateZ(0);
   box-shadow: 0 12px 35px rgba(66, 153, 225, 0.2);
 }
 
-/* Add subtle animation on initial load */
-.project-card {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px) translateZ(0);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) translateZ(0);
-  }
-}
-
-/* Stagger animation for multiple cards */
-.project-card:nth-child(1) { animation-delay: 0.1s; }
-.project-card:nth-child(2) { animation-delay: 0.2s; }
-.project-card:nth-child(3) { animation-delay: 0.3s; }
-
-.project-image {
-  background-color: #edf2f7;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #a0aec0;
-  font-size: 12px;
-  overflow: hidden;
-  position: relative;
-  /* Prevent pointer events on child elements during transition */
-  pointer-events: auto;
-}
-
-.project-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Prevent image from interfering with hover events */
-  pointer-events: none;
-  will-change: transform;
-}
-
-.project-card:hover .project-image img {
-  transform: scale(1.08);
-}
-
-/* Add loading state for images */
-.project-image img[src=""] {
-  opacity: 0;
-}
-
-.project-image img {
-  opacity: 1;
-  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Enhanced project content animations */
+/* Ensure project content area is stable */
 .project-content {
-  transition: transform 0.3s ease;
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* Prevent content from affecting hover area */
   position: relative;
   z-index: 1;
+  /* Fixed layout */
+  min-height: 180px;
 }
 
-.project-card:hover .project-content {
-  transform: translateY(-2px);
+/* Fix project title and description layout */
+.project-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-style: italic;
+  /* Prevent text overflow from affecting layout */
+  line-height: 1.3;
+  min-height: 1.3em;
 }
 
-/* Improve project title link interaction */
-.project-title a {
-  position: relative;
-  display: inline-block;
+.project-description {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 15px;
+  flex: 1;
+  /* Prevent text from affecting hover boundaries */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
-.project-title a::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background-color: var(--accent-primary);
-  transition: width 0.3s ease;
-}
-
-.project-title a:hover::after {
-  width: 100%;
-}
-
-/* Improve tag hover effects */
+/* Ensure tags don't affect layout */
 .project-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-right: 6px;
+  margin-bottom: 4px;
   transition: all 0.2s ease;
   cursor: default;
+  /* Prevent layout shifts */
+  white-space: nowrap;
 }
 
-.project-tag:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Force consistent grid item sizes */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  background-color: var(--bg-primary);
+  padding: 30px;
+  /* Ensure grid items are equal height */
+  align-items: stretch;
+}
+
+/* Responsive adjustments that maintain aspect ratios */
+@media (max-width: 768px) {
+  .project-card {
+    min-height: 280px;
+  }
+  
+  .project-content {
+    min-height: 160px;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
 }
 
 .project-content {
@@ -814,7 +843,6 @@ body {
   z-index: 1000;
   background: var(--bg-card);
   border: 2px solid var(--border-color);
-
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -854,7 +882,7 @@ body {
   margin: 15px auto -25px auto;
 }
 
-/* Image preview popup */
+/* Image preview popup - Enhanced for different image sizes */
 #image-preview-popup {
   display: none;
   position: fixed;
@@ -868,18 +896,55 @@ body {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
   opacity: 0;
   transition: opacity 0.3s ease;
+  /* Prevent layout shifts */
+  overflow: hidden;
+  /* Center content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Background for better contrast */
+  background: white;
+  padding: 4px;
 }
 
 #image-preview-popup.show {
   opacity: 1;
+  display: flex;
 }
 
 #image-preview-popup img {
-  width: auto;
   max-width: 100%;
   max-height: 100%;
+  width: auto;
+  height: auto;
   display: block;
-  border-radius: 8px;
+  border-radius: 4px;
+  /* Prevent image distortion */
+  object-fit: contain;
+  /* Center the image */
+  margin: auto;
+}
+
+/* Dark mode adjustments for preview */
+[data-theme="dark"] #image-preview-popup {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+}
+
+/* Loading state for preview images */
+#image-preview-popup::before {
+  content: 'Loading...';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-muted);
+  font-size: 14px;
+  z-index: -1;
+}
+
+#image-preview-popup:has(img)::before {
+  display: none;
 }
 
 /* Alert system */
@@ -1655,10 +1720,11 @@ function loadTheme() {
   }
 }
 
-// Image preview functions - Fixed flickering
+// Image preview functions - Enhanced stability for different image sizes
 let previewTimeout;
 let currentPreview = null;
 let isPreviewVisible = false;
+let previewElement = null;
 
 function showPreview(event, imageUrl) {
   // Prevent multiple calls for the same image
@@ -1671,21 +1737,54 @@ function showPreview(event, imageUrl) {
   
   const popup = document.getElementById('image-preview-popup');
   
-  // Don't reload if it's the same image
-  if (popup.querySelector('img')?.src !== imageUrl) {
-    popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
+  // Create or update image element
+  if (!previewElement || previewElement.src !== imageUrl) {
+    previewElement = new Image();
+    previewElement.onload = function() {
+      // Only show preview if we're still supposed to show this image
+      if (currentPreview === imageUrl) {
+        popup.innerHTML = '';
+        popup.appendChild(this);
+        
+        if (!isPreviewVisible) {
+          popup.style.display = 'block';
+          requestAnimationFrame(() => {
+            popup.classList.add('show');
+            isPreviewVisible = true;
+          });
+        }
+      }
+    };
+    
+    previewElement.onerror = function() {
+      console.log('Failed to load preview image:', imageUrl);
+      hidePreview();
+    };
+    
+    previewElement.src = imageUrl;
+    previewElement.alt = 'Full Preview';
+    previewElement.style.cssText = `
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    `;
+  } else {
+    // Image already loaded, show immediately
+    if (!isPreviewVisible) {
+      popup.style.display = 'block';
+      requestAnimationFrame(() => {
+        popup.classList.add('show');
+        isPreviewVisible = true;
+      });
+    }
   }
-  
-  popup.style.display = 'block';
-  // Use requestAnimationFrame for smooth animation
-  requestAnimationFrame(() => {
-    popup.classList.add('show');
-    isPreviewVisible = true;
-  });
 }
 
 function hidePreview() {
-  // Add a longer delay to prevent flickering
+  // Longer delay to prevent flickering on larger images
   previewTimeout = setTimeout(() => {
     const popup = document.getElementById('image-preview-popup');
     popup.classList.remove('show');
@@ -1696,9 +1795,10 @@ function hidePreview() {
       if (!isPreviewVisible) {
         popup.style.display = 'none';
         popup.innerHTML = '';
+        previewElement = null;
       }
     }, 300);
-  }, 200); // Increased delay
+  }, 300); // Increased delay for stability
 }
 
 // Form handling
