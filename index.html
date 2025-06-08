@@ -1772,27 +1772,8 @@ class VisitorAnalytics {
   }
 
   trackEvent(eventName, data = {}) {
-    // Prevent duplicate events within cooldown period
-    const eventKey = `${eventName}_${JSON.stringify(data)}`;
-    const now = Date.now();
-    const cooldownPeriod = this.getCooldownPeriod(eventName);
-    
-    if (this.eventCooldowns.has(eventKey)) {
-      const lastEventTime = this.eventCooldowns.get(eventKey);
-      if (now - lastEventTime < cooldownPeriod) {
-        return; // Skip this event, it's too soon
-      }
-    }
-    
-    this.eventCooldowns.set(eventKey, now);
-    this.events.push({ event: eventName, timestamp: now, data });
-    
-    // Clean up old cooldown entries
-    for (const [key, timestamp] of this.eventCooldowns.entries()) {
-      if (now - timestamp > 60000) { // Remove entries older than 1 minute
-        this.eventCooldowns.delete(key);
-      }
-    }
+    // Simple tracking - no cooldowns since we fixed the flickering
+    this.events.push({ event: eventName, timestamp: Date.now(), data });
     
     // Limit events array size
     if (this.events.length > 100) {
@@ -2036,40 +2017,18 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', () => trackEvent('external_link_click', { url: link.href }));
   });
 
-  // Track project interactions - Fixed to prevent multiple rapid events
+  // Track project interactions - Simple and reliable tracking
   document.querySelectorAll('.project-card').forEach(card => {
     const projectName = card.dataset.project;
-    let hoverTimeout;
-    let isHovering = false;
     
-    // Use mouseenter/mouseleave instead of hover for better control
+    // Simple hover tracking - fires every time
     card.addEventListener('mouseenter', () => {
-      if (!isHovering) {
-        isHovering = true;
-        clearTimeout(hoverTimeout);
-        
-        // Debounce the hover event
-        hoverTimeout = setTimeout(() => {
-          if (isHovering) { // Only track if still hovering after delay
-            trackEvent('project_hover', { project: projectName });
-          }
-        }, 300); // 300ms delay to prevent accidental hovers
-      }
+      trackEvent('project_hover', { project: projectName });
     });
     
-    card.addEventListener('mouseleave', () => {
-      isHovering = false;
-      clearTimeout(hoverTimeout);
-    });
-    
-    // Track clicks with debouncing
-    let lastClickTime = 0;
-    card.addEventListener('click', (e) => {
-      const now = Date.now();
-      if (now - lastClickTime > 1000) { // Prevent rapid clicks
-        lastClickTime = now;
-        trackEvent('project_click', { project: projectName });
-      }
+    // Click tracking
+    card.addEventListener('click', () => {
+      trackEvent('project_click', { project: projectName });
     });
   });
 
