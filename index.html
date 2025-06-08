@@ -398,20 +398,45 @@ body {
   padding: 30px;
 }
 
-/* Project cards */
+/* Project cards - Fixed hover flickering */
 .project-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  will-change: transform;
+  /* Ensure stable hover area */
+  transform: translateZ(0);
 }
 
 .project-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 25px rgba(66, 153, 225, 0.15);
+  transform: translateY(-8px) translateZ(0);
+  box-shadow: 0 12px 35px rgba(66, 153, 225, 0.2);
 }
+
+/* Add subtle animation on initial load */
+.project-card {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+/* Stagger animation for multiple cards */
+.project-card:nth-child(1) { animation-delay: 0.1s; }
+.project-card:nth-child(2) { animation-delay: 0.2s; }
+.project-card:nth-child(3) { animation-delay: 0.3s; }
 
 .project-image {
   background-color: #edf2f7;
@@ -423,17 +448,75 @@ body {
   font-size: 12px;
   overflow: hidden;
   position: relative;
+  /* Prevent pointer events on child elements during transition */
+  pointer-events: auto;
 }
 
 .project-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Prevent image from interfering with hover events */
+  pointer-events: none;
+  will-change: transform;
 }
 
 .project-card:hover .project-image img {
-  transform: scale(1.05);
+  transform: scale(1.08);
+}
+
+/* Add loading state for images */
+.project-image img[src=""] {
+  opacity: 0;
+}
+
+.project-image img {
+  opacity: 1;
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced project content animations */
+.project-content {
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.project-card:hover .project-content {
+  transform: translateY(-2px);
+}
+
+/* Improve project title link interaction */
+.project-title a {
+  position: relative;
+  display: inline-block;
+}
+
+.project-title a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--accent-primary);
+  transition: width 0.3s ease;
+}
+
+.project-title a:hover::after {
+  width: 100%;
+}
+
+/* Improve tag hover effects */
+.project-tag {
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.project-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .project-content {
@@ -731,6 +814,7 @@ body {
   z-index: 1000;
   background: var(--bg-card);
   border: 2px solid var(--border-color);
+
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -1125,7 +1209,8 @@ body {
                  onmouseleave="hidePreview()">
               <img class="preview-thumb" 
                    src="../Web Project Images/IR Web.png" 
-                   alt="Interactive Resume Website screenshot"/>
+                   alt="Interactive Resume Website screenshot"
+                   loading="lazy"/>
             </div>
             <div class="project-content">
               <h3 class="project-title">
@@ -1147,7 +1232,8 @@ body {
                  onmouseleave="hidePreview()">
               <img class="preview-thumb" 
                    src="../Web Project Images/IR SQL.png" 
-                   alt="Database Management System screenshot"/>
+                   alt="Database Management System screenshot"
+                   loading="lazy"/>
             </div>
             <div class="project-content">
               <h3 class="project-title">Database Management System</h3>
@@ -1165,7 +1251,8 @@ body {
                  onmouseleave="hidePreview()">
               <img class="preview-thumb" 
                    src="../Web Project Images/IR Wire.png" 
-                   alt="All American Inc. Wireframe screenshot"/>
+                   alt="All American Inc. Wireframe screenshot"
+                   loading="lazy"/>
             </div>
             <div class="project-content">
               <h3 class="project-title">
@@ -1568,26 +1655,50 @@ function loadTheme() {
   }
 }
 
-// Image preview functions
+// Image preview functions - Fixed flickering
 let previewTimeout;
+let currentPreview = null;
+let isPreviewVisible = false;
+
 function showPreview(event, imageUrl) {
+  // Prevent multiple calls for the same image
+  if (currentPreview === imageUrl && isPreviewVisible) {
+    return;
+  }
+  
   clearTimeout(previewTimeout);
+  currentPreview = imageUrl;
+  
   const popup = document.getElementById('image-preview-popup');
   
-  popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
+  // Don't reload if it's the same image
+  if (popup.querySelector('img')?.src !== imageUrl) {
+    popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
+  }
+  
   popup.style.display = 'block';
-  popup.classList.add('show');
+  // Use requestAnimationFrame for smooth animation
+  requestAnimationFrame(() => {
+    popup.classList.add('show');
+    isPreviewVisible = true;
+  });
 }
 
 function hidePreview() {
+  // Add a longer delay to prevent flickering
   previewTimeout = setTimeout(() => {
     const popup = document.getElementById('image-preview-popup');
     popup.classList.remove('show');
+    isPreviewVisible = false;
+    currentPreview = null;
+    
     setTimeout(() => {
-      popup.style.display = 'none';
-      popup.innerHTML = '';
+      if (!isPreviewVisible) {
+        popup.style.display = 'none';
+        popup.innerHTML = '';
+      }
     }, 300);
-  }, 100);
+  }, 200); // Increased delay
 }
 
 // Form handling
@@ -1642,7 +1753,7 @@ function handleSubmit(event) {
   });
 }
 
-// Analytics & Visitor Tracking - Simplified
+// Analytics & Visitor Tracking - Fixed event throttling
 class VisitorAnalytics {
   constructor() {
     this.sessionId = this.generateSessionId();
@@ -1650,6 +1761,7 @@ class VisitorAnalytics {
     this.pageViews = {};
     this.events = [];
     this.isActive = true;
+    this.eventCooldowns = new Map(); // Prevent rapid duplicate events
     this.init();
   }
 
@@ -1667,10 +1779,10 @@ class VisitorAnalytics {
   setupActivityTracking() {
     let lastActivity = Date.now();
     ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
-      document.addEventListener(event, () => {
+      document.addEventListener(event, this.throttle(() => {
         lastActivity = Date.now();
         this.isActive = true;
-      }, { passive: true });
+      }, 1000), { passive: true });
     });
     
     setInterval(() => {
@@ -1702,11 +1814,62 @@ class VisitorAnalytics {
   }
 
   trackEvent(eventName, data = {}) {
-    this.events.push({ event: eventName, timestamp: Date.now(), data });
+    // Prevent duplicate events within cooldown period
+    const eventKey = `${eventName}_${JSON.stringify(data)}`;
+    const now = Date.now();
+    const cooldownPeriod = this.getCooldownPeriod(eventName);
+    
+    if (this.eventCooldowns.has(eventKey)) {
+      const lastEventTime = this.eventCooldowns.get(eventKey);
+      if (now - lastEventTime < cooldownPeriod) {
+        return; // Skip this event, it's too soon
+      }
+    }
+    
+    this.eventCooldowns.set(eventKey, now);
+    this.events.push({ event: eventName, timestamp: now, data });
+    
+    // Clean up old cooldown entries
+    for (const [key, timestamp] of this.eventCooldowns.entries()) {
+      if (now - timestamp > 60000) { // Remove entries older than 1 minute
+        this.eventCooldowns.delete(key);
+      }
+    }
+    
     // Limit events array size
     if (this.events.length > 100) {
       this.events = this.events.slice(-50);
     }
+  }
+
+  getCooldownPeriod(eventName) {
+    // Different cooldown periods for different event types
+    const cooldowns = {
+      'project_hover': 2000,    // 2 seconds for project hovers
+      'project_click': 1000,    // 1 second for clicks
+      'form_field_focus': 500,  // 0.5 seconds for form events
+      'form_field_blur': 500,
+      'theme_toggle': 1000,
+      'mobile_menu': 500,
+      'external_link_click': 1000,
+      'page_view': 2000,
+      'page_blur': 1000,
+      'page_focus': 1000
+    };
+    
+    return cooldowns[eventName] || 1000; // Default 1 second
+  }
+
+  throttle(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
   }
 
   getEngagementMetrics() {
@@ -1915,11 +2078,41 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', () => trackEvent('external_link_click', { url: link.href }));
   });
 
-  // Track project interactions
+  // Track project interactions - Fixed to prevent multiple rapid events
   document.querySelectorAll('.project-card').forEach(card => {
     const projectName = card.dataset.project;
-    card.addEventListener('mouseenter', () => trackEvent('project_hover', { project: projectName }));
-    card.addEventListener('click', () => trackEvent('project_click', { project: projectName }));
+    let hoverTimeout;
+    let isHovering = false;
+    
+    // Use mouseenter/mouseleave instead of hover for better control
+    card.addEventListener('mouseenter', () => {
+      if (!isHovering) {
+        isHovering = true;
+        clearTimeout(hoverTimeout);
+        
+        // Debounce the hover event
+        hoverTimeout = setTimeout(() => {
+          if (isHovering) { // Only track if still hovering after delay
+            trackEvent('project_hover', { project: projectName });
+          }
+        }, 300); // 300ms delay to prevent accidental hovers
+      }
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      isHovering = false;
+      clearTimeout(hoverTimeout);
+    });
+    
+    // Track clicks with debouncing
+    let lastClickTime = 0;
+    card.addEventListener('click', (e) => {
+      const now = Date.now();
+      if (now - lastClickTime > 1000) { // Prevent rapid clicks
+        lastClickTime = now;
+        trackEvent('project_click', { project: projectName });
+      }
+    });
   });
 
   // Setup konami code
