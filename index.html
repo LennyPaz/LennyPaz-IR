@@ -450,14 +450,27 @@ body {
   font-style: italic;
 }
 
+/* Make project title links more obvious */
 .project-title a {
-  color: inherit;
+  color: var(--accent-primary);
   text-decoration: none;
   transition: color 0.3s ease;
+  position: relative;
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 2px;
 }
 
 .project-title a:hover {
-  color: var(--accent-primary);
+  color: var(--accent-secondary);
+  border-bottom-color: var(--accent-secondary);
+}
+
+/* Add external link icon for clarity */
+.project-title a[href^="http"]::after {
+  content: ' ↗';
+  font-size: 12px;
+  opacity: 0.7;
+  margin-left: 4px;
 }
 
 .project-description {
@@ -820,10 +833,9 @@ body {
   margin: 15px auto -25px auto;
 }
 
-/* Image preview popup - Simplified */
+/* Image preview popup - No animations */
 #image-preview-popup {
   display: none;
-
   position: fixed;
   top: 80px;
   left: 50%;
@@ -834,11 +846,7 @@ body {
   max-height: 70vh;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
   opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-#image-preview-popup.show {
-  opacity: 1;
+  /* Remove all transitions that cause flickering */
 }
 
 #image-preview-popup img {
@@ -1034,6 +1042,7 @@ body {
   }
 }
 
+
 @media (min-width: 769px) {
   .mobile-menu-btn {
     display: none;
@@ -1151,7 +1160,6 @@ body {
         </div>
         <div class="content-card">
           <div class="card-header">
-
             <h2 class="card-title">Key Stats</h2>
           </div>
           <div class="card-body">
@@ -1172,7 +1180,9 @@ body {
         <div class="projects-grid">
           <!-- Project 1 -->
           <article class="project-card" data-project="IR Website">
-            <div class="project-image">
+            <div class="project-image" 
+                 onmouseenter="showPreview(event, '../Web Project Images/IR Web.png')" 
+                 onmouseleave="hidePreview()">
               <img class="preview-thumb" 
                    src="../Web Project Images/IR Web.png" 
                    alt="Interactive Resume Website screenshot"
@@ -1193,7 +1203,9 @@ body {
 
           <!-- Project 2 -->
           <article class="project-card" data-project="DBMS SQL">
-            <div class="project-image">
+            <div class="project-image" 
+                 onmouseenter="showPreview(event, '../Web Project Images/IR SQL.png')" 
+                 onmouseleave="hidePreview()">
               <img class="preview-thumb" 
                    src="../Web Project Images/IR SQL.png" 
                    alt="Database Management System screenshot"
@@ -1210,7 +1222,9 @@ body {
 
           <!-- Project 3 -->
           <article class="project-card" data-project="Wireframe">
-            <div class="project-image">
+            <div class="project-image" 
+                 onmouseenter="showPreview(event, '../Web Project Images/IR Wire.png')" 
+                 onmouseleave="hidePreview()">
               <img class="preview-thumb" 
                    src="../Web Project Images/IR Wire.png" 
                    alt="All American Inc. Wireframe screenshot"
@@ -1617,7 +1631,7 @@ function loadTheme() {
   }
 }
 
-// Image preview functions - Simple approach to prevent flickering
+// Image preview functions - No animations, instant show/hide
 let previewTimeout;
 let isShowingPreview = false;
 
@@ -1625,33 +1639,24 @@ function showPreview(event, imageUrl) {
   // Clear any pending hide timeout
   clearTimeout(previewTimeout);
   
-  // If already showing this preview, don't do anything
-  if (isShowingPreview) {
-    return;
-  }
-  
-  isShowingPreview = true;
   const popup = document.getElementById('image-preview-popup');
   
-  // Simple approach - just set content and show
+  // Instant show without animations
   popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
   popup.style.display = 'block';
-  popup.classList.add('show');
+  popup.style.opacity = '1';
+  isShowingPreview = true;
 }
 
 function hidePreview() {
-  // Use a longer timeout to prevent rapid show/hide cycles
+  // Longer timeout to prevent accidental hiding
   previewTimeout = setTimeout(() => {
     const popup = document.getElementById('image-preview-popup');
-    popup.classList.remove('show');
+    popup.style.display = 'none';
+    popup.style.opacity = '0';
+    popup.innerHTML = '';
     isShowingPreview = false;
-    
-    // Hide after animation completes
-    setTimeout(() => {
-      popup.style.display = 'none';
-      popup.innerHTML = '';
-    }, 300);
-  }, 500); // Longer timeout to prevent flickering
+  }, 300);
 }
 
 // Form handling
