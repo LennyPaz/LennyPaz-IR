@@ -895,7 +895,7 @@ body {
 /* Mobile enhancements */
 @media (max-width: 768px) {
   body {
-    padding-bottom: 80px; /* Clean, simple spacing */
+    padding-bottom: 20px; /* Reduced since no bottom nav */
     -webkit-overflow-scrolling: touch;
     overflow-x: hidden;
   }
@@ -904,9 +904,10 @@ body {
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 280px;
-    /* Remove conflicting touch-action - let browser handle normally */
     overflow-y: auto;
+    overflow-x: hidden; /* Enforce no horizontal scroll */
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-y; /* Only allow vertical gestures */
   }
   
   .sidebar.open {
@@ -915,17 +916,28 @@ body {
   
   .sidebar.swiping {
     transition: none;
-    /* Disable touch handling during swipe */
-    pointer-events: none;
+    touch-action: none; /* Disable all touch during swipe */
   }
   
-  /* Allow normal scrolling on all sidebar content */
+  /* Make sure all nested elements respect vertical scroll context */
+  .sidebar * {
+    touch-action: pan-y; /* Force vertical pan only */
+    overflow-x: hidden; /* No horizontal overflow anywhere */
+  }
+  
   .sidebar .profile-section,
   .sidebar .nav-menu,
   .sidebar .nav-link,
   .sidebar .contact-info {
-    /* Remove touch-action restrictions - let it scroll naturally */
+    touch-action: pan-y; /* Ensure vertical scrolling works everywhere */
     -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+  }
+  
+  /* Specifically target nav links to ensure they scroll properly */
+  .sidebar .nav-link {
+    touch-action: pan-y !important;
+    pointer-events: auto;
   }
   
   .main-content {
@@ -934,7 +946,7 @@ body {
   
   .page {
     padding: 20px;
-    padding-bottom: 100px;
+    padding-bottom: 40px; /* Reduced padding since no bottom nav */
   }
   
   /* Mobile menu button - Enhanced */
@@ -984,41 +996,7 @@ body {
     visibility: visible;
   }
   
-  /* Bottom Navigation Bar - Clean Sticky Approach */
-  .bottom-nav {
-    position: sticky;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--bg-card);
-    border-top: 1px solid var(--border-color);
-    z-index: 1000;
-    padding: 12px 0 16px 0; /* Restored proper padding */
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
-    transform: translateY(0);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-top: auto; /* Push to bottom */
-    
-    /* Fallback for browsers that don't support sticky well */
-    position: -webkit-sticky;
-    position: sticky;
-  }
-  
-  /* Mobile specific adjustments */
-  @media screen and (max-width: 768px) {
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      padding: 12px 0 20px 0; /* Extra bottom padding for mobile */
-    }
-  }
-  
-  /* Hide bottom nav when sidebar is open */
-  .sidebar.open ~ .main-content .bottom-nav,
-  .bottom-nav.hidden {
-    transform: translateY(100%);
-  }
+  /* Hide bottom nav when sidebar is open - REMOVED SECTION */
   
   .bottom-nav-container {
     display: grid;
@@ -1135,13 +1113,9 @@ body {
   }
 }
 
-/* Hide bottom nav on desktop */
+/* Hide bottom nav on desktop - REMOVED */
 @media (min-width: 769px) {
   .mobile-menu-btn {
-    display: none;
-  }
-  
-  .bottom-nav {
     display: none;
   }
   
@@ -1215,6 +1189,7 @@ body {
       <li class="nav-item"> 
         <a class="nav-link" onclick="showPage('education', event)">Education</a> 
       </li>
+
       <li class="nav-item"> 
         <a class="nav-link" onclick="showPage('experience', event)">Experience</a> 
       </li>
@@ -1242,31 +1217,7 @@ body {
     </div>
   </nav>
   
-  <!-- Bottom Navigation (Mobile Only) -->
-  <nav class="bottom-nav">
-    <div class="bottom-nav-container">
-      <a class="bottom-nav-item active" onclick="showPageFromBottomNav('home', event)">
-        <div class="bottom-nav-icon">🏠</div>
-        <div class="bottom-nav-label">Home</div>
-      </a>
-      <a class="bottom-nav-item" onclick="showPageFromBottomNav('education', event)">
-        <div class="bottom-nav-icon">🎓</div>
-        <div class="bottom-nav-label">Education</div>
-      </a>
-      <a class="bottom-nav-item" onclick="showPageFromBottomNav('experience', event)">
-        <div class="bottom-nav-icon">💼</div>
-        <div class="bottom-nav-label">Experience</div>
-      </a>
-      <a class="bottom-nav-item" onclick="showPageFromBottomNav('technical-skills', event)">
-        <div class="bottom-nav-icon">⚡</div>
-        <div class="bottom-nav-label">Skills</div>
-      </a>
-      <a class="bottom-nav-item" onclick="showPageFromBottomNav('contact', event)">
-        <div class="bottom-nav-icon">📧</div>
-        <div class="bottom-nav-label">Contact</div>
-      </a>
-    </div>
-  </nav>
+  <!-- Bottom Navigation (Mobile Only) - REMOVED -->
   
   <!-- Main Content -->
   <main class="main-content"> 
@@ -1918,12 +1869,6 @@ class MobileNavigation {
     this.menuBtn.classList.add('active');
     document.body.style.overflow = 'hidden';
     
-    // Hide bottom navigation when sidebar opens
-    const bottomNav = document.querySelector('.bottom-nav');
-    if (bottomNav) {
-      bottomNav.classList.add('hidden');
-    }
-    
     // Track swipe open
     if (analytics) {
       analytics.trackEvent('mobile_menu', { action: 'swipe_open' });
@@ -1936,12 +1881,6 @@ class MobileNavigation {
     this.overlay.classList.remove('active');
     this.menuBtn.classList.remove('active');
     document.body.style.overflow = '';
-    
-    // Show bottom navigation when sidebar closes
-    const bottomNav = document.querySelector('.bottom-nav');
-    if (bottomNav) {
-      bottomNav.classList.remove('hidden');
-    }
     
     // Track swipe close
     if (analytics) {
@@ -2117,20 +2056,12 @@ function toggleMobileMenu() {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.mobile-overlay');
     const menuBtn = document.getElementById('mobileMenuBtn');
-    const bottomNav = document.querySelector('.bottom-nav');
 
     sidebar.classList.toggle('open');
     overlay.classList.toggle('active');
     menuBtn.classList.toggle('active');
 
-    // Handle bottom nav visibility
-    if (sidebar.classList.contains('open')) {
-      if (bottomNav) bottomNav.classList.add('hidden');
-      document.body.style.overflow = 'hidden';
-    } else {
-      if (bottomNav) bottomNav.classList.remove('hidden');
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
   }
 }
 
@@ -2142,14 +2073,10 @@ function closeMobileMenu() {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.mobile-overlay');
     const menuBtn = document.getElementById('mobileMenuBtn');
-    const bottomNav = document.querySelector('.bottom-nav');
 
     sidebar.classList.remove('open');
     overlay.classList.remove('active');
     menuBtn.classList.remove('active');
-    if (bottomNav) {
-      bottomNav.classList.remove('hidden');
-    }
     document.body.style.overflow = '';
   }
 }
@@ -2171,6 +2098,7 @@ function handleSubmit(event) {
   let valid = true;
   
   // Reset previous error styles
+
   [nameField, emailField, subjectField, messageField].forEach(field => {
     field.classList.remove('input-error');
   });
