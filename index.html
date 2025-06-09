@@ -904,7 +904,9 @@ body {
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 280px;
-    touch-action: pan-y; /* Allow vertical scrolling */
+    touch-action: manipulation; /* Better touch handling */
+    overflow-y: auto; /* Ensure scrolling works */
+    -webkit-overflow-scrolling: touch; /* Smooth iOS scrolling */
   }
   
   .sidebar.open {
@@ -915,10 +917,24 @@ body {
     transition: none;
   }
   
-  /* Improve sidebar scrolling */
+  /* Improve sidebar scrolling across full width */
+  .sidebar * {
+    touch-action: manipulation; /* Allow all touch interactions */
+  }
+  
+  .sidebar .profile-section,
   .sidebar .nav-menu,
   .sidebar .contact-info {
-    touch-action: pan-y; /* Ensure vertical scrolling works */
+    touch-action: pan-y; /* Ensure vertical scrolling works everywhere */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Make nav links easier to scroll on */
+  .sidebar .nav-link {
+    touch-action: manipulation;
+    -webkit-touch-callout: none; /* Disable callout */
+    -webkit-user-select: none; /* Disable selection */
+    user-select: none;
   }
   
   .main-content {
@@ -977,44 +993,62 @@ body {
     visibility: visible;
   }
   
-  /* Bottom Navigation Bar - Chrome Mobile Fix */
+  /* Bottom Navigation Bar - Chrome Mobile Dynamic Viewport Fix */
   .bottom-nav {
     position: fixed;
-    bottom: 0;
+    bottom: 0 !important; /* Force to absolute bottom */
     left: 0;
     right: 0;
     background: var(--bg-card);
     border-top: 1px solid var(--border-color);
     z-index: 1000;
-    padding: 8px 0;
+    padding: 8px 0 8px 0; /* Remove all padding-bottom variations */
     box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
     transform: translateY(0);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 64px; /* Fixed height */
+    box-sizing: border-box;
     
-    /* Chrome mobile specific fixes */
-    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-    min-height: calc(64px + env(safe-area-inset-bottom, 0px));
+    /* Force Chrome to render at actual bottom */
+    margin: 0;
+    border-bottom: none;
+    
+    /* Chrome mobile dynamic viewport fix */
+    bottom: 0;
+    position: fixed;
   }
   
-  /* Chrome mobile viewport fix */
+  /* Chrome mobile address bar hide/show fix */
   @media screen and (max-width: 768px) {
     .bottom-nav {
+      bottom: 0 !important;
+      position: fixed !important;
+      height: 64px !important;
+      padding-bottom: 8px !important;
+      margin-bottom: 0 !important;
+      
+      /* Force to stick to visual viewport bottom */
+      position: -webkit-sticky;
+      position: sticky;
       bottom: 0;
-      padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
-      /* Force to bottom edge on Chrome mobile */
-      margin-bottom: 0;
-      height: auto;
-      min-height: 64px;
+      
+      /* Fallback for Chrome mobile */
+      position: fixed !important;
+      bottom: env(keyboard-inset-height, 0px) !important;
+    }
+    
+    /* Ensure it stays at bottom when Chrome address bar hides */
+    body {
+      padding-bottom: 64px !important;
     }
   }
   
-  /* Android Chrome specific */
-  @media screen and (max-width: 768px) and (orientation: portrait) {
-    .bottom-nav {
-      bottom: 0;
-      position: fixed;
-      width: 100%;
-      box-sizing: border-box;
+  /* Alternative approach using viewport units */
+  @supports (height: 100dvh) {
+    @media screen and (max-width: 768px) {
+      .bottom-nav {
+        bottom: calc(100vh - 100dvh) !important;
+      }
     }
   }
   
