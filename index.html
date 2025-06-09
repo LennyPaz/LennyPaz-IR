@@ -917,18 +917,11 @@ body {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 280px;
     overflow-y: auto;
-    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    /* Allow both horizontal and vertical gestures */
-    touch-action: pan-x pan-y;
   }
   
   .sidebar.open {
     transform: translateX(0);
-  }
-  
-  .sidebar.swiping {
-    transition: none;
   }
   
   .main-content {
@@ -939,6 +932,47 @@ body {
     padding: 20px;
     padding-bottom: 40px;
   }
+  
+  /* Mobile menu button - clean styling */
+  .mobile-menu-btn {
+    display: block;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 101;
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .mobile-menu-btn:hover {
+    background: var(--accent-secondary);
+  }
+  
+  .mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .mobile-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
   
   /* Mobile menu button - Enhanced */
   .mobile-menu-btn {
@@ -1935,6 +1969,7 @@ function showPreview(event, imageUrl) {
   clearTimeout(previewTimeout);
   
   const popup = document.getElementById('image-preview-popup');
+
   popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
   popup.style.display = 'block';
   popup.style.opacity = '1';
@@ -2031,43 +2066,60 @@ function updateBottomNavigation(pageId) {
 
 // Enhanced mobile menu functions
 function toggleMobileMenu() {
-  if (mobileNav) {
-    mobileNav.toggle();
-    
-    // Track manual toggle
-    if (analytics) {
-      analytics.trackEvent('mobile_menu', { 
-        action: mobileNav.isOpen ? 'close' : 'open',
-        method: 'button'
-      });
-    }
+  console.log('toggleMobileMenu called'); // Debug log
+  
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.mobile-overlay');
+  
+  if (!sidebar || !overlay) {
+    console.error('Sidebar or overlay not found');
+    return;
+  }
+  
+  const isCurrentlyOpen = sidebar.classList.contains('open');
+  console.log('Currently open:', isCurrentlyOpen);
+  
+  if (isCurrentlyOpen) {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    console.log('Closed sidebar');
   } else {
-    // Fallback for non-mobile or if class not initialized
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.mobile-overlay');
-    const menuBtn = document.getElementById('mobileMenuBtn');
-
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('active');
-    menuBtn.classList.toggle('active');
-
-    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    sidebar.classList.add('open');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    console.log('Opened sidebar');
+  }
+  
+  // Update simpleSwipe state if it exists
+  if (simpleSwipe) {
+    simpleSwipe.isOpen = !isCurrentlyOpen;
+  }
+  
+  // Track manual toggle
+  if (typeof analytics !== 'undefined' && analytics) {
+    analytics.trackEvent('mobile_menu', { 
+      action: 'button_toggle',
+      method: 'hamburger'
+    });
   }
 }
 
 function closeMobileMenu() {
-  if (mobileNav) {
-    mobileNav.close();
-  } else {
-    // Fallback
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.mobile-overlay');
-    const menuBtn = document.getElementById('mobileMenuBtn');
+  console.log('closeMobileMenu called'); // Debug log
+  
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.mobile-overlay');
 
+  if (sidebar && overlay) {
     sidebar.classList.remove('open');
     overlay.classList.remove('active');
-    menuBtn.classList.remove('active');
     document.body.style.overflow = '';
+    
+    // Update simpleSwipe state if it exists
+    if (simpleSwipe) {
+      simpleSwipe.isOpen = false;
+    }
   }
 }
 
