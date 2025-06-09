@@ -69,7 +69,7 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar - FIXED positioning issues */
+/* Sidebar - Enhanced for mobile */
 .sidebar {
   width: 320px;
   background-color: var(--sidebar-bg);
@@ -79,6 +79,7 @@ body {
   z-index: 100;
   top: 0;
   left: 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar::-webkit-scrollbar {
@@ -222,7 +223,7 @@ body {
   color: var(--accent-primary);
 }
 
-/* Main content - FIXED margin */
+/* Main content */
 .main-content {
   margin-left: 320px;
   flex: 1;
@@ -398,7 +399,7 @@ body {
   padding: 30px;
 }
 
-/* Project cards - Simplified to prevent flickering */
+/* Project cards */
 .project-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -413,7 +414,6 @@ body {
   box-shadow: 0 8px 25px rgba(66, 153, 225, 0.15);
 }
 
-/* Simple project image - no complex transforms */
 .project-image {
   background-color: #edf2f7;
   height: 120px;
@@ -430,12 +430,6 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Remove all transform animations that cause flickering */
-}
-
-/* Remove hover image animations completely */
-.project-card:hover .project-image img {
-  /* No transform - this was causing the flickering */
 }
 
 .project-content {
@@ -450,7 +444,6 @@ body {
   font-style: italic;
 }
 
-/* Make project title links more obvious */
 .project-title a {
   color: var(--accent-primary);
   text-decoration: none;
@@ -465,60 +458,11 @@ body {
   border-bottom-color: var(--accent-secondary);
 }
 
-/* Add external link icon for clarity */
 .project-title a[href^="http"]::after {
   content: ' ↗';
   font-size: 12px;
   opacity: 0.7;
   margin-left: 4px;
-}
-
-.project-description {
-  color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.4;
-  margin-bottom: 15px;
-}
-
-/* Revert project tags to original size */
-.project-tag {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 10px;
-  font-size: 10px;
-  font-weight: 600;
-  margin-right: 6px;
-  margin-bottom: 4px;
-}
-
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  background-color: var(--bg-primary);
-  padding: 30px;
-}
-
-.project-content {
-  padding: 20px;
-}
-
-.project-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-  font-style: italic;
-}
-
-.project-title a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.project-title a:hover {
-  color: var(--accent-primary);
 }
 
 .project-description {
@@ -786,7 +730,7 @@ body {
   background-color: #fff6f6;
 }
 
-/* Theme toggle - FIXED */
+/* Theme toggle */
 .theme-toggle {
   position: fixed;
   top: 20px;
@@ -833,7 +777,7 @@ body {
   margin: 15px auto -25px auto;
 }
 
-/* Image preview popup - No animations */
+/* Image preview popup */
 #image-preview-popup {
   display: none;
   position: fixed;
@@ -846,7 +790,6 @@ body {
   max-height: 70vh;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
   opacity: 0;
-  /* Remove all transitions that cause flickering */
 }
 
 #image-preview-popup img {
@@ -949,33 +892,25 @@ body {
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
 }
 
-/* Mobile optimizations */
-@media (max-width: 1200px) {
-  .content-row, 
-  .projects-grid, 
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-}
-
-@media (max-width: 1109px) {
-  .sidebar {
-    width: 280px;
-  }
-  .main-content {
-    margin-left: 280px;
-  }
-}
-
+/* Mobile enhancements */
 @media (max-width: 768px) {
+  body {
+    padding-bottom: 80px; /* Space for bottom nav */
+  }
+  
   .sidebar {
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 280px;
+    touch-action: pan-y;
   }
   
   .sidebar.open {
     transform: translateX(0);
+  }
+  
+  .sidebar.swiping {
+    transition: none;
   }
   
   .main-content {
@@ -984,10 +919,11 @@ body {
   
   .page {
     padding: 20px;
+    padding-bottom: 100px; /* Extra space for bottom nav */
   }
   
+  /* Mobile menu button - Enhanced */
   .mobile-menu-btn {
-    display: block;
     position: fixed;
     top: 20px;
     left: 20px;
@@ -996,37 +932,115 @@ body {
     color: white;
     border: none;
     padding: 12px;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 18px;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
   }
   
   .mobile-menu-btn:hover {
     background: var(--accent-secondary);
+    transform: scale(1.05);
   }
   
+  .mobile-menu-btn.active {
+    background: #e53e3e;
+    transform: rotate(90deg);
+  }
+  
+  /* Enhanced overlay with blur effect */
   .mobile-overlay {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
     z-index: 99;
-    transition: opacity 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
   }
   
   .mobile-overlay.active {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Bottom Navigation Bar */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    z-index: 1000;
+    padding: 8px 0;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .bottom-nav-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .bottom-nav-item.active {
+    color: var(--accent-primary);
+  }
+  
+  .bottom-nav-item:hover {
+    color: var(--accent-primary);
+    transform: translateY(-2px);
+  }
+  
+  .bottom-nav-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+    transition: transform 0.2s ease;
+  }
+  
+  .bottom-nav-item.active .bottom-nav-icon {
+    transform: scale(1.1);
+  }
+  
+  .bottom-nav-label {
+    font-size: 9px;
+    text-align: center;
+    line-height: 1.2;
+  }
+  
+  /* Hide desktop elements on mobile */
+  .mobile-menu-btn-desktop {
+    display: none;
   }
   
   .theme-toggle {
-    top: 80px;
+    top: 20px;
     right: 20px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
   }
   
+  /* Adjust content for mobile */
   .content-row {
     grid-template-columns: 1fr;
   }
@@ -1040,12 +1054,79 @@ body {
   .skills-grid {
     grid-template-columns: 1fr;
   }
+  
+  /* Profile section adjustments for mobile */
+  .profile-section {
+    margin: 20px;
+    padding: 30px 15px;
+  }
+  
+  .nav-menu {
+    padding: 20px 30px;
+  }
+  
+  .contact-info {
+    padding: 20px 50px;
+  }
+  
+  /* Swipe indicator */
+  .swipe-indicator {
+    position: fixed;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    background: rgba(66, 153, 225, 0.9);
+    color: white;
+    padding: 8px;
+    border-radius: 50%;
+    z-index: 98;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .swipe-indicator.show {
+    opacity: 1;
+    animation: swipePulse 2s infinite;
+  }
+  
+  @keyframes swipePulse {
+    0%, 100% { transform: translateY(-50%) scale(1); }
+    50% { transform: translateY(-50%) scale(1.1); }
+  }
 }
 
-
+/* Hide bottom nav on desktop */
 @media (min-width: 769px) {
   .mobile-menu-btn {
     display: none;
+  }
+  
+  .bottom-nav {
+    display: none;
+  }
+  
+  .swipe-indicator {
+    display: none;
+  }
+}
+
+/* Tablet optimizations */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .content-row, 
+  .projects-grid, 
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 1109px) and (min-width: 769px) {
+  .sidebar {
+    width: 280px;
+  }
+  .main-content {
+    margin-left: 280px;
   }
 }
 
@@ -1069,14 +1150,15 @@ body {
 </head>
 <body>
 <div class="container"> 
-  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+  <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">☰</button>
   <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+  <div class="swipe-indicator" id="swipeIndicator">→</div>
   <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
     <span id="theme-icon">🌙</span>
   </button>
   
   <!-- Sidebar -->
-  <nav class="sidebar">
+  <nav class="sidebar" id="sidebar">
     <div class="profile-section">
       <div class="profile-photo"> 
         <img src="" alt="Profile Photo" style="display: none;" onload="this.style.display='block'; this.parentNode.innerHTML=this.outerHTML;"> 
@@ -1119,6 +1201,32 @@ body {
       <div class="contact-item">Tallahassee, FL</div>
       <div class="contact-item">(786) 752-0883</div>
       <div class="contact-item contact-email">Lenny.Paz123@gmail.com</div>
+    </div>
+  </nav>
+  
+  <!-- Bottom Navigation (Mobile Only) -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-container">
+      <a class="bottom-nav-item active" onclick="showPageFromBottomNav('home', event)">
+        <div class="bottom-nav-icon">🏠</div>
+        <div class="bottom-nav-label">Home</div>
+      </a>
+      <a class="bottom-nav-item" onclick="showPageFromBottomNav('education', event)">
+        <div class="bottom-nav-icon">🎓</div>
+        <div class="bottom-nav-label">Education</div>
+      </a>
+      <a class="bottom-nav-item" onclick="showPageFromBottomNav('experience', event)">
+        <div class="bottom-nav-icon">💼</div>
+        <div class="bottom-nav-label">Experience</div>
+      </a>
+      <a class="bottom-nav-item" onclick="showPageFromBottomNav('technical-skills', event)">
+        <div class="bottom-nav-icon">⚡</div>
+        <div class="bottom-nav-label">Skills</div>
+      </a>
+      <a class="bottom-nav-item" onclick="showPageFromBottomNav('contact', event)">
+        <div class="bottom-nav-icon">📧</div>
+        <div class="bottom-nav-label">Contact</div>
+      </a>
     </div>
   </nav>
   
@@ -1597,7 +1705,213 @@ body {
 </div>
 
 <script>
-// Theme management - FIXED
+// Enhanced mobile navigation with swipe gestures
+class MobileNavigation {
+  constructor() {
+    this.sidebar = document.getElementById('sidebar');
+    this.overlay = document.querySelector('.mobile-overlay');
+    this.menuBtn = document.getElementById('mobileMenuBtn');
+    this.swipeIndicator = document.getElementById('swipeIndicator');
+    this.isOpen = false;
+    this.isDragging = false;
+    this.startX = 0;
+    this.currentX = 0;
+    this.threshold = 50;
+    this.maxSwipeDistance = 280;
+    
+    this.init();
+  }
+  
+  init() {
+    // Only initialize on mobile
+    if (window.innerWidth <= 768) {
+      this.setupSwipeListeners();
+      this.showSwipeIndicator();
+    }
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        this.cleanup();
+      } else if (window.innerWidth <= 768) {
+        this.setupSwipeListeners();
+        this.showSwipeIndicator();
+      }
+    });
+  }
+  
+  setupSwipeListeners() {
+    // Touch events for swipe gestures
+    document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+    document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
+    document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
+    
+    // Mouse events for desktop testing
+    document.addEventListener('mousedown', this.handleMouseDown.bind(this));
+    document.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    document.addEventListener('mouseup', this.handleMouseUp.bind(this));
+  }
+  
+  cleanup() {
+    document.removeEventListener('touchstart', this.handleTouchStart);
+    document.removeEventListener('touchmove', this.handleTouchMove);
+    document.removeEventListener('touchend', this.handleTouchEnd);
+    document.removeEventListener('mousedown', this.handleMouseDown);
+    document.removeEventListener('mousemove', this.handleMouseMove);
+    document.removeEventListener('mouseup', this.handleMouseUp);
+  }
+  
+  showSwipeIndicator() {
+    // Show swipe indicator for 3 seconds on first visit
+    if (!localStorage.getItem('swipe-tutorial-shown')) {
+      setTimeout(() => {
+        this.swipeIndicator.classList.add('show');
+        setTimeout(() => {
+          this.swipeIndicator.classList.remove('show');
+          localStorage.setItem('swipe-tutorial-shown', 'true');
+        }, 3000);
+      }, 1000);
+    }
+  }
+  
+  handleTouchStart(e) {
+    this.handleStart(e.touches[0].clientX, e.touches[0].clientY);
+  }
+  
+  handleMouseDown(e) {
+    this.handleStart(e.clientX, e.clientY);
+  }
+  
+  handleStart(x, y) {
+    // Only start swipe from left edge or when sidebar is open
+    if ((x < 20 && !this.isOpen) || this.isOpen) {
+      this.isDragging = true;
+      this.startX = x;
+      this.currentX = x;
+      this.sidebar.classList.add('swiping');
+    }
+  }
+  
+  handleTouchMove(e) {
+    if (this.isDragging) {
+      e.preventDefault();
+      this.handleMove(e.touches[0].clientX);
+    }
+  }
+  
+  handleMouseMove(e) {
+    if (this.isDragging) {
+      this.handleMove(e.clientX);
+    }
+  }
+  
+  handleMove(x) {
+    if (!this.isDragging) return;
+    
+    this.currentX = x;
+    const deltaX = this.currentX - this.startX;
+    
+    if (this.isOpen) {
+      // Closing gesture
+      const translateX = Math.max(-this.maxSwipeDistance, Math.min(0, deltaX));
+      this.sidebar.style.transform = `translateX(${translateX}px)`;
+      
+      // Update overlay opacity
+      const progress = Math.abs(translateX) / this.maxSwipeDistance;
+      this.overlay.style.opacity = 1 - progress;
+    } else {
+      // Opening gesture
+      const translateX = Math.max(-this.maxSwipeDistance, Math.min(0, deltaX - this.maxSwipeDistance));
+      this.sidebar.style.transform = `translateX(${translateX}px)`;
+      
+      // Update overlay opacity
+      const progress = (this.maxSwipeDistance + translateX) / this.maxSwipeDistance;
+      this.overlay.style.opacity = progress;
+      if (progress > 0) {
+        this.overlay.classList.add('active');
+      }
+    }
+  }
+  
+  handleTouchEnd(e) {
+    this.handleEnd();
+  }
+  
+  handleMouseUp(e) {
+    this.handleEnd();
+  }
+  
+  handleEnd() {
+    if (!this.isDragging) return;
+    
+    this.isDragging = false;
+    this.sidebar.classList.remove('swiping');
+    
+    const deltaX = this.currentX - this.startX;
+    
+    if (this.isOpen) {
+      // Determine if we should close
+      if (deltaX < -this.threshold) {
+        this.close();
+      } else {
+        this.open();
+      }
+    } else {
+      // Determine if we should open
+      if (deltaX > this.threshold) {
+        this.open();
+      } else {
+        this.close();
+      }
+    }
+    
+    // Reset transform
+    this.sidebar.style.transform = '';
+    this.overlay.style.opacity = '';
+  }
+  
+  open() {
+    this.isOpen = true;
+    this.sidebar.classList.add('open');
+    this.overlay.classList.add('active');
+    this.menuBtn.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Track swipe open
+    if (analytics) {
+      analytics.trackEvent('mobile_menu', { action: 'swipe_open' });
+    }
+  }
+  
+  close() {
+    this.isOpen = false;
+    this.sidebar.classList.remove('open');
+    this.overlay.classList.remove('active');
+    this.menuBtn.classList.remove('active');
+    document.body.style.overflow = '';
+    
+    // Track swipe close
+    if (analytics) {
+      analytics.trackEvent('mobile_menu', { action: 'swipe_close' });
+    }
+  }
+  
+  toggle() {
+    if (this.isOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+}
+
+// Initialize mobile navigation
+let mobileNav;
+if (window.innerWidth <= 768) {
+  mobileNav = new MobileNavigation();
+}
+
+// Theme management
 function toggleTheme() {
   const html = document.documentElement;
   const currentTheme = html.getAttribute('data-theme');
@@ -1631,17 +1945,14 @@ function loadTheme() {
   }
 }
 
-// Image preview functions - No animations, instant show/hide
+// Image preview functions
 let previewTimeout;
 let isShowingPreview = false;
 
 function showPreview(event, imageUrl) {
-  // Clear any pending hide timeout
   clearTimeout(previewTimeout);
   
   const popup = document.getElementById('image-preview-popup');
-  
-  // Instant show without animations
   popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
   popup.style.display = 'block';
   popup.style.opacity = '1';
@@ -1649,7 +1960,6 @@ function showPreview(event, imageUrl) {
 }
 
 function hidePreview() {
-  // Longer timeout to prevent accidental hiding
   previewTimeout = setTimeout(() => {
     const popup = document.getElementById('image-preview-popup');
     popup.style.display = 'none';
@@ -1657,6 +1967,126 @@ function hidePreview() {
     popup.innerHTML = '';
     isShowingPreview = false;
   }, 300);
+}
+
+// Enhanced navigation functions
+function showPage(pageId, event = {}, push = true) {
+  // Hide all pages
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(page => {
+    page.classList.remove('active');
+  });
+
+  // Show selected page
+  const selectedPage = document.getElementById(pageId);
+  if (selectedPage) {
+    selectedPage.classList.add('active');
+  }
+
+  // Update sidebar navigation styling
+  const navLinks = document.querySelectorAll('.nav-link');
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+  });
+
+  if (event?.target) {
+    event.target.classList.add('active');
+  }
+  
+  // Update bottom navigation styling
+  updateBottomNavigation(pageId);
+
+  // Scroll to top
+  window.scrollTo(0, 0);
+
+  // Push to browser history
+  if (push && history.pushState) {
+    history.pushState({ pageId }, '', `#${pageId}`);
+  }
+
+  // Track page view
+  if (analytics) {
+    analytics.trackPageView(pageId);
+  }
+
+  // Close mobile menu with enhanced animation
+  if (window.innerWidth <= 768 && mobileNav) {
+    setTimeout(() => {
+      mobileNav.close();
+    }, 300); // Small delay for better UX
+  }
+}
+
+// Bottom navigation function
+function showPageFromBottomNav(pageId, event) {
+  showPage(pageId, event);
+  
+  // Update sidebar navigation to match
+  const sidebarLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
+  if (sidebarLink) {
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+    });
+    sidebarLink.classList.add('active');
+  }
+  
+  // Track bottom nav usage
+  if (analytics) {
+    analytics.trackEvent('bottom_nav_click', { page: pageId });
+  }
+}
+
+// Update bottom navigation active state
+function updateBottomNavigation(pageId) {
+  const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+  bottomNavItems.forEach(item => {
+    item.classList.remove('active');
+    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(pageId)) {
+      item.classList.add('active');
+    }
+  });
+}
+
+// Enhanced mobile menu functions
+function toggleMobileMenu() {
+  if (mobileNav) {
+    mobileNav.toggle();
+    
+    // Track manual toggle
+    if (analytics) {
+      analytics.trackEvent('mobile_menu', { 
+        action: mobileNav.isOpen ? 'close' : 'open',
+        method: 'button'
+      });
+    }
+  } else {
+    // Fallback for non-mobile or if class not initialized
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.mobile-overlay');
+    const menuBtn = document.getElementById('mobileMenuBtn');
+
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+    menuBtn.classList.toggle('active');
+
+    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+  }
+}
+
+function closeMobileMenu() {
+  if (mobileNav) {
+    mobileNav.close();
+  } else {
+    // Fallback
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.mobile-overlay');
+    const menuBtn = document.getElementById('mobileMenuBtn');
+
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    menuBtn.classList.remove('active');
+    document.body.style.overflow = '';
+  }
 }
 
 // Form handling
@@ -1711,7 +2141,7 @@ function handleSubmit(event) {
   });
 }
 
-// Analytics & Visitor Tracking - Fixed event throttling
+// Analytics & Visitor Tracking
 class VisitorAnalytics {
   constructor() {
     this.sessionId = this.generateSessionId();
@@ -1719,7 +2149,7 @@ class VisitorAnalytics {
     this.pageViews = {};
     this.events = [];
     this.isActive = true;
-    this.eventCooldowns = new Map(); // Prevent rapid duplicate events
+    this.eventCooldowns = new Map();
     this.init();
   }
 
@@ -1772,31 +2202,11 @@ class VisitorAnalytics {
   }
 
   trackEvent(eventName, data = {}) {
-    // Simple tracking - no cooldowns since we fixed the flickering
     this.events.push({ event: eventName, timestamp: Date.now(), data });
     
-    // Limit events array size
     if (this.events.length > 100) {
       this.events = this.events.slice(-50);
     }
-  }
-
-  getCooldownPeriod(eventName) {
-    // Different cooldown periods for different event types
-    const cooldowns = {
-      'project_hover': 2000,    // 2 seconds for project hovers
-      'project_click': 1000,    // 1 second for clicks
-      'form_field_focus': 500,  // 0.5 seconds for form events
-      'form_field_blur': 500,
-      'theme_toggle': 1000,
-      'mobile_menu': 500,
-      'external_link_click': 1000,
-      'page_view': 2000,
-      'page_blur': 1000,
-      'page_focus': 1000
-    };
-    
-    return cooldowns[eventName] || 1000; // Default 1 second
   }
 
   throttle(func, wait) {
@@ -1860,7 +2270,6 @@ function trackEvent(eventName, data = {}) {
 
 // Custom alert system
 function showCustomAlert(message, type = "success") {
-  // Remove existing alerts
   const existingAlert = document.querySelector('.custom-alert');
   if (existingAlert) existingAlert.remove();
 
@@ -1876,77 +2285,12 @@ function showCustomAlert(message, type = "success") {
 
   document.body.appendChild(alert);
 
-  // Auto remove after 5 seconds
   setTimeout(() => {
     if (alert.parentNode) {
       alert.style.opacity = '0';
       setTimeout(() => alert.remove(), 300);
     }
   }, 5000);
-}
-
-// Mobile menu functions
-function toggleMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.querySelector('.mobile-overlay');
-
-  sidebar.classList.toggle('open');
-  overlay.classList.toggle('active');
-
-  // Prevent body scroll when menu is open
-  document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
-
-  trackEvent('mobile_menu', { action: sidebar.classList.contains('open') ? 'open' : 'close' });
-}
-
-function closeMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.querySelector('.mobile-overlay');
-
-  sidebar.classList.remove('open');
-  overlay.classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-// Page navigation - FIXED
-function showPage(pageId, event = {}, push = true) {
-  // Hide all pages
-  const pages = document.querySelectorAll('.page');
-  pages.forEach(page => {
-    page.classList.remove('active');
-  });
-
-  // Show selected page
-  const selectedPage = document.getElementById(pageId);
-  if (selectedPage) {
-    selectedPage.classList.add('active');
-  }
-
-  // Update navigation styling
-  const navLinks = document.querySelectorAll('.nav-link');
-  navLinks.forEach(link => {
-    link.classList.remove('active');
-  });
-
-  if (event?.target) {
-    event.target.classList.add('active');
-  }
-
-  // Scroll to top
-  window.scrollTo(0, 0);
-
-  // Push to browser history
-  if (push && history.pushState) {
-    history.pushState({ pageId }, '', `#${pageId}`);
-  }
-
-  // Track page view
-  if (analytics) {
-    analytics.trackPageView(pageId);
-  }
-
-  // Close mobile menu
-  closeMobileMenu();
 }
 
 // Konami code easter egg
@@ -1999,6 +2343,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize analytics
   analytics = new VisitorAnalytics();
 
+  // Initialize mobile navigation on mobile devices
+  if (window.innerWidth <= 768) {
+    mobileNav = new MobileNavigation();
+  }
+
   // Handle initial page load
   const hash = window.location.hash.replace('#', '') || 'home';
   const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
@@ -2017,16 +2366,14 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', () => trackEvent('external_link_click', { url: link.href }));
   });
 
-  // Track project interactions - Simple and reliable tracking
+  // Track project interactions
   document.querySelectorAll('.project-card').forEach(card => {
     const projectName = card.dataset.project;
     
-    // Simple hover tracking - fires every time
     card.addEventListener('mouseenter', () => {
       trackEvent('project_hover', { project: projectName });
     });
     
-    // Click tracking
     card.addEventListener('click', () => {
       trackEvent('project_click', { project: projectName });
     });
@@ -2035,9 +2382,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup konami code
   document.addEventListener('keydown', handleKonamiCode);
 
-  // Close mobile menu when clicking nav links
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', closeMobileMenu);
+  // Handle resize events for responsive behavior
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      // Close mobile menu when switching to desktop
+      closeMobileMenu();
+      if (mobileNav) {
+        mobileNav.cleanup();
+        mobileNav = null;
+      }
+    } else if (window.innerWidth <= 768 && !mobileNav) {
+      // Initialize mobile nav when switching to mobile
+      mobileNav = new MobileNavigation();
+    }
   });
 });
 
