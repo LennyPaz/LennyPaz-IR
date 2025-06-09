@@ -841,35 +841,61 @@ body {
   box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
 }
 
-/* Skills grid - Enhanced for 5-box layout */
+/* Skills grid - Better responsive layout for 5 boxes */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   padding: 30px;
 }
 
-/* Special handling for the 5th box to center it */
-.skills-grid .skill-category:nth-child(5) {
-  grid-column: 1 / -1;
-  max-width: 600px;
-  margin: 0 auto;
+/* Mobile: Single column */
+@media (max-width: 768px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* For larger screens, use 3 columns when possible */
-@media (min-width: 1400px) {
+/* Tablet: 2 columns, last item spans full width */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .skills-grid .skill-category:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Medium desktop: 3 columns, bottom row has 2 items */
+@media (min-width: 1200px) and (max-width: 1599px) {
   .skills-grid {
     grid-template-columns: repeat(3, 1fr);
   }
   
+  /* Make last two items span to center them */
   .skills-grid .skill-category:nth-child(4) {
-    grid-column: 1;
+    grid-column: 1 / 2;
   }
   
   .skills-grid .skill-category:nth-child(5) {
-    grid-column: 2;
-    max-width: none;
-    margin: 0;
+    grid-column: 2 / 3;
+  }
+}
+
+/* Large desktop: 3 columns with better spacing */
+@media (min-width: 1600px) {
+  .skills-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .skills-grid .skill-category:nth-child(4) {
+    grid-column: 1 / 2;
+  }
+  
+  .skills-grid .skill-category:nth-child(5) {
+    grid-column: 2 / 3;
   }
 }
 
@@ -879,6 +905,7 @@ body {
   border-radius: 8px;
   padding: 25px;
   transition: all 0.3s ease;
+  min-height: 280px; /* Ensure consistent height */
 }
 
 .skill-category:hover {
@@ -962,6 +989,7 @@ body {
 .progress-fill[data-level="3"] { width: 42.86%; }
 .progress-fill[data-level="4"] { width: 57.14%; }
 .progress-fill[data-level="5"] { width: 71.43%; }
+
 .progress-fill[data-level="6"] { width: 85.71%; }
 .progress-fill[data-level="7"] { width: 100%; }
 
@@ -1158,6 +1186,7 @@ body {
   display: none;
   position: fixed;
   top: 20px;
+
   left: 20px;
   z-index: 101;
   background: var(--accent-primary);
@@ -2009,7 +2038,6 @@ body {
       <section class="section">
         <div class="section-header">
           <h2 class="section-title">
-
             <span class="section-icon">👑</span>
             Leadership Experience
           </h2>
