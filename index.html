@@ -841,12 +841,36 @@ body {
   box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
 }
 
-/* Skills grid */
+/* Skills grid - Enhanced for 5-box layout */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   padding: 30px;
+}
+
+/* Special handling for the 5th box to center it */
+.skills-grid .skill-category:nth-child(5) {
+  grid-column: 1 / -1;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* For larger screens, use 3 columns when possible */
+@media (min-width: 1400px) {
+  .skills-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .skills-grid .skill-category:nth-child(4) {
+    grid-column: 1;
+  }
+  
+  .skills-grid .skill-category:nth-child(5) {
+    grid-column: 2;
+    max-width: none;
+    margin: 0;
+  }
 }
 
 .skill-category {
@@ -964,7 +988,23 @@ body {
   color: #10b981;
 }
 
-/* Dark mode adjustments */
+/* Original skill items for professional skills */
+.skill-item {
+  display: inline-block;
+  background-color: #e6f3ff;
+  color: #3182ce;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 4px;
+  transition: all 0.3s ease;
+}
+
+.skill-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(49, 130, 206, 0.2);
+}
 [data-theme="dark"] .progress-bar {
   background: rgba(66, 153, 225, 0.1);
 }
@@ -1969,6 +2009,7 @@ body {
       <section class="section">
         <div class="section-header">
           <h2 class="section-title">
+
             <span class="section-icon">👑</span>
             Leadership Experience
           </h2>
@@ -2056,7 +2097,7 @@ body {
               
               <div class="skill-with-progress">
                 <div class="skill-info">
-                  <span class="skill-name">SQL</span>
+                  <span class="skill-name">JavaScript</span>
                   <span class="skill-level">Hands-On</span>
                 </div>
                 <div class="progress-bar">
@@ -2066,11 +2107,21 @@ body {
               
               <div class="skill-with-progress">
                 <div class="skill-info">
-                  <span class="skill-name">HTML/CSS</span>
-                  <span class="skill-level">Hands-On</span>
+                  <span class="skill-name">SQL</span>
+                  <span class="skill-level">Applied</span>
                 </div>
                 <div class="progress-bar">
-                  <div class="progress-fill" data-level="4"></div>
+                  <div class="progress-fill" data-level="5"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">HTML/CSS</span>
+                  <span class="skill-level">Applied</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="6"></div>
                 </div>
               </div>
             </div>
@@ -2078,7 +2129,7 @@ body {
             <div class="skill-category">
               <div class="skill-category-title">
                 <span>🔒</span>
-                Networking & Security
+                Networking &amp; Security
               </div>
               
               <div class="skill-with-progress">
@@ -2125,7 +2176,7 @@ body {
             <div class="skill-category">
               <div class="skill-category-title">
                 <span>🗄️</span>
-                Database & Systems
+                Database &amp; Systems
               </div>
               
               <div class="skill-with-progress">
@@ -2161,6 +2212,43 @@ body {
               <div class="skill-with-progress">
                 <div class="skill-info">
                   <span class="skill-name">System Administration</span>
+                  <span class="skill-level">Applied</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="5"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <div class="skill-category-title">
+                <span>☁️</span>
+                Cloud Platforms
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Cloudflare Workers</span>
+                  <span class="skill-level">Applied</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="5"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Cloud Databases</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="4"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">API Development</span>
                   <span class="skill-level">Hands-On</span>
                 </div>
                 <div class="progress-bar">
@@ -2172,36 +2260,16 @@ body {
             <div class="skill-category">
               <div class="skill-category-title">
                 <span>🛠️</span>
-                Software & Tools
+                Software &amp; Tools
               </div>
               
               <div class="skill-with-progress">
                 <div class="skill-info">
-                  <span class="skill-name">Microsoft Word</span>
-                  <span class="skill-level">Hands-On</span>
+                  <span class="skill-name">Microsoft Office Suite</span>
+                  <span class="skill-level">Applied</span>
                 </div>
                 <div class="progress-bar">
-                  <div class="progress-fill" data-level="4"></div>
-                </div>
-              </div>
-              
-              <div class="skill-with-progress">
-                <div class="skill-info">
-                  <span class="skill-name">Microsoft Excel</span>
-                  <span class="skill-level">Hands-On</span>
-                </div>
-                <div class="progress-bar">
-                  <div class="progress-fill" data-level="4"></div>
-                </div>
-              </div>
-              
-              <div class="skill-with-progress">
-                <div class="skill-info">
-                  <span class="skill-name">Microsoft PowerPoint</span>
-                  <span class="skill-level">Hands-On</span>
-                </div>
-                <div class="progress-bar">
-                  <div class="progress-fill" data-level="4"></div>
+                  <div class="progress-fill" data-level="7"></div>
                 </div>
               </div>
               
@@ -2224,16 +2292,6 @@ body {
                   <div class="progress-fill" data-level="3"></div>
                 </div>
               </div>
-              
-              <div class="skill-with-progress">
-                <div class="skill-info">
-                  <span class="skill-name">Adobe Illustrator</span>
-                  <span class="skill-level">Hands-On</span>
-                </div>
-                <div class="progress-bar">
-                  <div class="progress-fill" data-level="2"></div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -2241,12 +2299,18 @@ body {
       
       <section class="section">
         <div class="section-header">
-          <h2 class="section-title">Professional Skills</h2>
+          <h2 class="section-title">
+            <span class="section-icon">🤝</span>
+            Professional Skills
+          </h2>
         </div>
         <div class="section-body">
           <div class="skills-grid">
             <div class="skill-category">
-              <div class="skill-category-title">Communication</div>
+              <div class="skill-category-title">
+                <span>💬</span>
+                Communication
+              </div>
               <span class="skill-item">Bilingual (English/Spanish)</span> 
               <span class="skill-item">Technical Documentation</span> 
               <span class="skill-item">User Training</span> 
@@ -2255,7 +2319,10 @@ body {
               <span class="skill-item">Simplifying Concepts</span> 
             </div>
             <div class="skill-category">
-              <div class="skill-category-title">Problem Solving</div>
+              <div class="skill-category-title">
+                <span>🧩</span>
+                Problem Solving
+              </div>
               <span class="skill-item">Troubleshooting</span> 
               <span class="skill-item">Critical Thinking</span> 
               <span class="skill-item">Root Cause Analysis</span> 
