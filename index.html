@@ -895,7 +895,7 @@ body {
 /* Mobile enhancements */
 @media (max-width: 768px) {
   body {
-    padding-bottom: 80px; /* Space for bottom nav */
+    padding-bottom: env(safe-area-inset-bottom, 80px); /* iOS safe area support */
   }
   
   .sidebar {
@@ -919,7 +919,7 @@ body {
   
   .page {
     padding: 20px;
-    padding-bottom: 100px; /* Extra space for bottom nav */
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); /* Extra space for bottom nav + safe area */
   }
   
   /* Mobile menu button - Enhanced */
@@ -979,7 +979,23 @@ body {
     border-top: 1px solid var(--border-color);
     z-index: 1000;
     padding: 8px 0;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); /* iOS safe area */
     box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Ensure bottom nav sticks to actual bottom on iOS */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .bottom-nav {
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    }
+  }
+  
+  /* Hide bottom nav when sidebar is open */
+  .sidebar.open ~ .main-content .bottom-nav,
+  .bottom-nav.hidden {
+    transform: translateY(100%);
   }
   
   .bottom-nav-container {
@@ -1073,7 +1089,7 @@ body {
   .swipe-indicator {
     position: fixed;
     top: 50%;
-    left: 10px;
+    left: 15px; /* Moved slightly more to the right */
     transform: translateY(-50%);
     background: rgba(66, 153, 225, 0.9);
     color: white;
@@ -1783,8 +1799,11 @@ class MobileNavigation {
   }
   
   handleStart(x, y) {
-    // Only start swipe from left edge or when sidebar is open
-    if ((x < 20 && !this.isOpen) || this.isOpen) {
+    // Expanded swipe area: left edge (0-30px) or right portion when sidebar is open
+    const leftEdgeSwipe = x < 30 && !this.isOpen;
+    const rightSwipeToClose = x > window.innerWidth * 0.3 && this.isOpen; // Allow swipe from right 70% of screen when open
+    
+    if (leftEdgeSwipe || rightSwipeToClose) {
       this.isDragging = true;
       this.startX = x;
       this.currentX = x;
@@ -1877,6 +1896,12 @@ class MobileNavigation {
     this.menuBtn.classList.add('active');
     document.body.style.overflow = 'hidden';
     
+    // Hide bottom navigation when sidebar opens
+    const bottomNav = document.querySelector('.bottom-nav');
+    if (bottomNav) {
+      bottomNav.classList.add('hidden');
+    }
+    
     // Track swipe open
     if (analytics) {
       analytics.trackEvent('mobile_menu', { action: 'swipe_open' });
@@ -1889,6 +1914,12 @@ class MobileNavigation {
     this.overlay.classList.remove('active');
     this.menuBtn.classList.remove('active');
     document.body.style.overflow = '';
+    
+    // Show bottom navigation when sidebar closes
+    const bottomNav = document.querySelector('.bottom-nav');
+    if (bottomNav) {
+      bottomNav.classList.remove('hidden');
+    }
     
     // Track swipe close
     if (analytics) {
@@ -2064,12 +2095,20 @@ function toggleMobileMenu() {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.mobile-overlay');
     const menuBtn = document.getElementById('mobileMenuBtn');
+    const bottomNav = document.querySelector('.bottom-nav');
 
     sidebar.classList.toggle('open');
     overlay.classList.toggle('active');
     menuBtn.classList.toggle('active');
 
-    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    // Handle bottom nav visibility
+    if (sidebar.classList.contains('open')) {
+      if (bottomNav) bottomNav.classList.add('hidden');
+      document.body.style.overflow = 'hidden';
+    } else {
+      if (bottomNav) bottomNav.classList.remove('hidden');
+      document.body.style.overflow = '';
+    }
   }
 }
 
@@ -2081,10 +2120,14 @@ function closeMobileMenu() {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.mobile-overlay');
     const menuBtn = document.getElementById('mobileMenuBtn');
+    const bottomNav = document.querySelector('.bottom-nav');
 
     sidebar.classList.remove('open');
     overlay.classList.remove('active');
     menuBtn.classList.remove('active');
+    if (bottomNav) {
+      bottomNav.classList.remove('hidden');
+    }
     document.body.style.overflow = '';
   }
 }
