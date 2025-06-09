@@ -1716,7 +1716,7 @@ function handleSubmit(event) {
   });
 }
 
-// Analytics & Visitor Tracking - Fixed event throttling
+// Analytics & Visitor Tracking - IMPROVED with better reliability
 class VisitorAnalytics {
   constructor() {
     this.sessionId = this.generateSessionId();
@@ -1724,7 +1724,8 @@ class VisitorAnalytics {
     this.pageViews = {};
     this.events = [];
     this.isActive = true;
-    this.eventCooldowns = new Map(); // Prevent rapid duplicate events
+    this.eventCooldowns = new Map();
+    this.lastSendTime = 0;
     this.init();
   }
 
@@ -1734,9 +1735,9 @@ class VisitorAnalytics {
 
   init() {
     this.setupActivityTracking();
-    this.setupVisibilityTracking();
-    setInterval(() => this.sendAnalytics(), 30000);
-    window.addEventListener('beforeunload', () => this.sendAnalytics(true));
+    this.setupReliableUnloadTracking(); // IMPROVED: More reliable unload detection
+    this.setupPeriodicSending(); // IMPROVED: More frequent sending
+    this.setupEventBasedSending(); // NEW: Send on important events
   }
 
   setupActivityTracking() {
@@ -1755,14 +1756,62 @@ class VisitorAnalytics {
     }, 30000);
   }
 
-  setupVisibilityTracking() {
+  setupReliableUnloadTracking() {
+    // IMPROVED: Use multiple more reliable events instead of just beforeunload
+    
+    // 1. visibilitychange - Most reliable for detecting page abandonment
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         this.trackEvent('page_blur');
+        this.sendAnalytics(true); // IMPROVED: Send immediately when page becomes hidden
       } else {
         this.trackEvent('page_focus');
       }
     });
+
+    // 2. pagehide - Reliable for navigation away
+    window.addEventListener('pagehide', () => {
+      this.sendAnalytics(true);
+    }, { passive: true });
+
+    // 3. Keep beforeunload as backup (but don't rely on it)
+    window.addEventListener('beforeunload', () => {
+      this.sendAnalytics(true);
+    });
+
+    // 4. NEW: Send when user is idle for too long
+    let idleTimer;
+    const resetIdleTimer = () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        this.sendAnalytics(); // Send analytics after 2 minutes of inactivity
+      }, 120000); // 2 minutes
+    };
+
+    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+      document.addEventListener(event, resetIdleTimer, { passive: true });
+    });
+    resetIdleTimer(); // Start the timer
+  }
+
+  setupPeriodicSending() {
+    // IMPROVED: Send more frequently (every 15 seconds instead of 30)
+    setInterval(() => this.sendAnalytics(), 15000);
+  }
+
+  setupEventBasedSending() {
+    // NEW: Send analytics immediately after important events
+    const importantEvents = ['page_view', 'form_submit', 'external_link_click'];
+    
+    const originalTrackEvent = this.trackEvent.bind(this);
+    this.trackEvent = (eventName, data = {}) => {
+      originalTrackEvent(eventName, data);
+      
+      // Send immediately for important events
+      if (importantEvents.includes(eventName)) {
+        setTimeout(() => this.sendAnalytics(), 100); // Small delay to batch events
+      }
+    };
   }
 
   trackPageView(pageId) {
@@ -1777,31 +1826,11 @@ class VisitorAnalytics {
   }
 
   trackEvent(eventName, data = {}) {
-    // Simple tracking - no cooldowns since we fixed the flickering
     this.events.push({ event: eventName, timestamp: Date.now(), data });
     
-    // Limit events array size
     if (this.events.length > 100) {
       this.events = this.events.slice(-50);
     }
-  }
-
-  getCooldownPeriod(eventName) {
-    // Different cooldown periods for different event types
-    const cooldowns = {
-      'project_hover': 2000,    // 2 seconds for project hovers
-      'project_click': 1000,    // 1 second for clicks
-      'form_field_focus': 500,  // 0.5 seconds for form events
-      'form_field_blur': 500,
-      'theme_toggle': 1000,
-      'mobile_menu': 500,
-      'external_link_click': 1000,
-      'page_view': 2000,
-      'page_blur': 1000,
-      'page_focus': 1000
-    };
-    
-    return cooldowns[eventName] || 1000; // Default 1 second
   }
 
   throttle(func, wait) {
@@ -1836,22 +1865,50 @@ class VisitorAnalytics {
   }
 
   async sendAnalytics(final = false) {
+    const now = Date.now();
+    
+    // IMPROVED: Prevent too frequent sends (minimum 2 seconds between sends)
+    if (!final && (now - this.lastSendTime) < 2000) {
+      return;
+    }
+
+    // IMPROVED: Always send if we have events, regardless of isActive status
     const metrics = this.getEngagementMetrics();
-    if (!final && !this.isActive) return;
+    
+    // IMPROVED: Don't skip sending just because user is "inactive"
+    if (!final && this.events.length === 0) return;
+
+    this.lastSendTime = now;
 
     try {
-      await fetch('https://ir-analytics.lenny-paz123.workers.dev/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'analytics',
-          metrics: { ...metrics, isActive: final ? false : this.isActive },
-          events: this.events.slice(-50)
-        })
+      // IMPROVED: Use sendBeacon API for better reliability during unload
+      const payload = JSON.stringify({
+        type: 'analytics',
+        metrics: { ...metrics, isActive: final ? false : this.isActive },
+        events: this.events.slice(-50)
       });
+
+      let sent = false;
+
+      // Try sendBeacon first (more reliable for unload events)
+      if (navigator.sendBeacon && final) {
+        sent = navigator.sendBeacon('https://ir-analytics.lenny-paz123.workers.dev/', payload);
+      }
+
+      // Fallback to fetch if sendBeacon failed or not available
+      if (!sent) {
+        await fetch('https://ir-analytics.lenny-paz123.workers.dev/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+          keepalive: final // IMPROVED: Keep request alive during unload
+        });
+      }
+
       this.events = [];
+      console.log('✅ Analytics sent successfully', { eventCount: this.events.length, final });
     } catch (error) {
-      console.log('Analytics send failed:', error);
+      console.log('❌ Analytics send failed:', error);
     }
   }
 }
