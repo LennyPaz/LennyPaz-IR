@@ -1969,7 +1969,6 @@ function showPreview(event, imageUrl) {
   clearTimeout(previewTimeout);
   
   const popup = document.getElementById('image-preview-popup');
-
   popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
   popup.style.display = 'block';
   popup.style.opacity = '1';
