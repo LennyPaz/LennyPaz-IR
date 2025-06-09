@@ -905,9 +905,10 @@ body {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 280px;
     overflow-y: auto;
-    overflow-x: hidden; /* Enforce no horizontal scroll */
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-y; /* Only allow vertical gestures */
+    /* PRIORITY: Vertical scrolling always wins */
+    touch-action: pan-y !important;
   }
   
   .sidebar.open {
@@ -916,28 +917,31 @@ body {
   
   .sidebar.swiping {
     transition: none;
-    touch-action: none; /* Disable all touch during swipe */
+    /* During swipe, still allow vertical scrolling */
+    touch-action: pan-y !important;
   }
   
-  /* Make sure all nested elements respect vertical scroll context */
-  .sidebar * {
-    touch-action: pan-y; /* Force vertical pan only */
-    overflow-x: hidden; /* No horizontal overflow anywhere */
-  }
-  
+  /* Force vertical scrolling priority on ALL sidebar content */
+  .sidebar,
+  .sidebar *,
   .sidebar .profile-section,
   .sidebar .nav-menu,
+  .sidebar .nav-item,
   .sidebar .nav-link,
+  .sidebar .resume-button,
   .sidebar .contact-info {
-    touch-action: pan-y; /* Ensure vertical scrolling works everywhere */
+    touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch;
     overflow-x: hidden;
   }
   
-  /* Specifically target nav links to ensure they scroll properly */
-  .sidebar .nav-link {
-    touch-action: pan-y !important;
-    pointer-events: auto;
+  /* Fix resume button visibility */
+  .sidebar .nav-menu {
+    padding-bottom: 30px; /* Extra space at bottom */
+  }
+  
+  .sidebar .contact-info {
+    padding-bottom: 40px; /* Ensure contact info is fully visible */
   }
   
   .main-content {
@@ -1189,7 +1193,6 @@ body {
       <li class="nav-item"> 
         <a class="nav-link" onclick="showPage('education', event)">Education</a> 
       </li>
-
       <li class="nav-item"> 
         <a class="nav-link" onclick="showPage('experience', event)">Experience</a> 
       </li>
@@ -2098,7 +2101,6 @@ function handleSubmit(event) {
   let valid = true;
   
   // Reset previous error styles
-
   [nameField, emailField, subjectField, messageField].forEach(field => {
     field.classList.remove('input-error');
   });
