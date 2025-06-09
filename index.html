@@ -69,7 +69,7 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar - Enhanced for mobile */
+/* Sidebar - FIXED positioning issues */
 .sidebar {
   width: 320px;
   background-color: var(--sidebar-bg);
@@ -79,7 +79,6 @@ body {
   z-index: 100;
   top: 0;
   left: 0;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar::-webkit-scrollbar {
@@ -223,7 +222,7 @@ body {
   color: var(--accent-primary);
 }
 
-/* Main content */
+/* Main content - FIXED margin */
 .main-content {
   margin-left: 320px;
   flex: 1;
@@ -399,7 +398,7 @@ body {
   padding: 30px;
 }
 
-/* Project cards */
+/* Project cards - Simplified to prevent flickering */
 .project-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -414,6 +413,7 @@ body {
   box-shadow: 0 8px 25px rgba(66, 153, 225, 0.15);
 }
 
+/* Simple project image - no complex transforms */
 .project-image {
   background-color: #edf2f7;
   height: 120px;
@@ -430,6 +430,12 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Remove all transform animations that cause flickering */
+}
+
+/* Remove hover image animations completely */
+.project-card:hover .project-image img {
+  /* No transform - this was causing the flickering */
 }
 
 .project-content {
@@ -444,6 +450,7 @@ body {
   font-style: italic;
 }
 
+/* Make project title links more obvious */
 .project-title a {
   color: var(--accent-primary);
   text-decoration: none;
@@ -458,6 +465,7 @@ body {
   border-bottom-color: var(--accent-secondary);
 }
 
+/* Add external link icon for clarity */
 .project-title a[href^="http"]::after {
   content: ' ↗';
   font-size: 12px;
@@ -472,6 +480,7 @@ body {
   margin-bottom: 15px;
 }
 
+/* Revert project tags to original size */
 .project-tag {
   display: inline-block;
   padding: 4px 12px;
@@ -730,7 +739,7 @@ body {
   background-color: #fff6f6;
 }
 
-/* Theme toggle */
+/* Theme toggle - FIXED */
 .theme-toggle {
   position: fixed;
   top: 20px;
@@ -789,7 +798,7 @@ body {
   }
 }
 
-/* Image preview popup */
+/* Image preview popup - No animations */
 #image-preview-popup {
   display: none;
   position: fixed;
@@ -802,6 +811,7 @@ body {
   max-height: 70vh;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
   opacity: 0;
+  /* Remove all transitions that cause flickering */
 }
 
 #image-preview-popup img {
@@ -904,20 +914,29 @@ body {
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
 }
 
-/* Mobile enhancements */
-@media (max-width: 768px) {
-  body {
-    padding-bottom: 20px;
-    -webkit-overflow-scrolling: touch;
-    overflow-x: hidden;
+/* Mobile optimizations */
+@media (max-width: 1200px) {
+  .content-row, 
+  .projects-grid, 
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
-  
+}
+
+@media (max-width: 1109px) {
+  .sidebar {
+    width: 280px;
+  }
+  .main-content {
+    margin-left: 280px;
+  }
+}
+
+@media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s ease;
     width: 280px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
   
   .sidebar.open {
@@ -930,10 +949,8 @@ body {
   
   .page {
     padding: 20px;
-    padding-bottom: 40px;
   }
   
-  /* Mobile menu button - CLEAN and SIMPLE */
   .mobile-menu-btn {
     display: block;
     position: fixed;
@@ -947,139 +964,34 @@ body {
     border-radius: 8px;
     cursor: pointer;
     font-size: 18px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
   }
   
   .mobile-menu-btn:hover {
     background: var(--accent-secondary);
   }
   
-  /* NO ACTIVE STATE CHANGES */
-  
   .mobile-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(4px);
-    z-index: 99;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  .mobile-overlay.active {
-    opacity: 1;
-    visibility: visible;
-  }
-}
-  
-  /* Mobile menu button - CLEAN and SIMPLE */
-  .mobile-menu-btn {
-    display: block;
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 101;
-    background: var(--accent-primary);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .mobile-menu-btn:hover {
-    background: var(--accent-secondary);
-  }
-  
-  /* NO ACTIVE STATE CHANGES */
-  
-  /* Enhanced overlay with blur effect */
-  .mobile-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(4px);
-    z-index: 99;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  .mobile-overlay.active {
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  /* Hide bottom nav when sidebar is open - REMOVED SECTION */
-  
-  .bottom-nav-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    max-width: 100%;
-    margin: 0 auto;
-  }
-  
-  .bottom-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 8px 4px;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 10px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
-  
-  .bottom-nav-item.active {
-    color: var(--accent-primary);
-  }
-  
-  .bottom-nav-item:hover {
-    color: var(--accent-primary);
-    transform: translateY(-2px);
-  }
-  
-  .bottom-nav-icon {
-    font-size: 20px;
-    margin-bottom: 4px;
-    transition: transform 0.2s ease;
-  }
-  
-  .bottom-nav-item.active .bottom-nav-icon {
-    transform: scale(1.1);
-  }
-  
-  .bottom-nav-label {
-    font-size: 9px;
-    text-align: center;
-    line-height: 1.2;
-  }
-  
-  /* Hide desktop elements on mobile */
-  .mobile-menu-btn-desktop {
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+    transition: opacity 0.3s ease;
+  }
+  
+  .mobile-overlay.active {
+    display: block;
   }
   
   .theme-toggle {
-    top: 20px;
+    top: 80px;
     right: 20px;
-    width: 45px;
-    height: 45px;
-    font-size: 18px;
   }
   
-  /* Adjust content for mobile */
   .content-row {
     grid-template-columns: 1fr;
   }
@@ -1093,76 +1005,11 @@ body {
   .skills-grid {
     grid-template-columns: 1fr;
   }
-  
-  /* Profile section adjustments for mobile */
-  .profile-section {
-    margin: 20px;
-    padding: 30px 15px;
-  }
-  
-  .nav-menu {
-    padding: 20px 30px;
-  }
-  
-  .contact-info {
-    padding: 20px 50px;
-  }
-  
-  /* Swipe indicator */
-  .swipe-indicator {
-    position: fixed;
-    top: 50%;
-    left: 15px; /* Moved slightly more to the right */
-    transform: translateY(-50%);
-    background: rgba(66, 153, 225, 0.9);
-    color: white;
-    padding: 8px;
-    border-radius: 50%;
-    z-index: 98;
-    font-size: 14px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-  
-  .swipe-indicator.show {
-    opacity: 1;
-    animation: swipePulse 2s infinite;
-  }
-  
-  @keyframes swipePulse {
-    0%, 100% { transform: translateY(-50%) scale(1); }
-    50% { transform: translateY(-50%) scale(1.1); }
-  }
 }
 
-/* Hide bottom nav on desktop - REMOVED */
-/* Hide mobile elements on desktop */
 @media (min-width: 769px) {
   .mobile-menu-btn {
-    display: none !important;
-  }
-  
-  .swipe-indicator {
     display: none;
-  }
-}
-
-/* Tablet optimizations */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .content-row, 
-  .projects-grid, 
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-}
-
-@media (max-width: 1109px) and (min-width: 769px) {
-  .sidebar {
-    width: 280px;
-  }
-  .main-content {
-    margin-left: 280px;
   }
 }
 
@@ -1186,15 +1033,14 @@ body {
 </head>
 <body>
 <div class="container"> 
-  <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">☰</button>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
   <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
-  <div class="swipe-indicator" id="swipeIndicator">→</div>
   <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
     <span id="theme-icon">🌙</span>
   </button>
   
   <!-- Sidebar -->
-  <nav class="sidebar" id="sidebar">
+  <nav class="sidebar">
     <div class="profile-section">
       <div class="profile-photo"> 
         <img src="" alt="Profile Photo" style="display: none;" onload="this.style.display='block'; this.parentNode.innerHTML=this.outerHTML;"> 
@@ -1239,8 +1085,6 @@ body {
       <div class="contact-item contact-email">Lenny.Paz123@gmail.com</div>
     </div>
   </nav>
-  
-  <!-- Bottom Navigation (Mobile Only) - REMOVED -->
   
   <!-- Main Content -->
   <main class="main-content"> 
@@ -1717,216 +1561,7 @@ body {
 </div>
 
 <script>
-// Enhanced mobile navigation with swipe gestures
-class MobileNavigation {
-  constructor() {
-    this.sidebar = document.getElementById('sidebar');
-    this.overlay = document.querySelector('.mobile-overlay');
-    this.menuBtn = document.getElementById('mobileMenuBtn');
-    this.swipeIndicator = document.getElementById('swipeIndicator');
-    this.isOpen = false;
-    this.isDragging = false;
-    this.startX = 0;
-    this.currentX = 0;
-    this.threshold = 50;
-    this.maxSwipeDistance = 280;
-    
-    this.init();
-  }
-  
-  init() {
-    // Only initialize on mobile
-    if (window.innerWidth <= 768) {
-      this.setupSwipeListeners();
-      this.showSwipeIndicator();
-    }
-    
-    // Handle window resize
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 768) {
-        this.cleanup();
-      } else if (window.innerWidth <= 768) {
-        this.setupSwipeListeners();
-        this.showSwipeIndicator();
-      }
-    });
-  }
-  
-  setupSwipeListeners() {
-    // Touch events for swipe gestures
-    document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-    document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
-    document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
-    
-    // Mouse events for desktop testing
-    document.addEventListener('mousedown', this.handleMouseDown.bind(this));
-    document.addEventListener('mousemove', this.handleMouseMove.bind(this));
-    document.addEventListener('mouseup', this.handleMouseUp.bind(this));
-  }
-  
-  cleanup() {
-    document.removeEventListener('touchstart', this.handleTouchStart);
-    document.removeEventListener('touchmove', this.handleTouchMove);
-    document.removeEventListener('touchend', this.handleTouchEnd);
-    document.removeEventListener('mousedown', this.handleMouseDown);
-    document.removeEventListener('mousemove', this.handleMouseMove);
-    document.removeEventListener('mouseup', this.handleMouseUp);
-  }
-  
-  showSwipeIndicator() {
-    // Show swipe indicator for 3 seconds on first visit
-    if (!localStorage.getItem('swipe-tutorial-shown')) {
-      setTimeout(() => {
-        this.swipeIndicator.classList.add('show');
-        setTimeout(() => {
-          this.swipeIndicator.classList.remove('show');
-          localStorage.setItem('swipe-tutorial-shown', 'true');
-        }, 3000);
-      }, 1000);
-    }
-  }
-  
-  handleTouchStart(e) {
-    this.handleStart(e.touches[0].clientX, e.touches[0].clientY);
-  }
-  
-  handleMouseDown(e) {
-    this.handleStart(e.clientX, e.clientY);
-  }
-  
-  handleStart(x, y) {
-    // Expanded swipe area: left edge (0-30px) or right portion when sidebar is open
-    const leftEdgeSwipe = x < 30 && !this.isOpen;
-    const rightSwipeToClose = x > window.innerWidth * 0.3 && this.isOpen; // Allow swipe from right 70% of screen when open
-    
-    if (leftEdgeSwipe || rightSwipeToClose) {
-      this.isDragging = true;
-      this.startX = x;
-      this.currentX = x;
-      this.sidebar.classList.add('swiping');
-    }
-  }
-  
-  handleTouchMove(e) {
-    if (this.isDragging) {
-      e.preventDefault(); // Only prevent default when actively swiping
-      this.handleMove(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  }
-  
-  handleMouseMove(e) {
-    if (this.isDragging) {
-      this.handleMove(e.clientX, e.clientY);
-    }
-  }
-  
-  handleMove(x) {
-    if (!this.isDragging) return;
-    
-    this.currentX = x;
-    const deltaX = this.currentX - this.startX;
-    
-    if (this.isOpen) {
-      // Closing gesture
-      const translateX = Math.max(-this.maxSwipeDistance, Math.min(0, deltaX));
-      this.sidebar.style.transform = `translateX(${translateX}px)`;
-      
-      // Update overlay opacity
-      const progress = Math.abs(translateX) / this.maxSwipeDistance;
-      this.overlay.style.opacity = 1 - progress;
-    } else {
-      // Opening gesture
-      const translateX = Math.max(-this.maxSwipeDistance, Math.min(0, deltaX - this.maxSwipeDistance));
-      this.sidebar.style.transform = `translateX(${translateX}px)`;
-      
-      // Update overlay opacity
-      const progress = (this.maxSwipeDistance + translateX) / this.maxSwipeDistance;
-      this.overlay.style.opacity = progress;
-      if (progress > 0) {
-        this.overlay.classList.add('active');
-      }
-    }
-  }
-  
-  handleTouchEnd(e) {
-    this.handleEnd();
-  }
-  
-  handleMouseUp(e) {
-    this.handleEnd();
-  }
-  
-  handleEnd() {
-    if (!this.isDragging) return;
-    
-    this.isDragging = false;
-    this.sidebar.classList.remove('swiping');
-    
-    const deltaX = this.currentX - this.startX;
-    
-    if (this.isOpen) {
-      // Determine if we should close
-      if (deltaX < -this.threshold) {
-        this.close();
-      } else {
-        this.open();
-      }
-    } else {
-      // Determine if we should open
-      if (deltaX > this.threshold) {
-        this.open();
-      } else {
-        this.close();
-      }
-    }
-    
-    // Reset transform
-    this.sidebar.style.transform = '';
-    this.overlay.style.opacity = '';
-  }
-  
-  open() {
-    this.isOpen = true;
-    this.sidebar.classList.add('open');
-    this.overlay.classList.add('active');
-    this.menuBtn.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // Track swipe open
-    if (analytics) {
-      analytics.trackEvent('mobile_menu', { action: 'swipe_open' });
-    }
-  }
-  
-  close() {
-    this.isOpen = false;
-    this.sidebar.classList.remove('open');
-    this.overlay.classList.remove('active');
-    this.menuBtn.classList.remove('active');
-    document.body.style.overflow = '';
-    
-    // Track swipe close
-    if (analytics) {
-      analytics.trackEvent('mobile_menu', { action: 'swipe_close' });
-    }
-  }
-  
-  toggle() {
-    if (this.isOpen) {
-      this.close();
-    } else {
-      this.open();
-    }
-  }
-}
-
-// Initialize mobile navigation
-let mobileNav;
-if (window.innerWidth <= 768) {
-  mobileNav = new MobileNavigation();
-}
-
-// Theme management
+// Theme management - FIXED
 function toggleTheme() {
   const html = document.documentElement;
   const currentTheme = html.getAttribute('data-theme');
@@ -1960,14 +1595,17 @@ function loadTheme() {
   }
 }
 
-// Image preview functions
+// Image preview functions - No animations, instant show/hide
 let previewTimeout;
 let isShowingPreview = false;
 
 function showPreview(event, imageUrl) {
+  // Clear any pending hide timeout
   clearTimeout(previewTimeout);
   
   const popup = document.getElementById('image-preview-popup');
+  
+  // Instant show without animations
   popup.innerHTML = `<img src="${imageUrl}" alt="Full Preview">`;
   popup.style.display = 'block';
   popup.style.opacity = '1';
@@ -1975,6 +1613,7 @@ function showPreview(event, imageUrl) {
 }
 
 function hidePreview() {
+  // Longer timeout to prevent accidental hiding
   previewTimeout = setTimeout(() => {
     const popup = document.getElementById('image-preview-popup');
     popup.style.display = 'none';
@@ -1982,143 +1621,6 @@ function hidePreview() {
     popup.innerHTML = '';
     isShowingPreview = false;
   }, 300);
-}
-
-// Enhanced navigation functions
-function showPage(pageId, event = {}, push = true) {
-  // Hide all pages
-  const pages = document.querySelectorAll('.page');
-  pages.forEach(page => {
-    page.classList.remove('active');
-  });
-
-  // Show selected page
-  const selectedPage = document.getElementById(pageId);
-  if (selectedPage) {
-    selectedPage.classList.add('active');
-  }
-
-  // Update sidebar navigation styling
-  const navLinks = document.querySelectorAll('.nav-link');
-  navLinks.forEach(link => {
-    link.classList.remove('active');
-  });
-
-  if (event?.target) {
-    event.target.classList.add('active');
-  }
-  
-  // Update bottom navigation styling
-  updateBottomNavigation(pageId);
-
-  // Scroll to top
-  window.scrollTo(0, 0);
-
-  // Push to browser history
-  if (push && history.pushState) {
-    history.pushState({ pageId }, '', `#${pageId}`);
-  }
-
-  // Track page view
-  if (analytics) {
-    analytics.trackPageView(pageId);
-  }
-
-  // Close mobile menu with enhanced animation
-  if (window.innerWidth <= 768 && mobileNav) {
-    setTimeout(() => {
-      mobileNav.close();
-    }, 300); // Small delay for better UX
-  }
-}
-
-// Bottom navigation function
-function showPageFromBottomNav(pageId, event) {
-  showPage(pageId, event);
-  
-  // Update sidebar navigation to match
-  const sidebarLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
-  if (sidebarLink) {
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.remove('active');
-    });
-    sidebarLink.classList.add('active');
-  }
-  
-  // Track bottom nav usage
-  if (analytics) {
-    analytics.trackEvent('bottom_nav_click', { page: pageId });
-  }
-}
-
-// Update bottom navigation active state
-function updateBottomNavigation(pageId) {
-  const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
-  bottomNavItems.forEach(item => {
-    item.classList.remove('active');
-    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(pageId)) {
-      item.classList.add('active');
-    }
-  });
-}
-
-// Enhanced mobile menu functions
-function toggleMobileMenu() {
-  console.log('toggleMobileMenu called'); // Debug log
-  
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.querySelector('.mobile-overlay');
-  
-  if (!sidebar || !overlay) {
-    console.error('Sidebar or overlay not found');
-    return;
-  }
-  
-  const isCurrentlyOpen = sidebar.classList.contains('open');
-  console.log('Currently open:', isCurrentlyOpen);
-  
-  if (isCurrentlyOpen) {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
-    console.log('Closed sidebar');
-  } else {
-    sidebar.classList.add('open');
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    console.log('Opened sidebar');
-  }
-  
-  // Update simpleSwipe state if it exists
-  if (simpleSwipe) {
-    simpleSwipe.isOpen = !isCurrentlyOpen;
-  }
-  
-  // Track manual toggle
-  if (typeof analytics !== 'undefined' && analytics) {
-    analytics.trackEvent('mobile_menu', { 
-      action: 'button_toggle',
-      method: 'hamburger'
-    });
-  }
-}
-
-function closeMobileMenu() {
-  console.log('closeMobileMenu called'); // Debug log
-  
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.querySelector('.mobile-overlay');
-
-  if (sidebar && overlay) {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
-    
-    // Update simpleSwipe state if it exists
-    if (simpleSwipe) {
-      simpleSwipe.isOpen = false;
-    }
-  }
 }
 
 // Form handling
@@ -2173,7 +1675,7 @@ function handleSubmit(event) {
   });
 }
 
-// Analytics & Visitor Tracking
+// Analytics & Visitor Tracking - Fixed event throttling
 class VisitorAnalytics {
   constructor() {
     this.sessionId = this.generateSessionId();
@@ -2181,7 +1683,7 @@ class VisitorAnalytics {
     this.pageViews = {};
     this.events = [];
     this.isActive = true;
-    this.eventCooldowns = new Map();
+    this.eventCooldowns = new Map(); // Prevent rapid duplicate events
     this.init();
   }
 
@@ -2234,11 +1736,31 @@ class VisitorAnalytics {
   }
 
   trackEvent(eventName, data = {}) {
+    // Simple tracking - no cooldowns since we fixed the flickering
     this.events.push({ event: eventName, timestamp: Date.now(), data });
     
+    // Limit events array size
     if (this.events.length > 100) {
       this.events = this.events.slice(-50);
     }
+  }
+
+  getCooldownPeriod(eventName) {
+    // Different cooldown periods for different event types
+    const cooldowns = {
+      'project_hover': 2000,    // 2 seconds for project hovers
+      'project_click': 1000,    // 1 second for clicks
+      'form_field_focus': 500,  // 0.5 seconds for form events
+      'form_field_blur': 500,
+      'theme_toggle': 1000,
+      'mobile_menu': 500,
+      'external_link_click': 1000,
+      'page_view': 2000,
+      'page_blur': 1000,
+      'page_focus': 1000
+    };
+    
+    return cooldowns[eventName] || 1000; // Default 1 second
   }
 
   throttle(func, wait) {
@@ -2302,6 +1824,7 @@ function trackEvent(eventName, data = {}) {
 
 // Custom alert system
 function showCustomAlert(message, type = "success") {
+  // Remove existing alerts
   const existingAlert = document.querySelector('.custom-alert');
   if (existingAlert) existingAlert.remove();
 
@@ -2317,12 +1840,77 @@ function showCustomAlert(message, type = "success") {
 
   document.body.appendChild(alert);
 
+  // Auto remove after 5 seconds
   setTimeout(() => {
     if (alert.parentNode) {
       alert.style.opacity = '0';
       setTimeout(() => alert.remove(), 300);
     }
   }, 5000);
+}
+
+// Mobile menu functions
+function toggleMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.mobile-overlay');
+
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
+
+  // Prevent body scroll when menu is open
+  document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+
+  trackEvent('mobile_menu', { action: sidebar.classList.contains('open') ? 'open' : 'close' });
+}
+
+function closeMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.mobile-overlay');
+
+  sidebar.classList.remove('open');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Page navigation - ENHANCED with auto-close sidebar
+function showPage(pageId, event = {}, push = true) {
+  // Hide all pages
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(page => {
+    page.classList.remove('active');
+  });
+
+  // Show selected page
+  const selectedPage = document.getElementById(pageId);
+  if (selectedPage) {
+    selectedPage.classList.add('active');
+  }
+
+  // Update navigation styling
+  const navLinks = document.querySelectorAll('.nav-link');
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+  });
+
+  if (event?.target) {
+    event.target.classList.add('active');
+  }
+
+  // Scroll to top
+  window.scrollTo(0, 0);
+
+  // Push to browser history
+  if (push && history.pushState) {
+    history.pushState({ pageId }, '', `#${pageId}`);
+  }
+
+  // Track page view
+  if (analytics) {
+    analytics.trackPageView(pageId);
+  }
+
+  // Auto-close mobile menu when navigation item is clicked (ENHANCED FEATURE)
+  closeMobileMenu();
 }
 
 // Konami code easter egg
@@ -2375,11 +1963,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize analytics
   analytics = new VisitorAnalytics();
 
-  // Initialize mobile navigation on mobile devices
-  if (window.innerWidth <= 768) {
-    mobileNav = new MobileNavigation();
-  }
-
   // Handle initial page load
   const hash = window.location.hash.replace('#', '') || 'home';
   const navLink = document.querySelector(`.nav-link[onclick*="${hash}"]`);
@@ -2398,14 +1981,16 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', () => trackEvent('external_link_click', { url: link.href }));
   });
 
-  // Track project interactions
+  // Track project interactions - Simple and reliable tracking
   document.querySelectorAll('.project-card').forEach(card => {
     const projectName = card.dataset.project;
     
+    // Simple hover tracking - fires every time
     card.addEventListener('mouseenter', () => {
       trackEvent('project_hover', { project: projectName });
     });
     
+    // Click tracking
     card.addEventListener('click', () => {
       trackEvent('project_click', { project: projectName });
     });
@@ -2414,19 +1999,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup konami code
   document.addEventListener('keydown', handleKonamiCode);
 
-  // Handle resize events for responsive behavior
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
-      // Close mobile menu when switching to desktop
-      closeMobileMenu();
-      if (mobileNav) {
-        mobileNav.cleanup();
-        mobileNav = null;
-      }
-    } else if (window.innerWidth <= 768 && !mobileNav) {
-      // Initialize mobile nav when switching to mobile
-      mobileNav = new MobileNavigation();
-    }
+  // Close mobile menu when clicking nav links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
   });
 });
 
