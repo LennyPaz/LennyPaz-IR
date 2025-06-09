@@ -844,15 +844,16 @@ body {
 /* Skills grid */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
+  padding: 30px;
 }
 
 .skill-category {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 20px;
+  padding: 25px;
   transition: all 0.3s ease;
 }
 
@@ -865,25 +866,112 @@ body {
   font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.skill-with-progress {
+  margin-bottom: 20px;
 }
 
-.skill-item {
-  display: inline-block;
-  background-color: #e6f3ff;
-  color: #3182ce;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 12px;
+.skill-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.skill-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.skill-level {
+  font-size: 11px;
   font-weight: 500;
-  margin: 4px;
-  transition: all 0.3s ease;
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: rgba(66, 153, 225, 0.1);
 }
 
-.skill-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(49, 130, 206, 0.2);
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 4px;
+  transition: width 1.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Progress levels */
+.progress-fill[data-level="1"] { width: 14.28%; }
+.progress-fill[data-level="2"] { width: 28.57%; }
+.progress-fill[data-level="3"] { width: 42.86%; }
+.progress-fill[data-level="4"] { width: 57.14%; }
+.progress-fill[data-level="5"] { width: 71.43%; }
+.progress-fill[data-level="6"] { width: 85.71%; }
+.progress-fill[data-level="7"] { width: 100%; }
+
+/* Level-based colors */
+.skill-level {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.skill-with-progress:has(.skill-level:contains("Foundation")) .skill-level {
+  background: rgba(156, 163, 175, 0.15);
+  color: #6b7280;
+}
+
+.skill-with-progress:has(.skill-level:contains("Hands-On")) .skill-level {
+  background: rgba(66, 153, 225, 0.15);
+  color: var(--accent-primary);
+}
+
+.skill-with-progress:has(.skill-level:contains("Applied")) .skill-level {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .progress-bar {
+  background: rgba(66, 153, 225, 0.1);
+}
+
+[data-theme="dark"] .skill-level {
+  background: rgba(66, 153, 225, 0.2);
+  color: #90cdf4;
 }
 
 /* Goals */
@@ -1006,7 +1094,7 @@ body {
 }
 
 .theme-toggle:hover {
-  transform: scale(1.1) rotate(180deg);
+  transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
@@ -1933,40 +2021,219 @@ body {
       
       <section class="section">
         <div class="section-header">
-          <h2 class="section-title">Technical Proficiencies</h2>
+          <h2 class="section-title">
+            <span class="section-icon">💻</span>
+            Technical Proficiencies
+          </h2>
         </div>
         <div class="section-body">
           <div class="skills-grid">
             <div class="skill-category">
-              <div class="skill-category-title">Programming/Markup Languages</div>
-              <span class="skill-item">Java</span> 
-              <span class="skill-item">C++</span> 
-              <span class="skill-item">SQL</span> 
-              <span class="skill-item">HTML/CSS</span> 
+              <div class="skill-category-title">
+                <span>💻</span>
+                Programming/Markup Languages
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Java</span>
+                  <span class="skill-level">Foundation</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="3"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">C++</span>
+                  <span class="skill-level">Foundation</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="3"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">SQL</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="4"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">HTML/CSS</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="4"></div>
+                </div>
+              </div>
             </div>
+            
             <div class="skill-category">
-              <div class="skill-category-title">Networking &amp; Security</div>
-              <span class="skill-item">Network Configuration</span> 
-              <span class="skill-item">Cybersecurity Fundamentals</span> 
-              <span class="skill-item">Network Security Protocols</span> 
-              <span class="skill-item">Information Security</span> 
+              <div class="skill-category-title">
+                <span>🔒</span>
+                Networking & Security
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Network Configuration</span>
+                  <span class="skill-level">Foundation</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="3"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Cybersecurity Fundamentals</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="4"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Network Security Protocols</span>
+                  <span class="skill-level">Foundation</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="3"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Information Security</span>
+                  <span class="skill-level">Applied</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="5"></div>
+                </div>
+              </div>
             </div>
+            
             <div class="skill-category">
-              <div class="skill-category-title">Database &amp; Systems</div>
-              <span class="skill-item">MySQL</span> 
-              <span class="skill-item">Database Design</span> 
-              <span class="skill-item">Information Architecture</span> 
-              <span class="skill-item">System Administration</span> 
+              <div class="skill-category-title">
+                <span>🗄️</span>
+                Database & Systems
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">MySQL</span>
+                  <span class="skill-level">Foundation</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="2"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Database Design</span>
+                  <span class="skill-level">Foundation</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="2"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Information Architecture</span>
+                  <span class="skill-level">Applied</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="5"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">System Administration</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="4"></div>
+                </div>
+              </div>
             </div>
+            
             <div class="skill-category">
-              <div class="skill-category-title">Software &amp; Tools</div>
-              <span class="skill-item">Microsoft Office Suite</span> 
-              <span class="skill-item">Word</span> 
-              <span class="skill-item">Excel</span> 
-              <span class="skill-item">PowerPoint</span>
-              <span class="skill-item">Figma</span>
-              <span class="skill-item">Adobe Dreamweaver (Intro)</span>
-              <span class="skill-item">Adobe Illustrator (Intro)</span> 
+              <div class="skill-category-title">
+                <span>🛠️</span>
+                Software & Tools
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Microsoft Word</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="4"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Microsoft Excel</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="4"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Microsoft PowerPoint</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="4"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Figma</span>
+                  <span class="skill-level">Applied</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="5"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Adobe Dreamweaver</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="3"></div>
+                </div>
+              </div>
+              
+              <div class="skill-with-progress">
+                <div class="skill-info">
+                  <span class="skill-name">Adobe Illustrator</span>
+                  <span class="skill-level">Hands-On</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-level="2"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -2637,4 +2904,4 @@ window.addEventListener('popstate', (e) => {
 });
 </script>
 </body>
-</html>	
+</html>
