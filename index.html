@@ -895,27 +895,16 @@ body {
 /* Mobile enhancements */
 @media (max-width: 768px) {
   body {
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); /* iOS safe area support */
-    /* Prevent iOS Safari bounce scrolling */
+    padding-bottom: 80px; /* Simplified - no env() for Chrome mobile */
     -webkit-overflow-scrolling: touch;
     overflow-x: hidden;
-  }
-  
-  /* iOS viewport height fix */
-  html {
-    height: -webkit-fill-available;
-  }
-  
-  body {
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
   }
   
   .sidebar {
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 280px;
-    touch-action: pan-y;
+    touch-action: pan-y; /* Allow vertical scrolling */
   }
   
   .sidebar.open {
@@ -926,17 +915,19 @@ body {
     transition: none;
   }
   
+  /* Improve sidebar scrolling */
+  .sidebar .nav-menu,
+  .sidebar .contact-info {
+    touch-action: pan-y; /* Ensure vertical scrolling works */
+  }
+  
   .main-content {
     margin-left: 0;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
   }
   
   .page {
     padding: 20px;
-    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); /* Extra space for bottom nav + safe area */
-    min-height: calc(100vh - 80px);
-    min-height: calc(-webkit-fill-available - 80px);
+    padding-bottom: 100px; /* Simplified for Chrome mobile */
   }
   
   /* Mobile menu button - Enhanced */
@@ -986,7 +977,7 @@ body {
     visibility: visible;
   }
   
-  /* Bottom Navigation Bar - iOS Safari Fix */
+  /* Bottom Navigation Bar - Chrome Mobile Fix */
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -1000,31 +991,30 @@ body {
     transform: translateY(0);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
-    /* iOS Safari specific fixes */
+    /* Chrome mobile specific fixes */
     padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     min-height: calc(64px + env(safe-area-inset-bottom, 0px));
-    
-    /* Force it to stick to bottom on iOS */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
   }
   
-  /* Additional iOS viewport fixes */
-  @supports (-webkit-touch-callout: none) {
-    .bottom-nav {
-      /* iOS specific - ensure it goes to absolute bottom */
-      bottom: env(safe-area-inset-bottom, 0px);
-      padding-bottom: 8px;
-    }
-  }
-  
-  /* Alternative fix using viewport units for iOS */
-  @media screen and (max-device-width: 428px) and (-webkit-min-device-pixel-ratio: 2) {
+  /* Chrome mobile viewport fix */
+  @media screen and (max-width: 768px) {
     .bottom-nav {
       bottom: 0;
       padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+      /* Force to bottom edge on Chrome mobile */
+      margin-bottom: 0;
       height: auto;
-      min-height: calc(64px + env(safe-area-inset-bottom, 0px));
+      min-height: 64px;
+    }
+  }
+  
+  /* Android Chrome specific */
+  @media screen and (max-width: 768px) and (orientation: portrait) {
+    .bottom-nav {
+      bottom: 0;
+      position: fixed;
+      width: 100%;
+      box-sizing: border-box;
     }
   }
   
@@ -1849,14 +1839,14 @@ class MobileNavigation {
   
   handleTouchMove(e) {
     if (this.isDragging) {
-      e.preventDefault();
-      this.handleMove(e.touches[0].clientX);
+      e.preventDefault(); // Only prevent default when actively swiping
+      this.handleMove(e.touches[0].clientX, e.touches[0].clientY);
     }
   }
   
   handleMouseMove(e) {
     if (this.isDragging) {
-      this.handleMove(e.clientX);
+      this.handleMove(e.clientX, e.clientY);
     }
   }
   
