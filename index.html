@@ -933,7 +933,7 @@ body {
     padding-bottom: 40px;
   }
   
-  /* Mobile menu button - clean styling */
+  /* Mobile menu button - CLEAN and SIMPLE */
   .mobile-menu-btn {
     display: block;
     position: fixed;
@@ -953,6 +953,8 @@ body {
   .mobile-menu-btn:hover {
     background: var(--accent-secondary);
   }
+  
+  /* NO ACTIVE STATE CHANGES */
   
   .mobile-overlay {
     position: fixed;
@@ -974,8 +976,9 @@ body {
   }
 }
   
-  /* Mobile menu button - Enhanced */
+  /* Mobile menu button - CLEAN and SIMPLE */
   .mobile-menu-btn {
+    display: block;
     position: fixed;
     top: 20px;
     left: 20px;
@@ -984,22 +987,17 @@ body {
     color: white;
     border: none;
     padding: 12px;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 18px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+    transition: background-color 0.3s ease;
   }
   
   .mobile-menu-btn:hover {
     background: var(--accent-secondary);
-    transform: scale(1.05);
   }
   
-  .mobile-menu-btn.active {
-    background: #e53e3e;
-    transform: rotate(90deg);
-  }
+  /* NO ACTIVE STATE CHANGES */
   
   /* Enhanced overlay with blur effect */
   .mobile-overlay {
@@ -1139,9 +1137,10 @@ body {
 }
 
 /* Hide bottom nav on desktop - REMOVED */
+/* Hide mobile elements on desktop */
 @media (min-width: 769px) {
   .mobile-menu-btn {
-    display: none;
+    display: none !important;
   }
   
   .swipe-indicator {
