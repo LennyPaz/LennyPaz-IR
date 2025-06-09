@@ -895,7 +895,20 @@ body {
 /* Mobile enhancements */
 @media (max-width: 768px) {
   body {
-    padding-bottom: env(safe-area-inset-bottom, 80px); /* iOS safe area support */
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); /* iOS safe area support */
+    /* Prevent iOS Safari bounce scrolling */
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+  }
+  
+  /* iOS viewport height fix */
+  html {
+    height: -webkit-fill-available;
+  }
+  
+  body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
   
   .sidebar {
@@ -915,11 +928,15 @@ body {
   
   .main-content {
     margin-left: 0;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
   
   .page {
     padding: 20px;
     padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); /* Extra space for bottom nav + safe area */
+    min-height: calc(100vh - 80px);
+    min-height: calc(-webkit-fill-available - 80px);
   }
   
   /* Mobile menu button - Enhanced */
@@ -969,7 +986,7 @@ body {
     visibility: visible;
   }
   
-  /* Bottom Navigation Bar */
+  /* Bottom Navigation Bar - iOS Safari Fix */
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -979,16 +996,35 @@ body {
     border-top: 1px solid var(--border-color);
     z-index: 1000;
     padding: 8px 0;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); /* iOS safe area */
     box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
     transform: translateY(0);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* iOS Safari specific fixes */
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    min-height: calc(64px + env(safe-area-inset-bottom, 0px));
+    
+    /* Force it to stick to bottom on iOS */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
   
-  /* Ensure bottom nav sticks to actual bottom on iOS */
-  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+  /* Additional iOS viewport fixes */
+  @supports (-webkit-touch-callout: none) {
     .bottom-nav {
-      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+      /* iOS specific - ensure it goes to absolute bottom */
+      bottom: env(safe-area-inset-bottom, 0px);
+      padding-bottom: 8px;
+    }
+  }
+  
+  /* Alternative fix using viewport units for iOS */
+  @media screen and (max-device-width: 428px) and (-webkit-min-device-pixel-ratio: 2) {
+    .bottom-nav {
+      bottom: 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+      height: auto;
+      min-height: calc(64px + env(safe-area-inset-bottom, 0px));
     }
   }
   
