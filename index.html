@@ -739,7 +739,7 @@ body {
   background-color: #fff6f6;
 }
 
-/* Theme toggle - FIXED */
+/* Theme toggle - FIXED and stays in place at all screen sizes */
 .theme-toggle {
   position: fixed;
   top: 20px;
@@ -762,6 +762,47 @@ body {
 .theme-toggle:hover {
   transform: scale(1.1) rotate(180deg);
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Ensure theme toggle never moves regardless of screen size */
+@media (max-width: 768px) {
+  .theme-toggle {
+    top: 20px !important;
+    right: 20px !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .theme-toggle {
+    top: 20px !important;
+    right: 20px !important;
+  }
+}
+
+/* Mobile menu button - aligned with theme toggle */
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 101;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu-btn:hover {
+  background: var(--accent-secondary);
 }
 
 /* Resume button */
