@@ -107,8 +107,8 @@ body {
 }
 
 .profile-photo {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   background-color: #4a5568;
   border: 3px solid #e2e8f0;
   border-radius: 50%;
@@ -867,19 +867,32 @@ body {
   }
 }
 
-/* Medium desktop: 3 columns, bottom row has 2 items */
+/* Medium desktop: 3 columns top row, 2 columns bottom row filling full width */
 @media (min-width: 1200px) and (max-width: 1599px) {
   .skills-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
   }
   
-  /* Make last two items span to center them */
+  /* First 3 items each take 2 columns (3 items × 2 columns = 6 columns) */
+  .skills-grid .skill-category:nth-child(1) {
+    grid-column: 1 / 3;
+  }
+  
+  .skills-grid .skill-category:nth-child(2) {
+    grid-column: 3 / 5;
+  }
+  
+  .skills-grid .skill-category:nth-child(3) {
+    grid-column: 5 / 7;
+  }
+  
+  /* Bottom row: 2 items each take 3 columns (2 items × 3 columns = 6 columns) */
   .skills-grid .skill-category:nth-child(4) {
-    grid-column: 1 / 2;
+    grid-column: 1 / 4;
   }
   
   .skills-grid .skill-category:nth-child(5) {
-    grid-column: 2 / 3;
+    grid-column: 4 / 7;
   }
 }
 
@@ -990,7 +1003,6 @@ body {
 .progress-fill[data-level="3"] { width: 42.86%; }
 .progress-fill[data-level="4"] { width: 57.14%; }
 .progress-fill[data-level="5"] { width: 71.43%; }
-
 .progress-fill[data-level="6"] { width: 85.71%; }
 .progress-fill[data-level="7"] { width: 100%; }
 
@@ -1187,7 +1199,6 @@ body {
   display: none;
   position: fixed;
   top: 20px;
-
   left: 20px;
   z-index: 101;
   background: var(--accent-primary);
@@ -2609,6 +2620,7 @@ class VisitorAnalytics {
     this.pageViews = {};
     this.events = [];
     this.isActive = true;
+
     this.eventCooldowns = new Map();
     this.lastSendTime = 0;
     this.init();
