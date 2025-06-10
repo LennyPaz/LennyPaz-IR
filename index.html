@@ -291,12 +291,20 @@ body {
   padding: 40px;
   min-height: 100vh;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transform: translateY(20px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
 }
 
 .page.active {
   display: block;
   opacity: 1;
+  transform: translateY(0);
+}
+
+.page.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 /* ===========================================
