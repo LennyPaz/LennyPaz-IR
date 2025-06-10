@@ -2640,6 +2640,10 @@ function toggleTheme() {
   
   if (newTheme) {
     html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', 'dark');
+    document.getElementById('theme-icon').textContent = '☀️';
+  } else {
+    html.removeAttribute('data-theme');
     localStorage.setItem('theme', 'light');
     document.getElementById('theme-icon').textContent = '🌙';
   }
@@ -3146,8 +3150,4 @@ window.addEventListener('popstate', (e) => {
 });
 </script>
 </body>
-</html>'dark');
-    document.getElementById('theme-icon').textContent = '☀️';
-  } else {
-    html.removeAttribute('data-theme');
-    localStorage.setItem('theme',
+</html>
