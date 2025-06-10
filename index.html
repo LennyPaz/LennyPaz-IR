@@ -302,10 +302,7 @@ body {
   transform: translateY(0);
 }
 
-.page.fade-out {
-  opacity: 0;
-  transform: translateY(-10px);
-}
+/* Remove fade-out class - no longer needed */
 
 /* ===========================================
    HERO AND PAGE HEADERS
@@ -972,6 +969,7 @@ body {
   position: absolute;
   top: 0;
   left: -100%;
+
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
@@ -2616,6 +2614,7 @@ body {
             <input type="email" id="email" class="form-input" placeholder="your.email@example.com">
           </div>
           <div class="form-group">
+
             <label class="form-label" for="subject">Subject</label>
             <input type="text" id="subject" class="form-input" placeholder="Subject of your message">
           </div>
@@ -2641,10 +2640,6 @@ function toggleTheme() {
   
   if (newTheme) {
     html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', 'dark');
-    document.getElementById('theme-icon').textContent = '☀️';
-  } else {
-    html.removeAttribute('data-theme');
     localStorage.setItem('theme', 'light');
     document.getElementById('theme-icon').textContent = '🌙';
   }
@@ -3002,34 +2997,29 @@ function closeMobileMenu() {
   document.body.style.overflow = '';
 }
 
-// Page navigation - ENHANCED with smooth transitions and auto-close sidebar
+// Page navigation - SIMPLIFIED with only fade-in animation
 function showPage(pageId, event = {}, push = true) {
   const currentPage = document.querySelector('.page.active');
   const nextPage = document.getElementById(pageId);
 
   if (!nextPage || (currentPage && currentPage.id === pageId)) return;
 
-  // Start fade-out transition on current page
+  // Immediately hide current page and show next page
   if (currentPage) {
-    currentPage.classList.add('fade-out');
-    setTimeout(() => {
-      currentPage.classList.remove('active', 'fade-out');
-
-      // Prepare next page before showing
-      nextPage.style.opacity = '0';
-      nextPage.style.transform = 'translateY(20px)';
-      nextPage.classList.add('active');
-
-      // Force reflow to apply initial styles before animating
-      void nextPage.offsetWidth;
-
-      // Animate in
-      nextPage.style.opacity = '1';
-      nextPage.style.transform = 'translateY(0)';
-    }, 200); // Match this to CSS transition duration
-  } else {
-    nextPage.classList.add('active');
+    currentPage.classList.remove('active');
   }
+
+  // Show next page with fade-in animation
+  nextPage.style.opacity = '0';
+  nextPage.style.transform = 'translateY(20px)';
+  nextPage.classList.add('active');
+
+  // Force reflow to apply initial styles before animating
+  void nextPage.offsetWidth;
+
+  // Animate in
+  nextPage.style.opacity = '1';
+  nextPage.style.transform = 'translateY(0)';
 
   // Highlight nav
   document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
@@ -3156,4 +3146,8 @@ window.addEventListener('popstate', (e) => {
 });
 </script>
 </body>
-</html>
+</html>'dark');
+    document.getElementById('theme-icon').textContent = '☀️';
+  } else {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('theme',
