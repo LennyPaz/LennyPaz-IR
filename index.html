@@ -3002,44 +3002,55 @@ function closeMobileMenu() {
   document.body.style.overflow = '';
 }
 
-// Page navigation - ENHANCED with auto-close sidebar
+// Page navigation - ENHANCED with smooth transitions and auto-close sidebar
 function showPage(pageId, event = {}, push = true) {
-  // Hide all pages
-  const pages = document.querySelectorAll('.page');
-  pages.forEach(page => {
-    page.classList.remove('active');
-  });
+  const currentPage = document.querySelector('.page.active');
+  const nextPage = document.getElementById(pageId);
 
-  // Show selected page
-  const selectedPage = document.getElementById(pageId);
-  if (selectedPage) {
-    selectedPage.classList.add('active');
+  if (!nextPage || (currentPage && currentPage.id === pageId)) return;
+
+  // Start fade-out transition on current page
+  if (currentPage) {
+    currentPage.classList.add('fade-out');
+    setTimeout(() => {
+      currentPage.classList.remove('active', 'fade-out');
+
+      // Prepare next page before showing
+      nextPage.style.opacity = '0';
+      nextPage.style.transform = 'translateY(20px)';
+      nextPage.classList.add('active');
+
+      // Force reflow to apply initial styles before animating
+      void nextPage.offsetWidth;
+
+      // Animate in
+      nextPage.style.opacity = '1';
+      nextPage.style.transform = 'translateY(0)';
+    }, 200); // Match this to CSS transition duration
+  } else {
+    nextPage.classList.add('active');
   }
 
-  // Update navigation styling
-  const navLinks = document.querySelectorAll('.nav-link');
-  navLinks.forEach(link => {
-    link.classList.remove('active');
-  });
-
+  // Highlight nav
+  document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
   if (event?.target) {
     event.target.classList.add('active');
   }
 
   // Scroll to top
-  window.scrollTo(0, 0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Push to browser history
+  // Push state
   if (push && history.pushState) {
     history.pushState({ pageId }, '', `#${pageId}`);
   }
 
-  // Track page view
+  // Track view
   if (analytics) {
     analytics.trackPageView(pageId);
   }
 
-  // Auto-close mobile menu when navigation item is clicked (ENHANCED FEATURE)
+  // Auto-close menu
   closeMobileMenu();
 }
 
