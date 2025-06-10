@@ -37,6 +37,20 @@
   --info-color: #3182ce;
 }
 
+// Resume download handler
+function handleResumeDownload(event) {
+  // Track the download event
+  trackEvent('download_resume', { 
+    file: 'Lenny Paz - Resume.pdf',
+    source: 'sidebar_navigation'
+  });
+  
+  // Show success message after a short delay
+  setTimeout(() => {
+    showCustomAlert("✅ Resume downloaded. Thanks for your interest!", "success");
+  }, 500);
+}
+
 [data-theme="dark"] {
   --bg-primary: #1a202c;
   --bg-secondary: #2d3748;
@@ -1043,6 +1057,21 @@ body {
   color: #10b981;
 }
 
+/* Professional skills grid - separate from technical skills */
+.professional-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  padding: 30px;
+}
+
+/* Mobile: single column for professional skills too */
+@media (max-width: 768px) {
+  .professional-skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Original skill items for professional skills */
 .skill-item {
   display: inline-block;
@@ -1604,7 +1633,7 @@ body {
         <a class="nav-link" onclick="showPage('contact', event)">Contact</a> 
       </li>
       <li class="nav-item"> 
-        <a href="Lenny Paz - Resume.pdf" download class="resume-button spacer-button"> 
+        <a href="Lenny Paz - Resume.pdf" download class="resume-button spacer-button" onclick="handleResumeDownload(event)" title="Download my resume (PDF, updated 2025)"> 
           <span>📄</span> Download PDF Resume
         </a> 
       </li>
@@ -2358,7 +2387,7 @@ body {
           </h2>
         </div>
         <div class="section-body">
-          <div class="skills-grid">
+          <div class="professional-skills-grid">
             <div class="skill-category">
               <div class="skill-category-title">
                 <span>💬</span>
