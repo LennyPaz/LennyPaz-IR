@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume Website - Lenny Paz</title>
+    <meta name="description" content="A comprehensive look at building a modern, responsive personal portfolio website from scratch, featuring real-time analytics, dynamic user interactions, and a full-stack architecture using Cloudflare Workers and D1 database.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+    
+    <style>
+        :root {
+            /* Primary Colors */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f8f9fa;
+            
+            /* Text Colors */
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6b7280;
+            
+            /* Accent Colors */
+            --accent-primary: #2563eb;
+            --accent-secondary: #1d4ed8;
+            --accent-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            
+            /* Border & Effects */
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            
+            /* Typography */
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(17, 17, 17, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            gap: 2rem;
+        }
+
+        .nav-brand {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb-link:hover {
+            color: var(--accent-secondary);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Reading Progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 99;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-gradient);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* Main Layout */
+        .article-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 4rem;
+            margin-top: 2rem;
+        }
+
+        .article-content {
+            min-width: 0;
+        }
+
+        .article-sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        /* Hero Section */
+        .article-hero {
+            margin-bottom: 4rem;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .meta-badge {
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .meta-divider {
+            width: 1px;
+            height: 16px;
+            background: var(--border-color);
+        }
+
+        .article-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .article-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 300px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 0.5rem 0;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 0.75rem;
+            margin-left: -0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .toc-link:hover, .toc-link.active {
+            color: var(--accent-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Mobile Menu Panel - Slide from Right */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 320px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .mobile-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-close-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .mobile-close-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Mobile Menu Sections */
+        .mobile-nav-section {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .mobile-nav-section:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-section-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-section-header:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .mobile-nav-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-section-arrow {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-section-content.open {
+            max-height: 500px;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .mobile-nav-link:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        .mobile-nav-link.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        .mobile-nav-link svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .content-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .content-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .content-text h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem 0;
+        }
+
+        .content-text h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .content-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .content-text ul, .content-text ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .content-text li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .content-text blockquote {
+            border-left: 4px solid var(--accent-primary);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            background: var(--bg-tertiary);
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .content-text code {
+            background: var(--bg-tertiary);
+            padding: 0.125rem 0.25rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            color: var(--accent-primary);
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.125rem;
+        }
+
+        .highlight-content {
+            color: var(--text-secondary);
+        }
+
+        /* Code Blocks with Syntax Highlighting */
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .code-header {
+            background: var(--bg-tertiary);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .code-title {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .code-lang {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            background: var(--bg-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            background: #0d1117;
+            color: #e6edf3;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        /* Syntax highlighting */
+        .code-content .keyword { color: #ff7b72; }
+        .code-content .string { color: #a5d6ff; }
+        .code-content .comment { color: #8b949e; font-style: italic; }
+        .code-content .function { color: #d2a8ff; }
+        .code-content .variable { color: #ffa657; }
+        .code-content .property { color: #79c0ff; }
+        .code-content .number { color: #79c0ff; }
+        .code-content .operator { color: #ff7b72; }
+        .code-content .punctuation { color: #e6edf3; }
+
+        /* Tech Stack Pills */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-pill {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+        }
+		
+        /* Image Containers - Properly formatted with responsive sizing */
+        .image-container {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            display: block;
+            margin: 0 auto;
+            /* Lazy loading optimization */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .image-container img.loaded {
+            opacity: 1;
+        }
+
+        .image-container img.loading {
+            background: var(--bg-tertiary);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Different sizing for different types of screenshots */
+        .screenshot-comparison {
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .screenshot-mobile {
+            max-width: 250px
+				;
+        }
+
+        .screenshot-desktop {
+            max-width: 900px;
+        }
+
+        /* Image captions */
+        .image-caption {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .image-placeholder {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .image-placeholder:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .placeholder-text {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Project Navigation */
+        .project-nav {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .nav-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-title {
+            color: var(--accent-primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .nav-title:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .article-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .article-sidebar {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 0 1rem;
+            }
+            
+            .breadcrumbs {
+                display: none;
+            }
+            
+            .article-actions {
+                flex-direction: column;
+            }
+            
+            .hero-image {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reading-progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../../index.html" class="nav-brand">Lenny Paz</a>
+            
+            <div class="breadcrumbs">
+                <a href="../index.html" class="breadcrumb-link">Projects</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../index.html?filter=frontend" class="breadcrumb-link">Web Development</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Interactive Resume</span>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                    <svg id="theme-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Mobile Menu -->
+    <nav class="mobile-menu">
+        <div class="mobile-menu-header">
+            <span class="mobile-menu-title">Menu</span>
+            <button class="mobile-close-btn" onclick="closeMobileMenu()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Breadcrumbs Section -->
+        <div class="mobile-nav-section breadcrumbs-section">
+            <div class="mobile-section-header" onclick="toggleMobileSection('nav-section')">
+                <div class="mobile-nav-title">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                    Navigation
+                </div>
+                <svg class="mobile-section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="mobile-section-content" id="nav-section">
+                <a href="../projectshowcase.html" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                    View All Projects
+                </a>
+                <a href="../projectshowcase.html?filter=frontend" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    </svg>
+                    Web Development
+                </a>
+                <a href="../../index.html" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Main Resume
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contents Section -->
+        <div class="mobile-nav-section">
+            <div class="mobile-section-header" onclick="toggleMobileSection('contents-section')">
+                <div class="mobile-nav-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                    </svg>
+                    Contents
+                </div>
+                <svg class="mobile-section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="mobile-section-content open" id="contents-section">
+                <a href="#overview" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Project Overview
+                </a>
+                <a href="#technical" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Technical Implementation
+                </a>
+                <a href="#features" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Key Features
+                </a>
+                <a href="#challenges" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                    Challenges &amp; Solutions
+                </a>
+                <a href="#showcase" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Visual Showcase
+                </a>
+                <a href="#performance" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Performance &amp; Analytics
+                </a>
+                <a href="#code" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    </svg>
+                    Code Highlights
+                </a>
+                <a href="#lessons" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    Lessons Learned
+                </a>
+                <a href="#future" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                    Future Improvements
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="article-container">
+        <article class="article-content">
+            <!-- Hero Section -->
+            <header class="article-hero">
+                <div class="article-meta">
+                    <span class="meta-badge">Web Development</span>
+                    <div class="meta-divider"></div>
+                    <span>December 2024</span>
+                    <div class="meta-divider"></div>
+                    <span>12 min read</span>
+                </div>
+                
+                <h1 class="article-title">Interactive Resume Website</h1>
+                
+                <p class="article-description">
+                    A comprehensive look at building a modern, responsive personal portfolio website from scratch, featuring real-time analytics, dynamic user interactions, and a full-stack architecture using Cloudflare Workers and D1 database.
+                </p>
+                
+                <div class="article-actions">
+                    <a href="https://lennypaz.com" target="_blank" rel="noopener" class="btn-primary">
+                        View Live Site →
+                    </a>
+                    <a href="#" class="btn-secondary">
+                        View Source Code
+                    </a>
+                </div>
+                
+                <div class="hero-image">
+                    <img data-src="../assets/images/LPIR.png" alt="Desktop Site" class="lazy-load">
+                </div>
+                
+                <div class="tech-stack">
+                    <span class="tech-pill">HTML5</span>
+                    <span class="tech-pill">CSS3</span>
+                    <span class="tech-pill">Vanilla JavaScript</span>
+                    <span class="tech-pill">Cloudflare Workers</span>
+                    <span class="tech-pill">D1 Database</span>
+                    <span class="tech-pill">GitHub Pages</span>
+                </div>
+            </header>
+
+            <!-- Project Overview -->
+            <section class="content-section" id="overview">
+                <h2 class="section-title">Project Overview</h2>
+                <div class="content-text">
+                    <p>I set out to create a resume that went beyond a static PDF, something more dynamic, interactive, and personalized. The goal was to design a responsive website that could showcase not only my experience and skills but also my growth in web development and backend integration. It's aimed at recruiters, instructors, and anyone curious about my work. This was a solo project with the scope of creating a virtual resume that could later be connected to our project portfolio.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+                    
+                    <p>I wanted to create something that would engage visitors and provide insights into how people interact with my content. This led me to implement features like real-time analytics, interactive project previews, and a contact system that notifies me instantly when someone reaches out.</p>
+                    
+                    <p>The project represents a full-stack approach to web development, combining frontend design skills with backend data management and third-party integrations. Every feature was built with both user experience and technical learning in mind.</p>
+              </div>
+            </section>
+
+            <!-- Technical Implementation -->
+            <section class="content-section" id="technical">
+                <h2 class="section-title">Technical Implementation</h2>
+                <div class="content-text">
+                    <p>This project uses a lightweight tech stack: just HTML, CSS, and JavaScript on the frontend. The website is hosted on GitHub Pages, which provides free static hosting with excellent performance. However, for the backend functionality, I needed something more powerful.</p>
+                    
+                    <p>For the backend, I used Cloudflare Workers paired with Cloudflare D1, a serverless SQL database powered by SQLite. To connect GitHub Pages with Cloudflare's services, I updated my domain's nameservers to point to Cloudflare.</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Why Cloudflare for Backend Services?</div>
+                    <div class="highlight-content">
+                        Using Cloudflare's edge computing platform gives me the benefits of their global CDN (faster loading times worldwide), advanced security features, and access to serverless computing—all while keeping my static site on GitHub Pages. This hybrid approach combines the simplicity of static hosting with the power of serverless functions.
+                    </div>
+                </div>
+                
+                <div class="content-text">
+                    <h3>Development Environment Setup</h3>
+                    <p>Setting this up was a big learning experience. Since D1 runs through Cloudflare's ecosystem, I needed to install several tools:</p>
+                    
+                    <ul>
+                        <li><strong>Node.js</strong> – the JavaScript runtime environment</li>
+                        <li><strong>npm</strong> – its package manager, used to install the needed tooling</li>
+                        <li><strong>Wrangler</strong> – Cloudflare's command-line interface tool that helps deploy and manage projects</li>
+                        <li><strong>SSH</strong> – to handle secure deployment to Cloudflare's infrastructure</li>
+                    </ul>
+                    
+                    <p>After configuring the D1 database locally and defining the schema, I deployed everything via the command line using <code>wrangler d1</code> and <code>wrangler publish</code>. This setup allowed me to handle form submissions, store analytics events, and track user sessions without relying on traditional hosting with a database server.</p>
+                </div>
+            </section>
+
+            <!-- Key Features -->
+            <section class="content-section" id="features">
+                <h2 class="section-title">Key Features &amp; Implementation</h2>
+                <div class="content-text">
+                    <p>Some of the standout features that make this more than just a static website include:</p>
+                    
+                    <ul>
+                        <li><strong>Mobile-first responsive design</strong> so it looks great on any screen size</li>
+                        <li><strong>Theme toggle</strong> with a moon/sun button to switch between light and dark modes</li>
+                        <li><strong>Real-time analytics</strong> showing how people interact with my resume</li>
+                        <li><strong>Downloadable PDF resume</strong> for traditional applications</li>
+                        <li><strong>Interactive project previews</strong> that appear when you hover over project cards</li>
+                        <li><strong>Contact form integration</strong> via Telegram with secure backend processing</li>
+                    </ul>
+                    
+                    <h3>The Theme Toggle System</h3>
+                    <p>One feature I'm particularly proud of is the theme switching capability. It uses CSS custom properties (variables) to seamlessly transition between light and dark modes, and remembers your preference for future visits using browser storage.</p>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Theme Toggle Implementation</span>
+                        <span class="code-lang">JavaScript</span>
+                    </div>
+                    <div class="code-content">
+<span class="keyword">function</span> <span class="function">toggleTheme</span>() {
+  <span class="keyword">const</span> <span class="variable">html</span> = <span class="property">document</span>.<span class="property">documentElement</span>;
+  <span class="keyword">const</span> <span class="variable">currentTheme</span> = <span class="variable">html</span>.<span class="function">getAttribute</span>(<span class="string">'data-theme'</span>);
+  <span class="keyword">const</span> <span class="variable">newTheme</span> = <span class="variable">currentTheme</span> === <span class="string">'dark'</span> ? <span class="keyword">null</span> : <span class="string">'dark'</span>;
+  
+  <span class="keyword">if</span> (<span class="variable">newTheme</span>) {
+    <span class="variable">html</span>.<span class="function">setAttribute</span>(<span class="string">'data-theme'</span>, <span class="variable">newTheme</span>);
+    <span class="property">localStorage</span>.<span class="function">setItem</span>(<span class="string">'theme'</span>, <span class="string">'dark'</span>);
+    <span class="property">document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'☀️'</span>;
+  } <span class="keyword">else</span> {
+    <span class="variable">html</span>.<span class="function">removeAttribute</span>(<span class="string">'data-theme'</span>);
+    <span class="property">localStorage</span>.<span class="function">setItem</span>(<span class="string">'theme'</span>, <span class="string">'light'</span>);
+    <span class="property">document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'🌙'</span>;
+  }
+  
+  <span class="comment">// Track the theme change for analytics</span>
+  <span class="function">trackEvent</span>(<span class="string">'theme_toggle'</span>, { 
+    <span class="property">theme</span>: <span class="variable">newTheme</span> || <span class="string">'light'</span> 
+  });
+}
+
+<span class="comment">// Load saved theme on page initialization</span>
+<span class="keyword">function</span> <span class="function">loadTheme</span>() {
+  <span class="keyword">const</span> <span class="variable">savedTheme</span> = <span class="property">localStorage</span>.<span class="function">getItem</span>(<span class="string">'theme'</span>) || <span class="string">'light'</span>;
+  <span class="keyword">const</span> <span class="variable">prefersDark</span> = <span class="property">window</span>.<span class="function">matchMedia</span>(<span class="string">'(prefers-color-scheme: dark)'</span>).<span class="property">matches</span>;
+  <span class="keyword">const</span> <span class="variable">theme</span> = <span class="variable">savedTheme</span> === <span class="string">'auto'</span> ? 
+    (<span class="variable">prefersDark</span> ? <span class="string">'dark'</span> : <span class="string">'light'</span>) : <span class="variable">savedTheme</span>;
+  
+  <span class="keyword">if</span> (<span class="variable">theme</span> === <span class="string">'dark'</span>) {
+    <span class="property">document</span>.<span class="property">documentElement</span>.<span class="function">setAttribute</span>(<span class="string">'data-theme'</span>, <span class="string">'dark'</span>);
+    <span class="property">document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'☀️'</span>;
+  } <span class="keyword">else</span> {
+    <span class="property">document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'🌙'</span>;
+  }
+}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Challenges & Solutions -->
+            <section class="content-section" id="challenges">
+                <h2 class="section-title">Challenges &amp; Solutions</h2>
+                <div class="content-text">
+                    <h3>1. Working with Cloudflare D1 for the First Time</h3>
+                    <p>This was my first time deploying a live database using serverless SQL. Unlike traditional database setups where you might use phpMyAdmin or similar tools, everything with D1 is defined and pushed through Wrangler command-line tools. Here's a glimpse of the schema I created to track user sessions:</p>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Database Schema for User Sessions</span>
+                        <span class="code-lang">SQL</span>
+                    </div>
+                    <div class="code-content">
+<span class="keyword">CREATE TABLE</span> <span class="keyword">IF NOT EXISTS</span> <span class="variable">sessions</span> (
+  <span class="property">session_id</span> <span class="keyword">TEXT</span> <span class="keyword">PRIMARY KEY</span>,
+  <span class="property">total_time</span> <span class="keyword">INTEGER</span>,
+  <span class="property">active_pages</span> <span class="keyword">INTEGER</span>,
+  <span class="property">avg_time_per_page</span> <span class="keyword">INTEGER</span>,
+  <span class="property">total_events</span> <span class="keyword">INTEGER</span>,
+  <span class="property">is_active</span> <span class="keyword">INTEGER</span>,
+  <span class="property">user_agent</span> <span class="keyword">TEXT</span>,
+  <span class="property">referrer</span> <span class="keyword">TEXT</span>,
+  <span class="property">screen_resolution</span> <span class="keyword">TEXT</span>,
+  <span class="property">timestamp</span> <span class="keyword">TEXT</span>
+);
+
+<span class="keyword">CREATE TABLE</span> <span class="keyword">IF NOT EXISTS</span> <span class="variable">events</span> (
+  <span class="property">id</span> <span class="keyword">INTEGER</span> <span class="keyword">PRIMARY KEY</span> <span class="keyword">AUTOINCREMENT</span>,
+  <span class="property">session_id</span> <span class="keyword">TEXT</span>,
+  <span class="property">event_name</span> <span class="keyword">TEXT</span>,
+  <span class="property">event_data</span> <span class="keyword">TEXT</span>,
+  <span class="property">timestamp</span> <span class="keyword">TEXT</span>,
+  <span class="keyword">FOREIGN KEY</span>(<span class="property">session_id</span>) <span class="keyword">REFERENCES</span> <span class="variable">sessions</span>(<span class="property">session_id</span>)
+);
+                    </div>
+                </div>
+                
+                <div class="content-text">
+                    <p>Getting this to work involved debugging the deployment steps and making sure timestamps were recorded consistently. The serverless nature of D1 meant I had to think differently about database connections and query optimization.</p>
+                    
+                    <h3>2. Getting Comfortable with Adobe Dreamweaver</h3>
+                    <p>Although many developers today use code editors like VS Code, I decided to try Adobe Dreamweaver on my own to see how it could help with design visualization. It came with a learning curve—especially around how it handles asset paths and previews—but it helped me better understand front-end layout behaviors in a visual way.</p>
+                    
+                    <p>The split view feature was particularly useful for seeing how CSS changes affected the layout in real-time, which helped me catch responsive design issues earlier in the development process.</p>
+                    
+                    <h3>3. Reliable User Activity Tracking</h3>
+                    <p>One of the more technical hurdles was capturing user sessions accurately. A lot can go wrong: users close tabs, leave pages open, or go idle. To handle this, I wrote logic that tracks when the page is hidden, when the user is idle for too long, or when they navigate away:</p>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Session Tracking Logic</span>
+                        <span class="code-lang">JavaScript</span>
+                    </div>
+                    <div class="code-content">
+<span class="comment">// Multiple approaches to catch user departure</span>
+<span class="property">document</span>.<span class="function">addEventListener</span>(<span class="string">'visibilitychange'</span>, () =&gt; {
+  <span class="keyword">if</span> (<span class="property">document</span>.<span class="property">hidden</span>) {
+    <span class="function">trackEvent</span>(<span class="string">'page_blur'</span>);
+    <span class="function">sendAnalytics</span>(<span class="keyword">true</span>); <span class="comment">// Send immediately when page becomes hidden</span>
+  } <span class="keyword">else</span> {
+    <span class="function">trackEvent</span>(<span class="string">'page_focus'</span>);
+  }
+});
+
+<span class="comment">// Reliable for navigation away from page</span>
+<span class="property">window</span>.<span class="function">addEventListener</span>(<span class="string">'pagehide'</span>, () =&gt; {
+  <span class="function">sendAnalytics</span>(<span class="keyword">true</span>);
+}, { <span class="property">passive</span>: <span class="keyword">true</span> });
+
+<span class="comment">// Handle idle users</span>
+<span class="keyword">let</span> <span class="variable">idleTimer</span>;
+<span class="keyword">const</span> <span class="function">resetIdleTimer</span> = () =&gt; {
+  <span class="function">clearTimeout</span>(<span class="variable">idleTimer</span>);
+  <span class="variable">idleTimer</span> = <span class="function">setTimeout</span>(() =&gt; {
+    <span class="function">sendAnalytics</span>(); <span class="comment">// Send after 2 minutes of inactivity</span>
+  }, <span class="number">120000</span>);
+};
+
+<span class="comment">// Reset timer on user activity</span>
+[<span class="string">'mousedown'</span>, <span class="string">'mousemove'</span>, <span class="string">'keypress'</span>, <span class="string">'scroll'</span>, <span class="string">'touchstart'</span>].<span class="function">forEach</span>(<span class="variable">event</span> =&gt; {
+  <span class="property">document</span>.<span class="function">addEventListener</span>(<span class="variable">event</span>, <span class="variable">resetIdleTimer</span>, { <span class="property">passive</span>: <span class="keyword">true</span> });
+});
+
+<span class="function">resetIdleTimer</span>(); <span class="comment">// Start the timer</span>
+                    </div>
+                </div>
+                
+                <div class="content-text">
+                    <p>This multi-layered approach helped improve session accuracy and allowed me to calculate meaningful metrics like average time per page and user engagement patterns.</p>
+                </div>
+            </section>
+
+            <!-- Visual Showcase -->
+            <section class="content-section" id="showcase">
+                <h2 class="section-title">Visual Showcase</h2>
+                <div class="content-text">
+                    <p>Screenshots of the desktop and mobile views, dark/light mode toggles, and a peek at the analytics dashboard really help bring the work to life. One of my favorite details is how the navigation transitions are smooth and snappy, making the site feel more like an app than a static page.</p>
+                </div>
+                
+                <div class="image-container screenshot-mobile">
+                    <img data-src="../assets/images/MobileLight.png" alt="Lark mode view of Education tab on Interactive Resume" class="lazy-load">
+                    <div class="image-caption">Light mode view of website on mobile</div>
+                </div>
+                
+                <div class="image-container screenshot-mobile">
+                    <img data-src="../assets/images/MobileDark.png" alt="Dark mode view of Education tab on Interactive Resume" class="lazy-load">
+                    <div class="image-caption">Dark mode view of website on mobile</div>
+                </div>
+                
+                <div class="image-container screenshot-comparison">
+                    <img data-src="../assets/images/ADash.png" alt="Analytics Dashboard with visitor stats" class="lazy-load">
+                    <div class="image-caption">Analytics Dashboard</div>
+                </div>
+            </section>
+
+            <!-- Performance & Analytics -->
+            <section class="content-section" id="performance">
+                <h2 class="section-title">Performance &amp; Analytics</h2>
+                <div class="content-text">
+                    <p>I implemented a lightweight system to collect metrics like:</p>
+                    
+                    <ul>
+                        <li>How long visitors stay on each section</li>
+                        <li>Which pages they view and in what order</li>
+                        <li>Whether they download my resume or toggle themes</li>
+                        <li>What device and browser they're using</li>
+                        <li>Which projects they click on or interact with</li>
+                    </ul>
+                    
+                    <p>All of this is viewable through a custom analytics dashboard I built myself. It even shows what device the user was on and tracks specific interactions like project clicks:</p>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Analytics Event Example</span>
+                        <span class="code-lang">JSON</span>
+                    </div>
+                    <div class="code-content">
+{
+  <span class="property">"event"</span>: <span class="string">"project_click"</span>,
+  <span class="property">"timestamp"</span>: <span class="number">1702345678901</span>,
+  <span class="property">"session_id"</span>: <span class="string">"abc123def456"</span>,
+  <span class="property">"data"</span>: {
+    <span class="property">"project"</span>: <span class="string">"Interactive Resume"</span>,
+    <span class="property">"section"</span>: <span class="string">"home"</span>,
+    <span class="property">"user_agent"</span>: <span class="string">"Chrome/Mobile"</span>,
+    <span class="property">"screen_resolution"</span>: <span class="string">"375x667"</span>
+  }
+}
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Analytics Dashboard Features</div>
+                    <div class="highlight-content">
+                        The custom dashboard shows real-time visitor data, session tracking, device analytics, and user interaction patterns. It includes features like active session monitoring, popular content identification, and visitor flow analysis—all built without relying on third-party analytics services.
+                    </div>
+                </div>
+                
+                <div class="content-text">
+                    <p>The analytics dashboard provides insights that help me understand which content resonates most with visitors and how they navigate through the site. This data-driven approach helps me make informed decisions about future improvements.</p>
+                </div>
+            </section>
+
+            <!-- Code Highlights -->
+            <section class="content-section" id="code">
+                <h2 class="section-title">Notable Code Implementations</h2>
+                <div class="content-text">
+                    <h3>Contact Form Integration with Telegram</h3>
+                    <p>One of the most practical features is the contact form that sends messages directly to my Telegram. I chose to route this through Cloudflare Workers for security reasons—since GitHub Pages repositories are public, anyone could view my source code and potentially access sensitive API tokens if they were stored in the frontend.</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Security Through Backend Processing</div>
+                    <div class="highlight-content">
+                        By processing form submissions through Cloudflare Workers, sensitive credentials like Telegram bot tokens and chat IDs remain secure in environment variables, never exposed in the public GitHub repository. This approach also allows for input validation and spam protection on the server side.
+                    </div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Telegram Integration Worker</span>
+                        <span class="code-lang">JavaScript</span>
+                    </div>
+                    <div class="code-content">
+<span class="keyword">export</span> <span class="keyword">default</span> {
+  <span class="keyword">async</span> <span class="function">fetch</span>(<span class="variable">request</span>, <span class="variable">env</span>, <span class="variable">ctx</span>) {
+    <span class="comment">// Handle CORS preflight requests</span>
+    <span class="keyword">if</span> (<span class="variable">request</span>.<span class="property">method</span> === <span class="string">"OPTIONS"</span>) {
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="keyword">null</span>, {
+        <span class="property">status</span>: <span class="number">204</span>,
+        <span class="property">headers</span>: <span class="function">corsHeaders</span>()
+      });
+    }
+
+    <span class="comment">// Only allow POST requests</span>
+    <span class="keyword">if</span> (<span class="variable">request</span>.<span class="property">method</span> !== <span class="string">"POST"</span>) {
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="string">"Method not allowed"</span>, {
+        <span class="property">status</span>: <span class="number">405</span>,
+        <span class="property">headers</span>: <span class="function">corsHeaders</span>()
+      });
+    }
+
+    <span class="keyword">try</span> {
+      <span class="keyword">const</span> <span class="variable">data</span> = <span class="keyword">await</span> <span class="variable">request</span>.<span class="function">json</span>();
+      <span class="keyword">const</span> { <span class="variable">name</span>, <span class="variable">email</span>, <span class="variable">subject</span>, <span class="variable">message</span> } = <span class="variable">data</span>;
+
+      <span class="comment">// Format timestamp in Eastern Time</span>
+      <span class="keyword">const</span> <span class="variable">easternFormatter</span> = <span class="keyword">new</span> <span class="function">Intl</span>.<span class="function">DateTimeFormat</span>(<span class="string">"en-US"</span>, {
+        <span class="property">timeZone</span>: <span class="string">"America/New_York"</span>,
+        <span class="property">weekday</span>: <span class="string">"short"</span>,
+        <span class="property">year</span>: <span class="string">"numeric"</span>,
+        <span class="property">month</span>: <span class="string">"short"</span>, 
+        <span class="property">day</span>: <span class="string">"numeric"</span>,
+        <span class="property">hour</span>: <span class="string">"numeric"</span>,
+        <span class="property">minute</span>: <span class="string">"2-digit"</span>,
+        <span class="property">hour12</span>: <span class="keyword">true</span>
+      });
+
+      <span class="keyword">const</span> <span class="variable">formattedTime</span> = <span class="variable">easternFormatter</span>.<span class="function">format</span>(<span class="keyword">new</span> <span class="function">Date</span>());
+
+      <span class="comment">// Construct message for Telegram</span>
+      <span class="keyword">const</span> <span class="variable">text</span> = <span class="string">`🔔 New Contact Form Submission\n\n`</span> +
+        <span class="string">`👤 Name: ${<span class="variable">name</span>}\n`</span> +
+        <span class="string">`📧 Email: ${<span class="variable">email</span>}\n`</span> +
+        <span class="string">`📋 Subject: ${<span class="variable">subject</span>}\n`</span> +
+        <span class="string">`💬 Message: ${<span class="variable">message</span>}\n\n`</span> +
+        <span class="string">`🕒 Time (ET): ${<span class="variable">formattedTime</span>}`</span>;
+
+      <span class="keyword">const</span> <span class="variable">telegramUrl</span> = <span class="string">`https://api.telegram.org/bot${<span class="variable">env</span>.<span class="property">TELEGRAM_BOT_TOKEN</span>}/sendMessage`</span>;
+
+      <span class="keyword">const</span> <span class="variable">res</span> = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="variable">telegramUrl</span>, {
+        <span class="property">method</span>: <span class="string">"POST"</span>,
+        <span class="property">headers</span>: { <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span> },
+        <span class="property">body</span>: <span class="property">JSON</span>.<span class="function">stringify</span>({
+          <span class="property">chat_id</span>: <span class="variable">env</span>.<span class="property">TELEGRAM_CHAT_ID</span>,
+          <span class="property">text</span>: <span class="variable">text</span>,
+          <span class="property">parse_mode</span>: <span class="string">"Markdown"</span>
+        })
+      });
+
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="variable">res</span>.<span class="property">ok</span> ? <span class="string">"Success"</span> : <span class="string">"Failed"</span>, {
+        <span class="property">status</span>: <span class="variable">res</span>.<span class="property">ok</span> ? <span class="number">200</span> : <span class="number">500</span>,
+        <span class="property">headers</span>: <span class="function">corsHeaders</span>()
+      });
+    } <span class="keyword">catch</span> (<span class="variable">error</span>) {
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="string">"Server error"</span>, {
+        <span class="property">status</span>: <span class="number">500</span>,
+        <span class="property">headers</span>: <span class="function">corsHeaders</span>()
+      });
+    }
+  }
+};
+
+<span class="comment">// Helper function for CORS headers</span>
+<span class="keyword">function</span> <span class="function">corsHeaders</span>() {
+  <span class="keyword">return</span> {
+    <span class="string">"Access-Control-Allow-Origin"</span>: <span class="string">"*"</span>,
+    <span class="string">"Access-Control-Allow-Methods"</span>: <span class="string">"POST, OPTIONS"</span>,
+    <span class="string">"Access-Control-Allow-Headers"</span>: <span class="string">"Content-Type"</span>
+  };
+}
+                    </div>
+                </div>
+                
+                <div class="content-text">
+                    <p>This lets me get real-time form alerts directly to my phone, while keeping all sensitive credentials secure and hidden from public view.</p>
+                </div>
+            </section>
+
+            <!-- Lessons Learned -->
+            <section class="content-section" id="lessons">
+                <h2 class="section-title">Lessons Learned</h2>
+                <div class="content-text">
+                    <p>This project taught me valuable lessons that extend far beyond just writing code:</p>
+                    
+                    <h3>Technical Growth</h3>
+                    <p>I became more comfortable with backend concepts like RESTful APIs, SQL schemas, and data validation. Working with serverless architecture showed me how modern web applications can scale efficiently without managing traditional servers.</p>
+                    
+                    <p>Learning to handle cross-origin requests, timezone formatting, and real-time data transmission gave me a deeper understanding of how web applications communicate across different systems and time zones.</p>
+                    
+                    <h3>User Experience Insights</h3>
+                    <p>The analytics data revealed surprising patterns about how people actually use the site. For example, I discovered that mobile users spend significantly more time reading the technical skills section, which influenced me to optimize that section's mobile layout.</p>
+                    
+                    <p>I also learned the importance of user experience design, especially on mobile devices. Small details like touch target sizes, loading animations, and smooth transitions make a significant difference in how professional the site feels.</p>
+                    
+                    <h3>Development Workflow</h3>
+                    <p>Managing deployment and live debugging through command-line tools was initially challenging but ultimately taught me valuable DevOps skills. Understanding how to troubleshoot issues in a production environment, read server logs, and deploy updates safely are crucial skills for any web developer.</p>
+                    
+                    <blockquote>
+                        "Building this project taught me that great web development isn't just about writing code—it's about understanding users, measuring outcomes, and continuously improving based on real data."
+                    </blockquote>
+                </div>
+            </section>
+
+            <!-- Future Improvements -->
+            <section class="content-section" id="future">
+                <h2 class="section-title">Future Improvements</h2>
+                <div class="content-text">
+                    <p>Here are some enhancements I plan to make:</p>
+                    
+                    <h3>Enhanced Security &amp; Reliability</h3>
+                    <ul>
+                        <li><strong>Bot protection</strong> for the contact form—potentially using a honeypot field or CAPTCHA-like behavior to prevent spam</li>
+                        <li><strong>Rate limiting</strong> on form submissions to prevent abuse</li>
+                        <li><strong>Input sanitization</strong> improvements for better security</li>
+                    </ul>
+                    
+                    <h3>User Experience Enhancements</h3>
+                    <ul>
+                        <li><strong>Multilingual support (i18n)</strong> to make the site accessible to a wider audience</li>
+                        <li><strong>Heatmap or scroll-depth analytics</strong> to see which sections people engage with most</li>
+                        <li><strong>Progressive Web App features</strong> like offline functionality and installability</li>
+                        <li><strong>Enhanced accessibility</strong> with better screen reader support and keyboard navigation</li>
+                    </ul>
+                    
+                    <h3>Development Process</h3>
+                    <ul>
+                        <li><strong>CI/CD automation</strong> so future updates are deployed with less manual effort</li>
+                        <li><strong>Automated testing</strong> to catch issues before they reach production</li>
+                        <li><strong>Performance monitoring</strong> to track loading times and user experience metrics</li>
+                    </ul>
+                    
+                    <p>The modular architecture I've built makes these enhancements straightforward to implement without disrupting the existing functionality that's already working well.</p>
+                </div>
+            </section>
+
+            <!-- Project Navigation -->
+            <div class="project-nav">
+                <div class="nav-item">
+                    <div class="nav-label">Back to</div>
+                    <a href="../index.html" class="nav-title">All Projects</a>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-label">Next Project</div>
+                    <a href="../ui-ux-design/wireframe-design.html" class="nav-title">All American Inc. Wireframe</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Sidebar Table of Contents -->
+        <aside class="article-sidebar">
+            <div class="toc">
+                <h3 class="toc-title">Contents</h3>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <a href="#overview" class="toc-link">Project Overview</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#technical" class="toc-link">Technical Implementation</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#features" class="toc-link">Key Features</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#challenges" class="toc-link">Challenges &amp; Solutions</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#showcase" class="toc-link">Visual Showcase</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#performance" class="toc-link">Performance &amp; Analytics</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#code" class="toc-link">Code Highlights</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#lessons" class="toc-link">Lessons Learned</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#future" class="toc-link">Future Improvements</a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? null : 'dark';
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (newTheme) {
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', 'dark');
+                themeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                `;
+            } else {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                `;
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                `;
+            }
+        }
+
+        // Mobile Menu Management
+        function toggleMobileMenu() {
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            const menu = document.querySelector('.mobile-menu');
+            
+            overlay.classList.add('active');
+            menu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            const menu = document.querySelector('.mobile-menu');
+            
+            overlay.classList.remove('active');
+            menu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function toggleMobileSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const header = content.previousElementSibling;
+            const arrow = header.querySelector('.mobile-section-arrow');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+		
+		// Lazy Loading Implementation
+        function initializeLazyLoading() {
+            const lazyImages = document.querySelectorAll('img.lazy-load');
+            
+            // Fallback for browsers without IntersectionObserver
+            if (!('IntersectionObserver' in window)) {
+                lazyImages.forEach(img => {
+                    loadImage(img);
+                });
+                return;
+            }
+            
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        loadImage(img);
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                // Load image when it's 50px away from viewport
+                rootMargin: '50px 0px',
+                threshold: 0.01
+            });
+            
+            lazyImages.forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        function loadImage(img) {
+            // Show loading state
+            img.classList.add('loading');
+            
+            // Create a new image to preload
+            const imageLoader = new Image();
+            
+            imageLoader.onload = function() {
+                // Image loaded successfully
+                img.src = img.dataset.src;
+                img.classList.remove('loading');
+                img.classList.add('loaded');
+                
+                // Remove the data-src attribute as it's no longer needed
+                img.removeAttribute('data-src');
+            };
+            
+            imageLoader.onerror = function() {
+                // Image failed to load
+                img.classList.remove('loading');
+                img.alt = 'Image failed to load: ' + img.alt;
+                console.error('Failed to load image:', img.dataset.src);
+            };
+            
+            // Start loading the image
+            imageLoader.src = img.dataset.src;
+        }
+
+        // Table of Contents Active State
+        function updateTocActiveState() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link, .mobile-nav-link[href^="#"]');
+            const scrollPos = window.pageYOffset + 150;
+            
+            let activeSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    activeSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + activeSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Smooth Scrolling for TOC Links
+        function initializeTocScrolling() {
+            const tocLinks = document.querySelectorAll('.toc-link, .mobile-nav-link[href^="#"]');
+            
+            tocLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        const offsetTop = targetSection.offsetTop - 100;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu after clicking TOC link
+                        closeMobileMenu();
+                    }
+                });
+            });
+        }
+
+        // Reading Progress
+        function updateReadingProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const article = document.querySelector('.article-content');
+            const scrollTop = window.pageYOffset;
+            const articleHeight = article.offsetHeight;
+            const windowHeight = window.innerHeight;
+            const maxScroll = articleHeight - windowHeight;
+            const progress = Math.min((scrollTop / maxScroll) * 100, 100);
+            
+            progressBar.style.width = progress + '%';
+        }
+
+        // Initialize Everything
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            initializeTocScrolling();
+            initializeLazyLoading(); // Initialize lazy loading
+			
+            // Set initial arrow states for open sections
+            document.querySelectorAll('.mobile-section-content.open').forEach(content => {
+                const header = content.previousElementSibling;
+                const arrow = header.querySelector('.mobile-section-arrow');
+                if (arrow) {
+                    arrow.style.transform = 'rotate(180deg)';
+                }
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                const menu = document.querySelector('.mobile-menu');
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                
+                if (menu && menu.classList.contains('active') && 
+                    !menu.contains(e.target) && 
+                    !menuBtn.contains(e.target)) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Throttled scroll handler for performance
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateReadingProgress();
+                        updateTocActiveState();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            // Initial call to set correct states
+            updateReadingProgress();
+            updateTocActiveState();
+        });
+    </script>
+</body>
+</html>
