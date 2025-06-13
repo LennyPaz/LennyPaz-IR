@@ -716,12 +716,31 @@
         }
 
         .screenshot-mobile {
-            max-width: 250px
-				;
+            max-width: 250px;
         }
 
         .screenshot-desktop {
             max-width: 900px;
+        }
+
+        /* Mobile comparison grid - NEW */
+        .mobile-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mobile-comparison .image-container {
+            margin: 0;
+        }
+
+        .mobile-comparison .image-container img {
+            max-width: 100%;
+            width: 100%;
         }
 
         /* Image captions */
@@ -821,6 +840,13 @@
             .hero-image {
                 height: 250px;
             }
+
+            /* Mobile comparison - stack on mobile */
+            .mobile-comparison {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
@@ -831,12 +857,12 @@
 
     <nav class="navbar">
         <div class="nav-container">
-            <a href="../../index.html" class="nav-brand">Lenny Paz</a>
+            <a href="../../" class="nav-brand">Lenny Paz</a>
             
             <div class="breadcrumbs">
-                <a href="../index.html" target="_blank" class="breadcrumb-link">Projects</a>
+                <a href="../" class="breadcrumb-link">Projects</a>
                 <span class="breadcrumb-separator">›</span>
-                <a href="../index.html?filter=frontend" target="_blank" class="breadcrumb-link">Web Development</a>
+                <a href="../?filter=frontend" class="breadcrumb-link">Web Development</a>
                 <span class="breadcrumb-separator">›</span>
                 <span>Interactive Resume</span>
             </div>
@@ -884,19 +910,19 @@
                 </svg>
             </div>
             <div class="mobile-section-content" id="nav-section">
-                <a href="../projectshowcase.html" class="mobile-nav-link">
+                <a href="../" class="mobile-nav-link">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                     </svg>
                     View All Projects
                 </a>
-                <a href="../projectshowcase.html?filter=frontend" class="mobile-nav-link">
+                <a href="../?filter=frontend" class="mobile-nav-link">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
                     </svg>
                     Web Development
                 </a>
-                <a href="../../index.html" class="mobile-nav-link">
+                <a href="../../" class="mobile-nav-link">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                     </svg>
@@ -1000,7 +1026,7 @@
                     <a href="https://lennypaz.com" target="_blank" rel="noopener" class="btn-primary">
                         View Live Site →
                     </a>
-                    <a href="#" class="btn-secondary">
+                    <a href="https://github.com/LennyPaz/LennyPaz-IR/blob/main/index.html" target="_blank" rel="noopener" class="btn-secondary">
                         View Source Code
                     </a>
                 </div>
@@ -1081,47 +1107,47 @@
                     <p>One feature I'm particularly proud of is the theme switching capability. It uses CSS custom properties (variables) to seamlessly transition between light and dark modes, and remembers your preference for future visits using browser storage.</p>
                 </div>
                 
-                <div class="code-block">
+              <div class="code-block">
                     <div class="code-header">
                         <span class="code-title">Theme Toggle Implementation</span>
                         <span class="code-lang">JavaScript</span>
                     </div>
                     <div class="code-content">
-<span class="keyword">function</span> <span class="function">toggleTheme</span>() {
-  <span class="keyword">const</span> <span class="variable">html</span> = <span class="property">document</span>.<span class="property">documentElement</span>;
-  <span class="keyword">const</span> <span class="variable">currentTheme</span> = <span class="variable">html</span>.<span class="function">getAttribute</span>(<span class="string">'data-theme'</span>);
-  <span class="keyword">const</span> <span class="variable">newTheme</span> = <span class="variable">currentTheme</span> === <span class="string">'dark'</span> ? <span class="keyword">null</span> : <span class="string">'dark'</span>;
-  
-  <span class="keyword">if</span> (<span class="variable">newTheme</span>) {
-    <span class="variable">html</span>.<span class="function">setAttribute</span>(<span class="string">'data-theme'</span>, <span class="variable">newTheme</span>);
-    <span class="property">localStorage</span>.<span class="function">setItem</span>(<span class="string">'theme'</span>, <span class="string">'dark'</span>);
-    <span class="property">document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'☀️'</span>;
-  } <span class="keyword">else</span> {
-    <span class="variable">html</span>.<span class="function">removeAttribute</span>(<span class="string">'data-theme'</span>);
-    <span class="property">localStorage</span>.<span class="function">setItem</span>(<span class="string">'theme'</span>, <span class="string">'light'</span>);
-    <span class="property">document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'🌙'</span>;
-  }
-  
-  <span class="comment">// Track the theme change for analytics</span>
-  <span class="function">trackEvent</span>(<span class="string">'theme_toggle'</span>, { 
-    <span class="property">theme</span>: <span class="variable">newTheme</span> || <span class="string">'light'</span> 
-  });
-}
-
-<span class="comment">// Load saved theme on page initialization</span>
-<span class="keyword">function</span> <span class="function">loadTheme</span>() {
-  <span class="keyword">const</span> <span class="variable">savedTheme</span> = <span class="property">localStorage</span>.<span class="function">getItem</span>(<span class="string">'theme'</span>) || <span class="string">'light'</span>;
-  <span class="keyword">const</span> <span class="variable">prefersDark</span> = <span class="property">window</span>.<span class="function">matchMedia</span>(<span class="string">'(prefers-color-scheme: dark)'</span>).<span class="property">matches</span>;
-  <span class="keyword">const</span> <span class="variable">theme</span> = <span class="variable">savedTheme</span> === <span class="string">'auto'</span> ? 
-    (<span class="variable">prefersDark</span> ? <span class="string">'dark'</span> : <span class="string">'light'</span>) : <span class="variable">savedTheme</span>;
-  
-  <span class="keyword">if</span> (<span class="variable">theme</span> === <span class="string">'dark'</span>) {
-    <span class="property">document</span>.<span class="property">documentElement</span>.<span class="function">setAttribute</span>(<span class="string">'data-theme'</span>, <span class="string">'dark'</span>);
-    <span class="property">document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'☀️'</span>;
-  } <span class="keyword">else</span> {
-    <span class="property">document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'🌙'</span>;
-  }
-}
+                      <p> <span class="keyword">function</span> <span class="function">toggleTheme</span>() {&nbsp;</p>
+                      <p>&nbsp; <span class="keyword">const</span> <span class="variable">html</span> = <span class="property">document</span>.<span class="property">documentElement</span>;&nbsp;</p>
+                      <p>&nbsp; <span class="keyword">const</span> <span class="variable">currentTheme</span> = <span class="variable">html</span>.<span class="function">getAttribute</span>(<span class="string">'data-theme'</span>);&nbsp;</p>
+                      <p>&nbsp; <span class="keyword">const</span> <span class="variable">newTheme</span> = <span class="variable">currentTheme</span> === <span class="string">'dark'</span> ? <span class="keyword">null</span> : <span class="string">'dark'</span>;&nbsp;</p>
+                      <p>&nbsp;</p>
+<p>&nbsp; <span class="keyword">if</span> (<span class="variable">newTheme</span>) {&nbsp;</p>
+                      <p>&nbsp;&nbsp; <span class="variable">html</span>.<span class="function">setAttribute</span>(<span class="string">'data-theme'</span>, <span class="variable">newTheme</span>);&nbsp;</p>
+                      <p>&nbsp;&nbsp; <span class="property">localStorage</span>.<span class="function">setItem</span>(<span class="string">'theme'</span>, <span class="string">'dark'</span>);&nbsp;</p>
+                      <p>&nbsp;&nbsp; <span class="property">document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'☀️'</span>;&nbsp;</p>
+                      <p>&nbsp;} <span class="keyword">else</span> {&nbsp;</p>
+                      <p>&nbsp; <span class="variable">html</span>.<span class="function">removeAttribute</span>(<span class="string">'data-theme'</span>);&nbsp;</p>
+                      <p>&nbsp; <span class="property">localStorage</span>.<span class="function">setItem</span>(<span class="string">'theme'</span>, <span class="string">'light'</span>);&nbsp;</p>
+                      <p><span class="property">&nbsp;&nbsp;document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'🌙'</span>;&nbsp;</p>
+                      <p>&nbsp;}&nbsp;</p>
+                      <p>&nbsp;</p>
+                      <p><span class="comment">&nbsp;&nbsp;// Track the theme change for analytics</span>&nbsp;</p>
+                      <p><span class="function">&nbsp;&nbsp;trackEvent</span>(<span class="string">'theme_toggle'</span>, {&nbsp;</p>
+                      <p><span class="property">&nbsp;&nbsp;&nbsp;theme</span>: <span class="variable">newTheme</span> || <span class="string">'light'</span>&nbsp;</p>
+                      <p>&nbsp;&nbsp;});</p>
+                      <p>}&nbsp;</p>
+                      <p>&nbsp;</p>
+                      <p><span class="comment">// Load saved theme on page initialization</span>&nbsp;</p>
+                      <p><span class="keyword">function</span> <span class="function">loadTheme</span>() {&nbsp;</p>
+                      <p><span class="keyword">&nbsp;const</span> <span class="variable">savedTheme</span> = <span class="property">localStorage</span>.<span class="function">getItem</span>(<span class="string">'theme'</span>) || <span class="string">'light'</span>;&nbsp;</p>
+                      <p><span class="keyword">&nbsp;const</span> <span class="variable">prefersDark</span> = <span class="property">window</span>.<span class="function">matchMedia</span>(<span class="string">'(prefers-color-scheme: dark)'</span>).<span class="property">matches</span>;&nbsp;</p>
+                      <p><span class="keyword">&nbsp;const</span> <span class="variable">theme</span> = <span class="variable">savedTheme</span> === <span class="string">'auto'</span> ? 
+                        (<span class="variable">prefersDark</span> ? <span class="string">'dark'</span> : <span class="string">'light'</span>) : <span class="variable">savedTheme</span>;&nbsp;</p>
+                      <p>&nbsp;</p>
+                      <p><span class="keyword">&nbsp;if</span> (<span class="variable">theme</span> === <span class="string">'dark'</span>) {&nbsp;</p>
+                      <p><span class="property">&nbsp;&nbsp;document</span>.<span class="property">documentElement</span>.<span class="function">setAttribute</span>(<span class="string">'data-theme'</span>, <span class="string">'dark'</span>);&nbsp;</p>
+                      <p><span class="property">&nbsp;&nbsp;document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'☀️'</span>;&nbsp;</p>
+                      <p>&nbsp;} <span class="keyword">else</span> {&nbsp;</p>
+                      <p><span class="property">&nbsp;&nbsp;&nbsp;document</span>.<span class="function">getElementById</span>(<span class="string">'theme-icon'</span>).<span class="property">textContent</span> = <span class="string">'🌙'</span>;&nbsp;</p>
+                      <p>&nbsp;}&nbsp;</p>
+                      <p>}</p>
                     </div>
                 </div>
             </section>
@@ -1140,27 +1166,23 @@
                         <span class="code-lang">SQL</span>
                     </div>
                     <div class="code-content">
-<span class="keyword">CREATE TABLE</span> <span class="keyword">IF NOT EXISTS</span> <span class="variable">sessions</span> (
-  <span class="property">session_id</span> <span class="keyword">TEXT</span> <span class="keyword">PRIMARY KEY</span>,
-  <span class="property">total_time</span> <span class="keyword">INTEGER</span>,
-  <span class="property">active_pages</span> <span class="keyword">INTEGER</span>,
-  <span class="property">avg_time_per_page</span> <span class="keyword">INTEGER</span>,
-  <span class="property">total_events</span> <span class="keyword">INTEGER</span>,
-  <span class="property">is_active</span> <span class="keyword">INTEGER</span>,
-  <span class="property">user_agent</span> <span class="keyword">TEXT</span>,
-  <span class="property">referrer</span> <span class="keyword">TEXT</span>,
-  <span class="property">screen_resolution</span> <span class="keyword">TEXT</span>,
-  <span class="property">timestamp</span> <span class="keyword">TEXT</span>
-);
-
-<span class="keyword">CREATE TABLE</span> <span class="keyword">IF NOT EXISTS</span> <span class="variable">events</span> (
-  <span class="property">id</span> <span class="keyword">INTEGER</span> <span class="keyword">PRIMARY KEY</span> <span class="keyword">AUTOINCREMENT</span>,
-  <span class="property">session_id</span> <span class="keyword">TEXT</span>,
-  <span class="property">event_name</span> <span class="keyword">TEXT</span>,
-  <span class="property">event_data</span> <span class="keyword">TEXT</span>,
-  <span class="property">timestamp</span> <span class="keyword">TEXT</span>,
-  <span class="keyword">FOREIGN KEY</span>(<span class="property">session_id</span>) <span class="keyword">REFERENCES</span> <span class="variable">sessions</span>(<span class="property">session_id</span>)
-);
+                      <p> <span class="keyword">CREATE TABLE</span> <span class="keyword">IF NOT EXISTS</span> <span class="variable">sessions</span> ( <br>
+                        &nbsp; <span class="property">session_id</span> <span class="keyword">TEXT</span> <span class="keyword">PRIMARY KEY</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">total_time</span> <span class="keyword">INTEGER</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">active_pages</span> <span class="keyword">INTEGER</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">avg_time_per_page</span> <span class="keyword">INTEGER</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">total_events</span> <span class="keyword">INTEGER</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">is_active</span> <span class="keyword">INTEGER</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">user_agent</span> <span class="keyword">TEXT</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">referrer</span> <span class="keyword">TEXT</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">screen_resolution</span> <span class="keyword">TEXT</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">timestamp</span> <span class="keyword">TEXT</span> );&nbsp;</p>
+                      <p><span class="keyword">CREATE TABLE</span> <span class="keyword">IF NOT EXISTS</span> <span class="variable">events</span> (&nbsp;</p>
+                      <p>&nbsp; <span class="property">id</span> <span class="keyword">INTEGER</span> <span class="keyword">PRIMARY KEY</span> <span class="keyword">AUTOINCREMENT</span>,&nbsp;</p>
+                      <p>&nbsp;&nbsp;<span class="property">session_id</span> <span class="keyword">TEXT</span>,&nbsp;</p>
+                      <p>&nbsp;&nbsp;<span class="property">event_name</span> <span class="keyword">TEXT</span>,&nbsp;</p>
+                      <p>&nbsp;&nbsp;<span class="property">event_data</span> <span class="keyword">TEXT</span>,&nbsp;</p>
+                      <p>&nbsp;&nbsp;<span class="property">timestamp</span> <span class="keyword">TEXT</span>&nbsp;); </p>
                     </div>
                 </div>
                 
@@ -1182,36 +1204,43 @@
                         <span class="code-lang">JavaScript</span>
                     </div>
                     <div class="code-content">
-<span class="comment">// Multiple approaches to catch user departure</span>
-<span class="property">document</span>.<span class="function">addEventListener</span>(<span class="string">'visibilitychange'</span>, () =&gt; {
-  <span class="keyword">if</span> (<span class="property">document</span>.<span class="property">hidden</span>) {
-    <span class="function">trackEvent</span>(<span class="string">'page_blur'</span>);
-    <span class="function">sendAnalytics</span>(<span class="keyword">true</span>); <span class="comment">// Send immediately when page becomes hidden</span>
-  } <span class="keyword">else</span> {
-    <span class="function">trackEvent</span>(<span class="string">'page_focus'</span>);
-  }
-});
-
-<span class="comment">// Reliable for navigation away from page</span>
-<span class="property">window</span>.<span class="function">addEventListener</span>(<span class="string">'pagehide'</span>, () =&gt; {
-  <span class="function">sendAnalytics</span>(<span class="keyword">true</span>);
-}, { <span class="property">passive</span>: <span class="keyword">true</span> });
-
-<span class="comment">// Handle idle users</span>
-<span class="keyword">let</span> <span class="variable">idleTimer</span>;
-<span class="keyword">const</span> <span class="function">resetIdleTimer</span> = () =&gt; {
-  <span class="function">clearTimeout</span>(<span class="variable">idleTimer</span>);
-  <span class="variable">idleTimer</span> = <span class="function">setTimeout</span>(() =&gt; {
-    <span class="function">sendAnalytics</span>(); <span class="comment">// Send after 2 minutes of inactivity</span>
-  }, <span class="number">120000</span>);
-};
-
-<span class="comment">// Reset timer on user activity</span>
-[<span class="string">'mousedown'</span>, <span class="string">'mousemove'</span>, <span class="string">'keypress'</span>, <span class="string">'scroll'</span>, <span class="string">'touchstart'</span>].<span class="function">forEach</span>(<span class="variable">event</span> =&gt; {
-  <span class="property">document</span>.<span class="function">addEventListener</span>(<span class="variable">event</span>, <span class="variable">resetIdleTimer</span>, { <span class="property">passive</span>: <span class="keyword">true</span> });
-});
-
-<span class="function">resetIdleTimer</span>(); <span class="comment">// Start the timer</span>
+                      <p> <span class="comment">// Multiple approaches to catch user departure</span>&nbsp;</p>
+                      <p><span class="property">document</span>.<span class="function">addEventListener</span>(<span class="string">'visibilitychange'</span>, () =&gt; {&nbsp;</p>
+                      <p>&nbsp; <span class="keyword">if</span> (<span class="property">document</span>.<span class="property">hidden</span>) {&nbsp;</p>
+                      <p>&nbsp;&nbsp; <span class="function">trackEvent</span>(<span class="string">'page_blur'</span>);&nbsp;</p>
+                      <p><span class="function">&nbsp;&nbsp;&nbsp;sendAnalytics</span>(<span class="keyword">true</span>); <span class="comment">// Send immediately when page becomes hidden</span>&nbsp;</p>
+                      <p>&nbsp;&nbsp;} <span class="keyword">else</span> {&nbsp;</p>
+                      <p><span class="function">&nbsp;&nbsp;&nbsp;&nbsp;trackEvent</span>(<span class="string">'page_focus'</span>);&nbsp;</p>
+                      <p>&nbsp;&nbsp;}&nbsp;</p>
+                      <p>});&nbsp;</p>
+                      <p>&nbsp;</p>
+<p><span class="comment">// Reliable for navigation away from page</span>&nbsp;</p>
+                      <p><span class="property">window</span>.<span class="function">addEventListener</span>(<span class="string">'pagehide'</span>, () =&gt; {&nbsp;</p>
+                      <p><span class="function">&nbsp;sendAnalytics</span>(<span class="keyword">true</span>);&nbsp;</p>
+                      <p>}, { <span class="property">passive</span>: <span class="keyword">true</span> });&nbsp;</p>
+                      <p>&nbsp;</p>
+                      <p><span class="comment">// Handle idle users</span>&nbsp;</p>
+                      <p><span class="keyword">let</span> <span class="variable">idleTimer</span>;&nbsp;</p>
+                      <p>&nbsp;</p>
+                      <p><span class="keyword">const</span> <span class="function">resetIdleTimer</span> = () =&gt; {&nbsp;</p>
+                      <p><span class="function">&nbsp;clearTimeout</span>(<span class="variable">idleTimer</span>);&nbsp;</p>
+                      <p><span class="variable">&nbsp;idleTimer</span> = <span class="function">setTimeout</span>(() =&gt; {&nbsp;</p>
+                      <p><span class="function">&nbsp;&nbsp;&nbsp;sendAnalytics</span>(); <span class="comment">// Send after 2 minutes of inactivity</span></p>
+                      <p> &nbsp;}, <span class="number">120000</span>);&nbsp;</p>
+                      <p>};&nbsp;</p>
+                      <p>&nbsp;</p>
+                      <p><span class="comment">// Reset timer on user activity</span>&nbsp;</p>
+                      <p>[</p>
+                      <p><span class="string">&nbsp;'mousedown'</span>,&nbsp;</p>
+                      <p><span class="string">&nbsp;'mousemove'</span>,&nbsp;</p>
+                      <p><span class="string">&nbsp;'keypress'</span>,&nbsp;</p>
+                      <p><span class="string">&nbsp;'scroll'</span>,&nbsp;</p>
+                      <p><span class="string">&nbsp;'touchstart'</span></p>
+                      <p>].<span class="function">forEach</span>(<span class="variable">event</span> =&gt; {&nbsp;</p>
+                      <p>&nbsp;<span class="property">document</span>.<span class="function">addEventListener</span>(<span class="variable">event</span>, <span class="variable">resetIdleTimer</span>, { <span class="property">passive</span>: <span class="keyword">true</span> });&nbsp;</p>
+                      <p>});&nbsp;</p>
+                      <p>&nbsp;</p>
+                      <p><span class="function">resetIdleTimer</span>(); <span class="comment">// Start the timer</span></p>
                     </div>
                 </div>
                 
@@ -1227,14 +1256,16 @@
                     <p>Screenshots of the desktop and mobile views, dark/light mode toggles, and a peek at the analytics dashboard really help bring the work to life. One of my favorite details is how the navigation transitions are smooth and snappy, making the site feel more like an app than a static page.</p>
                 </div>
                 
-                <div class="image-container screenshot-mobile">
-                    <img data-src="../assets/images/MobileLight.png" alt="Lark mode view of Education tab on Interactive Resume" class="lazy-load">
-                    <div class="image-caption">Light mode view of website on mobile</div>
-                </div>
-                
-                <div class="image-container screenshot-mobile">
-                    <img data-src="../assets/images/MobileDark.png" alt="Dark mode view of Education tab on Interactive Resume" class="lazy-load">
-                    <div class="image-caption">Dark mode view of website on mobile</div>
+                <div class="mobile-comparison">
+                    <div class="image-container">
+                        <img data-src="../assets/images/MobileLight.png" alt="Light mode view of Education tab on Interactive Resume" class="lazy-load">
+                        <div class="image-caption">Light mode view of website on mobile</div>
+                    </div>
+                    
+                    <div class="image-container">
+                        <img data-src="../assets/images/MobileDark.png" alt="Dark mode view of Education tab on Interactive Resume" class="lazy-load">
+                        <div class="image-caption">Dark mode view of website on mobile</div>
+                    </div>
                 </div>
                 
                 <div class="image-container screenshot-comparison">
@@ -1266,17 +1297,17 @@
                         <span class="code-lang">JSON</span>
                     </div>
                     <div class="code-content">
-{
-  <span class="property">"event"</span>: <span class="string">"project_click"</span>,
-  <span class="property">"timestamp"</span>: <span class="number">1702345678901</span>,
-  <span class="property">"session_id"</span>: <span class="string">"abc123def456"</span>,
-  <span class="property">"data"</span>: {
-    <span class="property">"project"</span>: <span class="string">"Interactive Resume"</span>,
-    <span class="property">"section"</span>: <span class="string">"home"</span>,
-    <span class="property">"user_agent"</span>: <span class="string">"Chrome/Mobile"</span>,
-    <span class="property">"screen_resolution"</span>: <span class="string">"375x667"</span>
-  }
-}
+                      <p> {&nbsp;</p>
+                      <p>&nbsp; <span class="property">"event"</span>: <span class="string">"project_click"</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">"timestamp"</span>: <span class="number">1702345678901</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">"session_id"</span>: <span class="string">"abc123def456"</span>,&nbsp;</p>
+                      <p>&nbsp; <span class="property">"data"</span>: {&nbsp;</p>
+                      <p><span class="property">&nbsp;&nbsp;&nbsp;&nbsp;"project"</span>: <span class="string">"Interactive Resume"</span>,&nbsp;</p>
+                      <p><span class="property">&nbsp;&nbsp;&nbsp;&nbsp;"section"</span>: <span class="string">"home"</span>,&nbsp;</p>
+                      <p><span class="property">&nbsp;&nbsp;&nbsp;&nbsp;"user_agent"</span>: <span class="string">"Chrome/Mobile"</span>,&nbsp;</p>
+                      <p><span class="property">&nbsp;&nbsp;&nbsp;&nbsp;"screen_resolution"</span>: <span class="string">"375x667"</span>&nbsp;</p>
+                      <p>&nbsp;&nbsp;}&nbsp;</p>
+                      <p>}</p>
                     </div>
                 </div>
                 
@@ -1307,91 +1338,80 @@
                     </div>
                 </div>
                 
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-title">Telegram Integration Worker</span>
-                        <span class="code-lang">JavaScript</span>
-                    </div>
-                    <div class="code-content">
-<span class="keyword">export</span> <span class="keyword">default</span> {
-  <span class="keyword">async</span> <span class="function">fetch</span>(<span class="variable">request</span>, <span class="variable">env</span>, <span class="variable">ctx</span>) {
-    <span class="comment">// Handle CORS preflight requests</span>
-    <span class="keyword">if</span> (<span class="variable">request</span>.<span class="property">method</span> === <span class="string">"OPTIONS"</span>) {
-      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="keyword">null</span>, {
-        <span class="property">status</span>: <span class="number">204</span>,
-        <span class="property">headers</span>: <span class="function">corsHeaders</span>()
-      });
-    }
+              <div class="code-block">
+  <div class="code-header">
+    <span class="code-title">Telegram Contact Worker</span>
+    <span class="code-lang">JavaScript (Cloudflare Worker)</span>
+  </div>
+  <div class="code-content">
+    <p><span class="keyword">export default</span> {</p>
+    <p>&nbsp;&nbsp;<span class="keyword">async</span> <span class="function">fetch</span>(<span class="variable">request</span>, <span class="variable">env</span>, <span class="variable">ctx</span>) {</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Handle CORS preflight requests</span></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> (<span class="variable">request</span>.<span class="property">method</span> === <span class="string">"OPTIONS"</span>) {</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Response</span>(<span class="literal">null</span>, { status: <span class="number">204</span>, headers: <span class="function">corsHeaders</span>() });</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
 
-    <span class="comment">// Only allow POST requests</span>
-    <span class="keyword">if</span> (<span class="variable">request</span>.<span class="property">method</span> !== <span class="string">"POST"</span>) {
-      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="string">"Method not allowed"</span>, {
-        <span class="property">status</span>: <span class="number">405</span>,
-        <span class="property">headers</span>: <span class="function">corsHeaders</span>()
-      });
-    }
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Only allow POST requests</span></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> (<span class="variable">request</span>.<span class="property">method</span> !== <span class="string">"POST"</span>) {</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Response</span>(<span class="string">"Method not allowed"</span>, { status: <span class="number">405</span>, headers: <span class="function">corsHeaders</span>() });</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
 
-    <span class="keyword">try</span> {
-      <span class="keyword">const</span> <span class="variable">data</span> = <span class="keyword">await</span> <span class="variable">request</span>.<span class="function">json</span>();
-      <span class="keyword">const</span> { <span class="variable">name</span>, <span class="variable">email</span>, <span class="variable">subject</span>, <span class="variable">message</span> } = <span class="variable">data</span>;
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">try</span> {</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> <span class="variable">data</span> = <span class="keyword">await</span> <span class="variable">request</span>.<span class="function">json</span>();</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> { <span class="variable">name</span>, <span class="variable">email</span>, <span class="variable">subject</span>, <span class="variable">message</span> } = <span class="variable">data</span>;</p>
 
-      <span class="comment">// Format timestamp in Eastern Time</span>
-      <span class="keyword">const</span> <span class="variable">easternFormatter</span> = <span class="keyword">new</span> <span class="function">Intl</span>.<span class="function">DateTimeFormat</span>(<span class="string">"en-US"</span>, {
-        <span class="property">timeZone</span>: <span class="string">"America/New_York"</span>,
-        <span class="property">weekday</span>: <span class="string">"short"</span>,
-        <span class="property">year</span>: <span class="string">"numeric"</span>,
-        <span class="property">month</span>: <span class="string">"short"</span>, 
-        <span class="property">day</span>: <span class="string">"numeric"</span>,
-        <span class="property">hour</span>: <span class="string">"numeric"</span>,
-        <span class="property">minute</span>: <span class="string">"2-digit"</span>,
-        <span class="property">hour12</span>: <span class="keyword">true</span>
-      });
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Format timestamp in Eastern Time</span></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> <span class="variable">easternFormatter</span> = <span class="keyword">new</span> <span class="class">Intl</span>.<span class="class">DateTimeFormat</span>(<span class="string">"en-US"</span>, {</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">timeZone</span>: <span class="string">"America/New_York"</span>,</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">weekday</span>: <span class="string">"short"</span>, <span class="property">year</span>: <span class="string">"numeric"</span>, <span class="property">month</span>: <span class="string">"short"</span>,</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">day</span>: <span class="string">"numeric"</span>, <span class="property">hour</span>: <span class="string">"numeric"</span>, <span class="property">minute</span>: <span class="string">"2-digit"</span>, <span class="property">hour12</span>: <span class="keyword">true</span></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</p>
 
-      <span class="keyword">const</span> <span class="variable">formattedTime</span> = <span class="variable">easternFormatter</span>.<span class="function">format</span>(<span class="keyword">new</span> <span class="function">Date</span>());
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> <span class="variable">formattedTime</span> = <span class="variable">easternFormatter</span>.<span class="function">format</span>(<span class="keyword">new</span> <span class="class">Date</span>());</p>
 
-      <span class="comment">// Construct message for Telegram</span>
-      <span class="keyword">const</span> <span class="variable">text</span> = <span class="string">`🔔 New Contact Form Submission\n\n`</span> +
-        <span class="string">`👤 Name: ${<span class="variable">name</span>}\n`</span> +
-        <span class="string">`📧 Email: ${<span class="variable">email</span>}\n`</span> +
-        <span class="string">`📋 Subject: ${<span class="variable">subject</span>}\n`</span> +
-        <span class="string">`💬 Message: ${<span class="variable">message</span>}\n\n`</span> +
-        <span class="string">`🕒 Time (ET): ${<span class="variable">formattedTime</span>}`</span>;
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Construct message for Telegram</span></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> <span class="variable">text</span> = `🔔 New Contact Form Submission\n\n` +</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`👤 Name: ${name}\n` +</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`📧 Email: ${email}\n` +</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`📋 Subject: ${subject}\n` +</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`💬 Message: ${message}\n\n` +</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`🕒 Time (ET): ${formattedTime}`;</p>
 
-      <span class="keyword">const</span> <span class="variable">telegramUrl</span> = <span class="string">`https://api.telegram.org/bot${<span class="variable">env</span>.<span class="property">TELEGRAM_BOT_TOKEN</span>}/sendMessage`</span>;
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> <span class="variable">telegramUrl</span> = <span class="string">`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`</span>;</p>
 
-      <span class="keyword">const</span> <span class="variable">res</span> = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="variable">telegramUrl</span>, {
-        <span class="property">method</span>: <span class="string">"POST"</span>,
-        <span class="property">headers</span>: { <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span> },
-        <span class="property">body</span>: <span class="property">JSON</span>.<span class="function">stringify</span>({
-          <span class="property">chat_id</span>: <span class="variable">env</span>.<span class="property">TELEGRAM_CHAT_ID</span>,
-          <span class="property">text</span>: <span class="variable">text</span>,
-          <span class="property">parse_mode</span>: <span class="string">"Markdown"</span>
-        })
-      });
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> <span class="variable">res</span> = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="variable">telegramUrl</span>, {</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">method</span>: <span class="string">"POST"</span>,</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">headers</span>: { <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span> },</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">body</span>: <span class="function">JSON.stringify</span>({</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">chat_id</span>: <span class="variable">env</span>.<span class="variable">TELEGRAM_CHAT_ID</span>,</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">text</span>: <span class="variable">text</span>,</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">parse_mode</span>: <span class="string">"Markdown"</span></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;})</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</p>
 
-      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="variable">res</span>.<span class="property">ok</span> ? <span class="string">"Success"</span> : <span class="string">"Failed"</span>, {
-        <span class="property">status</span>: <span class="variable">res</span>.<span class="property">ok</span> ? <span class="number">200</span> : <span class="number">500</span>,
-        <span class="property">headers</span>: <span class="function">corsHeaders</span>()
-      });
-    } <span class="keyword">catch</span> (<span class="variable">error</span>) {
-      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="string">"Server error"</span>, {
-        <span class="property">status</span>: <span class="number">500</span>,
-        <span class="property">headers</span>: <span class="function">corsHeaders</span>()
-      });
-    }
-  }
-};
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Response</span>(<span class="variable">res</span>.<span class="property">ok</span> ? <span class="string">"Success"</span> : <span class="string">"Failed"</span>, {</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">status</span>: <span class="variable">res</span>.<span class="property">ok</span> ? <span class="number">200</span> : <span class="number">500</span>,</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">headers</span>: <span class="function">corsHeaders</span>()</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</p>
 
-<span class="comment">// Helper function for CORS headers</span>
-<span class="keyword">function</span> <span class="function">corsHeaders</span>() {
-  <span class="keyword">return</span> {
-    <span class="string">"Access-Control-Allow-Origin"</span>: <span class="string">"*"</span>,
-    <span class="string">"Access-Control-Allow-Methods"</span>: <span class="string">"POST, OPTIONS"</span>,
-    <span class="string">"Access-Control-Allow-Headers"</span>: <span class="string">"Content-Type"</span>
-  };
-}
-                    </div>
-                </div>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;} <span class="keyword">catch</span> (<span class="variable">error</span>) {</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Response</span>(<span class="string">"Server error"</span>, { status: <span class="number">500</span>, headers: <span class="function">corsHeaders</span>() });</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+    <p>&nbsp;&nbsp;}</p>
+    <p>};</p>
+
+    <p>&nbsp;</p>
+    <p><span class="comment">// Helper function for CORS headers</span></p>
+    <p><span class="keyword">function</span> <span class="function">corsHeaders</span>() {</p>
+    <p>&nbsp;&nbsp;<span class="keyword">return</span> {</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Access-Control-Allow-Origin"</span>: <span class="string">"*"</span>,</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Access-Control-Allow-Methods"</span>: <span class="string">"POST, OPTIONS"</span>,</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Access-Control-Allow-Headers"</span>: <span class="string">"Content-Type"</span></p>
+    <p>&nbsp;&nbsp;};</p>
+    <p>}</p>
+  </div>
+</div>
+
                 
                 <div class="content-text">
                     <p>This lets me get real-time form alerts directly to my phone, while keeping all sensitive credentials secure and hidden from public view.</p>
@@ -1459,11 +1479,11 @@
             <div class="project-nav">
                 <div class="nav-item">
                     <div class="nav-label">Back to</div>
-                    <a href="../index.html" target="_blank" class="nav-title">All Projects</a>
+                    <a href="../" class="nav-title">All Projects</a>
                 </div>
                 <div class="nav-item">
                     <div class="nav-label">Next Project</div>
-                    <a href="../ui-ux-design/wireframe-design.html" class="nav-title">All American Inc. Wireframe</a>
+                    <a href="../ui-ux-design/wireframe-design" class="nav-title">All American Inc. Wireframe</a>
                 </div>
             </div>
         </article>
