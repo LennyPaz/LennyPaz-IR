@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All American Inc. Wireframe - Lenny Paz</title>
+    <meta name="description" content="A beginner's journey into wireframing and user experience design using Figma for a real-world business site. This article walks through my first experience designing a complete website wireframe from scratch.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+    
+    <style>
+        :root {
+            /* Primary Colors */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f8f9fa;
+            
+            /* Text Colors */
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6b7280;
+            
+            /* Accent Colors */
+            --accent-primary: #2563eb;
+            --accent-secondary: #1d4ed8;
+            --accent-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            
+            /* Border & Effects */
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            
+            /* Typography */
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(17, 17, 17, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            gap: 2rem;
+        }
+
+        .nav-brand {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb-link:hover {
+            color: var(--accent-secondary);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Reading Progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 99;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-gradient);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* Main Layout */
+        .article-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 4rem;
+            margin-top: 2rem;
+        }
+
+        .article-content {
+            min-width: 0;
+        }
+
+        .article-sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        /* Hero Section */
+        .article-hero {
+            margin-bottom: 4rem;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .meta-badge {
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .meta-divider {
+            width: 1px;
+            height: 16px;
+            background: var(--border-color);
+        }
+
+        .article-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .article-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* Figma Prototype Container */
+        .prototype-container {
+            width: 100%;
+            margin-bottom: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .prototype-header {
+            background: var(--bg-tertiary);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prototype-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .prototype-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .prototype-embed {
+            width: 100%;
+            height: 600px;
+            border: none;
+            display: block;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 0.5rem 0;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 0.75rem;
+            margin-left: -0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .toc-link:hover, .toc-link.active {
+            color: var(--accent-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Mobile Menu Panel */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 320px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .mobile-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-close-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .mobile-close-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Mobile Menu Sections */
+        .mobile-nav-section {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .mobile-nav-section:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-section-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-section-header:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .mobile-nav-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-section-arrow {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-section-content.open {
+            max-height: 500px;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .mobile-nav-link:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        .mobile-nav-link.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        .mobile-nav-link svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .content-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .content-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .content-text h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem 0;
+        }
+
+        .content-text h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .content-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .content-text ul, .content-text ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .content-text li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .content-text blockquote {
+            border-left: 4px solid var(--accent-primary);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            background: var(--bg-tertiary);
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .content-text code {
+            background: var(--bg-tertiary);
+            padding: 0.125rem 0.25rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            color: var(--accent-primary);
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.125rem;
+        }
+
+        .highlight-content {
+            color: var(--text-secondary);
+        }
+
+        /* Tech Stack Pills */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-pill {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Image Containers - Properly formatted with responsive sizing */
+        .image-container {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            display: block;
+            margin: 0 auto;
+            /* Lazy loading optimization */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .image-container img.loaded {
+            opacity: 1;
+        }
+
+        .image-container img.loading {
+            background: var(--bg-tertiary);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Different sizing for different types of screenshots */
+        .screenshot-comparison {
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .screenshot-mobile {
+            max-width: 400px;
+        }
+
+        .screenshot-desktop {
+            max-width: 900px;
+        }
+
+        /* Image captions */
+        .image-caption {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .image-placeholder {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .image-placeholder:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .placeholder-text {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Project Navigation */
+        .project-nav {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .nav-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-title {
+            color: var(--accent-primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .nav-title:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .article-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .article-sidebar {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 0 1rem;
+            }
+            
+            .breadcrumbs {
+                display: none;
+            }
+            
+            .article-actions {
+                flex-direction: column;
+            }
+            
+            .prototype-embed {
+                height: 400px;
+            }
+            
+            .prototype-controls {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            
+            .nav-hint {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reading-progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../../index.html" class="nav-brand">Lenny Paz</a>
+            
+            <div class="breadcrumbs">
+                <a href="../projectshowcase.html" class="breadcrumb-link">Projects</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../projectshowcase.html?filter=ui-ux" class="breadcrumb-link">UI/UX Design</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>All American Inc. Wireframe</span>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                    <svg id="theme-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Mobile Menu -->
+    <nav class="mobile-menu">
+        <div class="mobile-menu-header">
+            <span class="mobile-menu-title">Menu</span>
+            <button class="mobile-close-btn" onclick="closeMobileMenu()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Breadcrumbs Section -->
+        <div class="mobile-nav-section breadcrumbs-section">
+            <div class="mobile-section-header" onclick="toggleMobileSection('nav-section')">
+                <div class="mobile-nav-title">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                    Navigation
+                </div>
+                <svg class="mobile-section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="mobile-section-content" id="nav-section">
+                <a href="../projectshowcase.html" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                    View All Projects
+                </a>
+                <a href="../projectshowcase.html?filter=ui-ux" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2zM16 18a1 1 0 011-1h2a1 1 0 011 1v1a1 1 0 01-1 1h-2a1 1 0 01-1-1v-1z"/>
+                    </svg>
+                    UI/UX Design
+                </a>
+                <a href="../../index.html" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Main Resume
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contents Section -->
+        <div class="mobile-nav-section">
+            <div class="mobile-section-header" onclick="toggleMobileSection('contents-section')">
+                <div class="mobile-nav-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                    </svg>
+                    Contents
+                </div>
+                <svg class="mobile-section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="mobile-section-content open" id="contents-section">
+                <a href="#overview" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Project Overview
+                </a>
+                <a href="#figma" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                    Learning to Use Figma
+                </a>
+                <a href="#features" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Key Features &amp; Design Thinking
+                </a>
+                <a href="#challenges" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                    Challenges &amp; Reflections
+                </a>
+                <a href="#showcase" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Visual Showcase (Before &amp; After)
+                </a>
+                <a href="#lessons" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    Lessons Learned
+                </a>
+                <a href="#future" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                    Future Improvements
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="article-container">
+        <article class="article-content">
+            <!-- Hero Section -->
+            <header class="article-hero">
+                <div class="article-meta">
+                    <span class="meta-badge">UI/UX Design</span>
+                    <div class="meta-divider"></div>
+                    <span>November 2024</span>
+                    <div class="meta-divider"></div>
+                    <span>8 min read</span>
+                </div>
+                
+                <h1 class="article-title">All American Inc. Wireframe</h1>
+                
+                <p class="article-description">
+                    A beginner's journey into wireframing and user experience design using Figma for a real-world business site. This article walks through my first experience designing a complete website wireframe from scratch.
+                </p>
+                
+                <div class="article-actions">
+                    <a href="https://www.figma.com/proto/AqGlnlsOnpBRGlhp9GpLA8/All-American-Inc.-Wireframe?node-id=13-145&p=f&t=DPoEesGqyMitDBG4-1&scaling=scale-down-width&content-scaling=fixed&page-id=0%3A1" target="_blank" rel="noopener" class="btn-primary">
+                        View Interactive Prototype →
+                    </a>
+                    <a href="https://web.archive.org/web/20241109160133/http://allamericaninc.net/page1" target="_blank" rel="noopener" class="btn-secondary">
+                    View Original Site
+                </a>
+                </div>
+                
+                <!-- Interactive Figma Prototype -->
+                <div class="prototype-container">
+                    <div class="prototype-header">
+                        <span class="prototype-title">Interactive Wireframe Prototype</span>
+                        <div class="prototype-controls">
+                            <div class="nav-hint">
+                                Use controls within the prototype to navigate
+                          </div>
+                        </div>
+                    </div>
+                    <iframe 
+                        class="prototype-embed"
+                        style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/proto/AqGlnlsOnpBRGlhp9GpLA8/All-American-Inc.-Wireframe?node-id=13-145&p=f&scaling=scale-down-width&content-scaling=fixed&page-id=0%3A1&embed-host=share" allowfullscreen>
+                    </iframe>
+                </div>
+                
+                <div class="tech-stack">
+                    <span class="tech-pill">Figma</span>
+                    <span class="tech-pill">Information Architecture</span>
+                    <span class="tech-pill">User Experience Design</span>
+                    <span class="tech-pill">Wireframing</span>
+                    <span class="tech-pill">Prototyping</span>
+                </div>
+            </header>
+
+            <!-- Project Overview -->
+            <section class="content-section" id="overview">
+                <h2 class="section-title">Project Overview</h2>
+                <div class="content-text">
+                    <p>This wireframe project was intended to explore the core principles of information architecture: organizing content clearly, guiding user flow, and improving usability without actually building a working website. Our class was split into groups of four, each responsible for planning and presenting a functional site structure for an existing business.</p>
+                    
+                    <p>Unfortunately, group dynamics became an issue early on. Most team members failed to show up to meetings or contribute meaningfully. In the end, I collaborated with just one other student for the final presentation, but I took full ownership of the design work. I created each page of the wireframe, from the homepage and service listings to the contact form and quote request interface.</p>
+                    
+                    <p>The goal was to create a navigable prototype that improved upon the original site by focusing on content clarity, visual hierarchy, and user trust. I'll later embed the interactive Figma prototype as a hero banner and include a visual comparison between the old site and my design.</p>
+                </div>
+            </section>
+
+            <!-- Learning to Use Figma -->
+            <section class="content-section" id="figma">
+                <h2 class="section-title">Learning to Use Figma (and Designing with Purpose)</h2>
+                <div class="content-text">
+                    <p>This was my first time using Figma, and I was both intimidated and excited. Figma is a collaborative design tool often used in the professional world for prototyping websites, apps, and interfaces. It works entirely in the browser, making it great for design teams, though in my case, I was essentially flying solo.</p>
+                    
+                    <p>At first, I struggled with aligning elements, using grids, and getting a feel for spacing. But once I got the hang of frames, components, and text styles, I began approaching the design more strategically. I didn't just want the wireframe to "look nice"; I wanted it to feel easy to use and reflective of the brand.</p>
+                    
+                    <p>Some of the intentional choices I made included:</p>
+                    
+                    <ul>
+                        <li><strong>Simple top navigation bar</strong> that always included a call-to-action (like "Get a Free Quote")</li>
+                        <li><strong>Clear service tiles</strong> that explained what each package offered with optional pricing tiers</li>
+                        <li><strong>Reorganized contact and quote sections</strong>, making sure a user would never feel lost or unsure how to reach out</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Why Figma for Wireframing?</div>
+                    <div class="highlight-content">
+                        Figma's collaborative features and component system made it ideal for creating consistent, reusable elements across multiple pages. The ability to create interactive prototypes meant I could simulate user flows and test navigation patterns before any actual development work began.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Key Features and Design Thinking -->
+            <section class="content-section" id="features">
+                <h2 class="section-title">Key Features &amp; Design Thinking</h2>
+                <div class="content-text">
+                    <p>Although this wasn't a coded website, the design still needed to think like one. Every decision I made aimed to enhance clarity and conversion.</p>
+                    
+                    <p>Here are a few highlights:</p>
+                    
+                    <h3>Homepage Flow</h3>
+                    <p>Users land on a hero image with a quick summary of what the business does, followed by scrollable sections highlighting services, testimonials, and a visual before/after.</p>
+                    
+                    <h3>Quote Form</h3>
+                    <p>I designed this to appear above the fold on mobile, making it easy to access without unnecessary scrolling.</p>
+                    
+                    <h3>Service Comparison Layout</h3>
+                    <p>I created a simple comparison block that lists out features across different packages, a design trick borrowed from popular SaaS websites to help customers make faster decisions.</p>
+                    
+                    <h3>FAQ Page</h3>
+                    <p>Instead of long text blocks, I used collapsible accordion components (even though they're only visual in the wireframe) to show how interaction could improve readability.</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Design Principles Applied</div>
+                    <div class="highlight-content">
+                        Every design decision was guided by three core principles: <strong>Clarity</strong> (users should never be confused about what to do next), <strong>Trust</strong> (professional appearance builds confidence), and <strong>Conversion</strong> (clear paths to contact or request quotes).
+                    </div>
+                </div>
+            </section>
+
+            <!-- Challenges & Reflections -->
+            <section class="content-section" id="challenges">
+                <h2 class="section-title">Challenges &amp; Reflections</h2>
+                <div class="content-text">
+                    <p>The biggest challenge wasn't the software, it was managing the workload alone.</p>
+                    
+                    <h3>Group Project Dynamics</h3>
+                    <p>Group projects often test your communication skills, but in this case, they also tested my initiative. After a couple of no-show meetings, I realized that waiting for others would hold me back, so I took the lead. I designed, revised, and documented every part of the wireframe. The only real collaboration happened during the final presentation.</p>
+                    
+                    <h3>Balancing Detail vs. Simplicity</h3>
+                    <p>Another challenge was finding the right balance between structure and presentation. While wireframes are typically grayscale and focused purely on layout, I chose to incorporate branding colors and subtle visual styling to make the wireframe feel more true to life. This added a layer of polish without losing sight of the project's purpose. Even with the added color, I kept my attention on content hierarchy and spacing, elements that quietly shape how usable and intuitive a site really feels.</p>
+                    
+                    <h3>First-Time Tool Learning</h3>
+                    <p>Learning Figma while simultaneously trying to create a professional-quality wireframe was like learning to drive while navigating to a new destination. The tool itself became less of a barrier as I progressed, but the initial learning curve definitely slowed down my early iterations.</p>
+                    
+                    <blockquote>
+                        "After a couple of no-show meetings, I realized that waiting for others would hold me back, so I took the lead. Sometimes the biggest challenge in group work is learning when to work independently."
+                    </blockquote>
+                </div>
+            </section>
+
+            <!-- Visual Showcase -->
+            <section class="content-section" id="showcase">
+                <h2 class="section-title">Visual Showcase (Before &amp; After)</h2>
+                <div class="content-text">
+                    <p>This section includes side-by-side comparisons of the original website and my redesigned wireframe. While the original had outdated styling and cluttered navigation, my version introduced clarity, responsiveness, and a more professional feel, especially on mobile layouts.</p>
+                </div>
+                
+                <div class="image-container screenshot-comparison">
+                    <img data-src="../assets/images/WireB.png" alt="Original All American Inc. website showing outdated design and cluttered navigation" class="lazy-load">
+                    <div class="image-caption">Before: Original website with outdated styling and bad information scent</div>
+                </div>
+                
+                <div class="image-container screenshot-comparison">
+                    <img data-src="../assets/images/WireA.png" alt="Redesigned wireframe showing improved layout and user experience" class="lazy-load">
+                    <div class="image-caption">After: My wireframe design with improved clarity and professional layout</div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Key Improvements</div>
+                    <div class="highlight-content">
+                      The redesigned wireframe addressed the original site's main pain points: outdated styling, blank pages,  unclear service descriptions, and poor mobile experience. My version prioritized user goals and created clear pathways to conversion.
+                  </div>
+                </div>
+            </section>
+
+            <!-- Lessons Learned -->
+            <section class="content-section" id="lessons">
+                <h2 class="section-title">Lessons Learned</h2>
+                <div class="content-text">
+                    <h3>UX Design is About Empathy</h3>
+                    <p>You're not designing for yourself, you're designing for the person who visits the site at 10 p.m. looking for a quote. Every design decision should make their experience easier, not showcase your creativity at the expense of usability.</p>
+                    
+                    <h3>Structure Comes Before Style</h3>
+                    <p>Wireframes don't need to be pretty to be powerful. Clean layout and logical flow matter more than colors and fonts at this stage. This project taught me to focus on the foundation before worrying about the decoration.</p>
+                    
+                    <h3>Solo Work Can Be Empowering</h3>
+                    <p>Although it was meant to be a team effort, taking full control helped me understand every part of the process more deeply. I learned that sometimes working independently can be more productive than waiting for consensus.</p>
+                    
+                    <h3>Tool Mastery Comes Through Practice</h3>
+                    <p>Figma seemed overwhelming at first, but by the end of the project, I was comfortable with frames, components, constraints, and interactive prototyping. The best way to learn design tools is through real projects with actual constraints and deadlines.</p>
+                    
+                    <blockquote>
+                        "This project taught me that great UX design isn't about making something look good, it's about making something work intuitively for real people with real needs."
+                    </blockquote>
+                </div>
+            </section>
+
+            <!-- Future Improvements -->
+            <section class="content-section" id="future">
+                <h2 class="section-title">Future Improvements</h2>
+                <div class="content-text">
+                    <p>While this project was only meant to stop at the wireframe, it left me wanting to build the full site. If I ever revisit this project, I'd consider:</p>
+                    
+                    <h3>Development &amp; Implementation</h3>
+                    <ul>
+                        <li><strong>Turning it into a coded prototype</strong>, possibly using HTML/CSS and a JavaScript framework</li>
+                        <li><strong>Adding animations or transitions</strong> to simulate interactions more realistically</li>
+                        <li><strong>Implementing responsive breakpoints</strong> to ensure the design works across all device sizes</li>
+                    </ul>
+                    
+                    <h3>User Testing &amp; Validation</h3>
+                    <ul>
+                        <li><strong>Testing the design with real users</strong> to collect feedback on pain points or confusion</li>
+                        <li><strong>A/B testing different layout approaches</strong> to see which converts better</li>
+                        <li><strong>Usability studies</strong> to identify areas where users get stuck or confused</li>
+                    </ul>
+                    
+                    <h3>Enhanced Functionality</h3>
+                    <ul>
+                        <li><strong>Integration with scheduling systems</strong> for automatic quote booking</li>
+                        <li><strong>Before/after photo galleries</strong> with filtering and search capabilities</li>
+                        <li><strong>Customer testimonial system</strong> with verified reviews</li>
+                        <li><strong>Mobile-first quote calculator</strong> with instant pricing estimates</li>
+                    </ul>
+                    
+                    <p>The wireframing process gave me a solid foundation to build upon, and I'm excited to potentially turn this concept into a fully functional website that could genuinely help a local business succeed online.</p>
+                </div>
+            </section>
+
+            <!-- Project Navigation -->
+            <div class="project-nav">
+                <div class="nav-item">
+                    <div class="nav-label">Previous Project</div>
+                    <a href="../web-development/interactive-resume.html" class="nav-title">Interactive Resume Website</a>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-label">Back to</div>
+                    <a href="../index.html" class="nav-title">All Projects</a>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-label">Next Project</div>
+                    <a href="../database-backend/mysql-dbms.html" class="nav-title">MySQL Database System</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Sidebar Table of Contents -->
+        <aside class="article-sidebar">
+            <div class="toc">
+                <h3 class="toc-title">Contents</h3>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <a href="#overview" class="toc-link">Project Overview</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#figma" class="toc-link">Learning to Use Figma</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#features" class="toc-link">Key Features &amp; Design Thinking</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#challenges" class="toc-link">Challenges &amp; Reflections</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#showcase" class="toc-link">Visual Showcase (Before &amp; After)</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#lessons" class="toc-link">Lessons Learned</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#future" class="toc-link">Future Improvements</a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? null : 'dark';
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (newTheme) {
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', 'dark');
+                themeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                `;
+            } else {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                `;
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                `;
+            }
+        }
+
+        // Mobile Menu Management
+        function toggleMobileMenu() {
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            const menu = document.querySelector('.mobile-menu');
+            
+            overlay.classList.add('active');
+            menu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            const menu = document.querySelector('.mobile-menu');
+            
+            overlay.classList.remove('active');
+            menu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function toggleMobileSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const header = content.previousElementSibling;
+            const arrow = header.querySelector('.mobile-section-arrow');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Lazy Loading Implementation
+        function initializeLazyLoading() {
+            const lazyImages = document.querySelectorAll('img.lazy-load');
+            
+            // Fallback for browsers without IntersectionObserver
+            if (!('IntersectionObserver' in window)) {
+                lazyImages.forEach(img => {
+                    loadImage(img);
+                });
+                return;
+            }
+            
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        loadImage(img);
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                // Load image when it's 50px away from viewport
+                rootMargin: '50px 0px',
+                threshold: 0.01
+            });
+            
+            lazyImages.forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        function loadImage(img) {
+            // Show loading state
+            img.classList.add('loading');
+            
+            // Create a new image to preload
+            const imageLoader = new Image();
+            
+            imageLoader.onload = function() {
+                // Image loaded successfully
+                img.src = img.dataset.src;
+                img.classList.remove('loading');
+                img.classList.add('loaded');
+                
+                // Remove the data-src attribute as it's no longer needed
+                img.removeAttribute('data-src');
+            };
+            
+            imageLoader.onerror = function() {
+                // Image failed to load
+                img.classList.remove('loading');
+                img.alt = 'Image failed to load: ' + img.alt;
+                console.error('Failed to load image:', img.dataset.src);
+            };
+            
+            // Start loading the image
+            imageLoader.src = img.dataset.src;
+        }
+
+        // Table of Contents Active State
+        function updateTocActiveState() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link, .mobile-nav-link[href^="#"]');
+            const scrollPos = window.pageYOffset + 150;
+            
+            let activeSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    activeSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + activeSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Smooth Scrolling for TOC Links
+        function initializeTocScrolling() {
+            const tocLinks = document.querySelectorAll('.toc-link, .mobile-nav-link[href^="#"]');
+            
+            tocLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        const offsetTop = targetSection.offsetTop - 100;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu after clicking TOC link
+                        closeMobileMenu();
+                    }
+                });
+            });
+        }
+
+        // Reading Progress
+        function updateReadingProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const article = document.querySelector('.article-content');
+            const scrollTop = window.pageYOffset;
+            const articleHeight = article.offsetHeight;
+            const windowHeight = window.innerHeight;
+            const maxScroll = articleHeight - windowHeight;
+            const progress = Math.min((scrollTop / maxScroll) * 100, 100);
+            
+            progressBar.style.width = progress + '%';
+        }
+
+        // Initialize Everything
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            initializeTocScrolling();
+            initializeLazyLoading(); // Initialize lazy loading
+            
+            // Set initial arrow states for open sections
+            document.querySelectorAll('.mobile-section-content.open').forEach(content => {
+                const header = content.previousElementSibling;
+                const arrow = header.querySelector('.mobile-section-arrow');
+                if (arrow) {
+                    arrow.style.transform = 'rotate(180deg)';
+                }
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                const menu = document.querySelector('.mobile-menu');
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                
+                if (menu && menu.classList.contains('active') && 
+                    !menu.contains(e.target) && 
+                    !menuBtn.contains(e.target)) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Throttled scroll handler for performance
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateReadingProgress();
+                        updateTocActiveState();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            // Initial call to set correct states
+            updateReadingProgress();
+            updateTocActiveState();
+        });
+    </script>
+</body>
+</html>
