@@ -1001,7 +1001,7 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="../index.html" class="nav-brand">Lenny Paz - Projects</a>
+            <a href="../" class="nav-brand">Lenny Paz - Projects</a>
             
             <ul class="nav-menu">
                 <li class="nav-item">
@@ -1678,6 +1678,9 @@
             initializeFiltering();
             initializeScrollAnimations();
             
+			//Handle URL filter parameters from breadcrumbs
+    		handleUrlFilterParameters();
+			
             // Animate stats after a short delay
             setTimeout(animateHeroStats, 500);
             
@@ -1710,7 +1713,29 @@
                 }
             });
         });
+		
+		function handleUrlFilterParameters() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const filterParam = urlParams.get('filter');
 
+			if (filterParam) {
+				// Update the active filter tag
+				const filterTags = document.querySelectorAll('.filter-tag');
+				filterTags.forEach(tag => {
+					tag.classList.remove('active');
+					if (tag.dataset.filter === filterParam) {
+						tag.classList.add('active');
+					}
+				});
+
+				// Apply the filter
+				filterProjects(filterParam);
+
+				// Update URL without the query parameter for cleaner history
+				const newUrl = window.location.pathname;
+				window.history.replaceState({}, '', newUrl);
+			}
+		}
         // Smooth scroll behavior for hash links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
