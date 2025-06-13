@@ -9,44 +9,47 @@
     
     <style>
         :root {
-            /* Primary Colors */
-            --bg-primary: #f8fafc;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #f1f5f9;
-            
-            /* Text Colors */
-            --text-primary: #1e293b;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            
-            /* Accent Colors */
-            --accent-primary: #3b82f6;
-            --accent-secondary: #1d4ed8;
-            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            
-            /* Status Colors */
-            --status-completed: #10b981;
-            --status-progress: #f59e0b;
-            --status-planned: #8b5cf6;
-            
-            /* Border & Effects */
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-        }
+			/* Primary Colors - Updated to match article pages */
+			--bg-primary: #fafafa;
+			--bg-secondary: #ffffff;
+			--bg-tertiary: #f8f9fa;
 
-        [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
-        }
+			/* Text Colors - Updated to match article pages */
+			--text-primary: #1a1a1a;
+			--text-secondary: #4a4a4a;
+			--text-muted: #6b7280;
 
+			/* Accent Colors - Updated to match article pages */
+			--accent-primary: #2563eb;
+			--accent-secondary: #1d4ed8;
+			--accent-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+
+			/* Status Colors */
+			--status-completed: #10b981;
+			--status-progress: #f59e0b;
+			--status-planned: #8b5cf6;
+
+			/* Border & Effects - Updated to match article pages */
+			--border-color: #e5e7eb;
+			--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+			--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+			--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+			--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+			/* Typography - Updated to match article pages */
+			--font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+		}
+
+		[data-theme="dark"] {
+			/* Dark mode colors - Updated to match article pages */
+			--bg-primary: #0a0a0a;
+			--bg-secondary: #111111;
+			--bg-tertiary: #1a1a1a;
+			--text-primary: #f5f5f5;
+			--text-secondary: #d1d5db;
+			--text-muted: #9ca3af;
+			--border-color: #374151;
+		}
         * {
             margin: 0;
             padding: 0;
@@ -54,7 +57,7 @@
         }
 
         body {
-            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
@@ -63,33 +66,34 @@
 
         /* Navigation - IMPROVED RESPONSIVE DESIGN */
         .navbar {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
+			background: rgba(255, 255, 255, 0.8);
+			backdrop-filter: blur(20px);
+			border-bottom: 1px solid var(--border-color);
+			padding: 0 2rem;
+			position: sticky;
+			top: 0;
+			z-index: 100;
+		}
+
+		[data-theme="dark"] .navbar {
+			background: rgba(17, 17, 17, 0.8);
+		}
 
         .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-            gap: 1rem; /* Add consistent spacing */
-        }
+			max-width: 1400px;
+			margin: 0 auto;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			height: 64px;
+			gap: 1rem;
+		}
 
         .nav-brand {
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: 1.125rem;
+            font-weight: 600;
             color: var(--text-primary);
             text-decoration: none;
-            font-style: italic;
-            white-space: nowrap;
-            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .nav-menu {
@@ -1023,15 +1027,15 @@
                         </svg>
                     </a>
                     <div class="dropdown">
-                        <a href="web-development/interactive-resume.html" class="dropdown-item">
+                        <a href="web-development/interactive-resume" class="dropdown-item">
                             Interactive Resume Website
                             <span class="status-badge status-completed">Completed</span>
                         </a>
-                        <a href="web-development/project-showcase.html" class="dropdown-item">
+                        <a href="web-development/project-showcase" class="dropdown-item">
                             Project Showcase Site
                             <span class="status-badge status-progress">In Progress</span>
                         </a>
-                        <a href="web-development/e-commerce-prototype.html" class="dropdown-item">
+                        <a href="web-development/e-commerce-prototype" class="dropdown-item">
                             E-commerce Prototype
                             <span class="status-badge status-planned">Planned</span>
                         </a>
@@ -1048,7 +1052,7 @@
                         </svg>
                     </a>
                     <div class="dropdown">
-                        <a href="database-backend/mysql-dbms.html" class="dropdown-item">
+                        <a href="database-backend/mysql-dbms" class="dropdown-item">
                             MySQL Database Management System
                             <span class="status-badge status-completed">Completed</span>
                         </a>
@@ -1065,7 +1069,7 @@
                         </svg>
                     </a>
                     <div class="dropdown">
-                        <a href="ui-ux-design/wireframe-design.html" class="dropdown-item">
+                        <a href="ui-ux-design/wireframe-design" class="dropdown-item">
                             All American Inc. Wireframe
                             <span class="status-badge status-completed">Completed</span>
                         </a>
@@ -1154,7 +1158,7 @@
                         </div>
                         
                         <div class="featured-actions">
-                            <a href="web-development/interactive-resume.html" class="btn-primary">
+                            <a href="web-development/interactive-resume" class="btn-primary">
                                 📖 Read Full Story
                             </a>
                             <a href="https://lennypaz.com" target="_blank" rel="noopener" class="btn-secondary">
@@ -1183,7 +1187,7 @@
                         <span class="project-tag">User Experience</span>
                     </div>
                     <div class="project-actions">
-                        <a href="ui-ux-design/wireframe-design.html" class="btn-read">📖 Read More</a>
+                        <a href="ui-ux-design/wireframe-design" class="btn-read">📖 Read More</a>
                     </div>
                     <div class="project-footer">
                         <span class="read-time">6 min read</span>
@@ -1209,7 +1213,7 @@
                         <span class="project-tag">SQL Optimization</span>
                     </div>
                     <div class="project-actions">
-                        <a href="database-backend/mysql-dbms.html" class="btn-read">📖 Read More</a>
+                        <a href="database-backend/mysql-dbms" class="btn-read">📖 Read More</a>
                     </div>
                     <div class="project-footer">
                         <span class="read-time">8 min read</span>
@@ -1237,7 +1241,7 @@
                         <span class="project-tag">Technical Writing</span>
                     </div>
                     <div class="project-actions">
-                        <a href="web-development/project-showcase.html" class="btn-read">📖 Read More</a>
+                        <a href="web-development/project-showcase" class="btn-read">📖 Read More</a>
                     </div>
                     <div class="project-footer">
                         <span class="read-time">10 min read</span>
@@ -1265,7 +1269,7 @@
                         <span class="project-tag">Payment Integration</span>
                     </div>
                     <div class="project-actions">
-                        <a href="web-development/e-commerce-prototype.html" class="btn-read">📖 Read More</a>
+                        <a href="web-development/e-commerce-prototype" class="btn-read">📖 Read More</a>
                     </div>
                     <div class="project-footer">
                         <span class="read-time">Est. 15 min read</span>
@@ -1323,21 +1327,21 @@
                 </svg>
             </div>
             <div class="mobile-section-content" id="web-section">
-                <a href="web-development/interactive-resume.html" class="mobile-nav-link">
+                <a href="web-development/interactive-resume" class="mobile-nav-link">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Interactive Resume Website
                     <span class="status-badge status-completed">Completed</span>
                 </a>
-                <a href="web-development/project-showcase.html" class="mobile-nav-link">
+                <a href="web-development/project-showcase" class="mobile-nav-link">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Project Showcase Site
                     <span class="status-badge status-progress">In Progress</span>
                 </a>
-                <a href="web-development/e-commerce-prototype.html" class="mobile-nav-link">
+                <a href="web-development/e-commerce-prototype" class="mobile-nav-link">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                     </svg>
@@ -1360,7 +1364,7 @@
                 </svg>
             </div>
             <div class="mobile-section-content" id="database-section">
-                <a href="database-backend/mysql-dbms.html" class="mobile-nav-link">
+                <a href="database-backend/mysql-dbms" class="mobile-nav-link">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
@@ -1383,7 +1387,7 @@
                 </svg>
             </div>
             <div class="mobile-section-content" id="ui-section">
-                <a href="ui-ux-design/wireframe-design.html" class="mobile-nav-link">
+                <a href="ui-ux-design/wireframe-design" class="mobile-nav-link">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
