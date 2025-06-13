@@ -1720,6 +1720,9 @@
             initializeTocScrolling();
             initializeLazyLoading(); // Initialize lazy loading
 			
+            // Handle URL filter parameters for breadcrumb navigation
+            handleUrlFilters();
+			
             // Set initial arrow states for open sections
             document.querySelectorAll('.mobile-section-content.open').forEach(content => {
                 const header = content.previousElementSibling;
@@ -1758,6 +1761,42 @@
             updateReadingProgress();
             updateTocActiveState();
         });
+
+        // Handle URL filter parameters for breadcrumb navigation
+        function handleUrlFilters() {
+            // Check if we're on a projects page and if there are filter parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const filterParam = urlParams.get('filter');
+            
+            if (filterParam) {
+                // If we're on the projects page, apply the filter
+                if (window.location.pathname.includes('/projects/') && !window.location.pathname.includes('.html')) {
+                    // We're on the main projects page, apply the filter
+                    if (typeof setActiveFilter === 'function') {
+                        setActiveFilter(filterParam);
+                    } else if (typeof filterProjects === 'function') {
+                        // Alternative function name that might exist
+                        filterProjects(filterParam);
+                        // Also update the filter tag to show as active
+                        const filterTags = document.querySelectorAll('.filter-tag');
+                        filterTags.forEach(tag => {
+                            tag.classList.remove('active');
+                            if (tag.dataset.filter === filterParam) {
+                                tag.classList.add('active');
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        // Message for projects page filter handling
+        function handleProjectsPageFilter() {
+            // This function will be called by the projects page to handle filters
+            const urlParams = new URLSearchParams(window.location.search);
+            const filterParam = urlParams.get('filter');
+            return filterParam;
+        }
     </script>
 </body>
 </html>
