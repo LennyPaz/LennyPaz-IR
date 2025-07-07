@@ -487,9 +487,9 @@
             <div class="progress-section">
                 <div class="progress-title">Documentation Progress</div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 25%"></div>
+                    <div class="progress-fill" data-progress="50" style="width: 50%"></div>
                 </div>
-                <div class="progress-text">Research and content planning phase</div>
+                <div class="progress-text">Writing technical documentation</div>
             </div>
 
             <div class="timeline">
@@ -652,11 +652,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadTheme();
             
-            // Simulate progress bar animation
+            // Animate progress bar based on data-progress attribute
             setTimeout(() => {
                 const progressFill = document.querySelector('.progress-fill');
                 if (progressFill) {
-                    progressFill.style.width = '35%';
+                    const targetProgress = progressFill.getAttribute('data-progress') || 25;
+                    progressFill.style.width = targetProgress + '%';
                 }
             }, 1000);
         });
