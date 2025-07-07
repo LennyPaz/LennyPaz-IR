@@ -487,9 +487,9 @@
             <div class="progress-section">
                 <div class="progress-title">Documentation Progress</div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 10%"></div>
+                    <div class="progress-fill" data-progress="15" style="width: 15%"></div>
                 </div>
-                <div class="progress-text">Research and content planning phase</div>
+                <div class="progress-text">Building core functionality and features</div>
             </div>
 
             <div class="timeline">
@@ -530,7 +530,6 @@
                 <a href="../" class="btn-primary">
                     ← Back to All Projects
                 </a>
-
                 <a href="../../" class="btn-secondary">
                     View Main Resume
                 </a>
@@ -653,15 +652,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadTheme();
             
-            // Simulate progress bar animation
+            // Animate progress bar based on data-progress attribute
             setTimeout(() => {
                 const progressFill = document.querySelector('.progress-fill');
                 if (progressFill) {
-                    progressFill.style.width = '35%';
+                    const targetProgress = progressFill.getAttribute('data-progress') || 25;
+                    progressFill.style.width = targetProgress + '%';
                 }
             }, 1000);
         });
     </script>
 </body>
 </html>
-
