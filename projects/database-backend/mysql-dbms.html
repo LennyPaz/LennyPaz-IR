@@ -1,1 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL Database Management System - Lenny Paz</title>
+    <meta name="description" content="A comprehensive database design project demonstrating relational modeling, data normalization, and complex query optimization for a multi-tiered corporate workforce management system.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗄️</text></svg>">
+    
+    <style>
+        :root {
+            /* Primary Colors */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f8f9fa;
+            
+            /* Text Colors */
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6b7280;
+            
+            /* Accent Colors */
+            --accent-primary: #2563eb;
+            --accent-secondary: #1d4ed8;
+            --accent-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            
+            /* Border & Effects */
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            
+            /* Typography */
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        }
 
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(17, 17, 17, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            gap: 2rem;
+        }
+
+        .nav-brand {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb-link:hover {
+            color: var(--accent-secondary);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Reading Progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 99;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-gradient);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* Main Layout */
+        .article-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 4rem;
+            margin-top: 2rem;
+        }
+
+        .article-content {
+            min-width: 0;
+        }
+
+        .article-sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        /* Hero Section */
+        .article-hero {
+            margin-bottom: 4rem;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .meta-badge {
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .meta-divider {
+            width: 1px;
+            height: 16px;
+            background: var(--border-color);
+        }
+
+        .article-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .article-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 0.5rem 0;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 0.75rem;
+            margin-left: -0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .toc-link:hover, .toc-link.active {
+            color: var(--accent-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Mobile Menu Panel */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 320px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .mobile-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-close-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .mobile-close-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Mobile Menu Sections */
+        .mobile-nav-section {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .mobile-nav-section:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-section-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-section-header:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .mobile-nav-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-section-arrow {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-section-content.open {
+            max-height: 500px;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .mobile-nav-link:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        .mobile-nav-link.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        .mobile-nav-link svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .content-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .content-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .content-text h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem 0;
+        }
+
+        .content-text h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .content-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .content-text ul, .content-text ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .content-text li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .content-text blockquote {
+            border-left: 4px solid var(--accent-primary);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            background: var(--bg-tertiary);
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .content-text code {
+            background: var(--bg-tertiary);
+            padding: 0.125rem 0.25rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            color: var(--accent-primary);
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.125rem;
+        }
+
+        .highlight-content {
+            color: var(--text-secondary);
+        }
+
+        /* Code Blocks with Syntax Highlighting */
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .code-header {
+            background: var(--bg-tertiary);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .code-title {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .code-lang {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            background: var(--bg-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            background: #0d1117;
+            color: #e6edf3;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        /* Syntax highlighting */
+        .code-content .keyword { color: #ff7b72; }
+        .code-content .string { color: #a5d6ff; }
+        .code-content .comment { color: #8b949e; font-style: italic; }
+        .code-content .function { color: #d2a8ff; }
+        .code-content .variable { color: #ffa657; }
+        .code-content .property { color: #79c0ff; }
+        .code-content .number { color: #79c0ff; }
+        .code-content .operator { color: #ff7b72; }
+        .code-content .punctuation { color: #e6edf3; }
+
+        /* Tech Stack Pills */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-pill {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Image Containers */
+        .image-container {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            display: block;
+            margin: 0 auto;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .image-container img.loaded {
+            opacity: 1;
+        }
+
+        .image-container img.loading {
+            background: var(--bg-tertiary);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screenshot-comparison {
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .image-caption {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .query-result {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .query-result-header {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            background: var(--bg-primary);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-table th {
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--accent-secondary);
+        }
+
+        .result-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .result-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .result-table tr:nth-child(even) {
+            background: var(--bg-tertiary);
+        }
+
+        .result-table tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        [data-theme="dark"] .result-table {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Project Navigation */
+        .project-nav {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .nav-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-title {
+            color: var(--accent-primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .nav-title:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .article-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .article-sidebar {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 0 1rem;
+            }
+            
+            .breadcrumbs {
+                display: none;
+            }
+            
+            .article-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reading-progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../../" class="nav-brand">Lenny Paz</a>
+            
+            <div class="breadcrumbs">
+                <a href="../" class="breadcrumb-link">Projects</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../?filter=database" class="breadcrumb-link">Database &amp; Backend</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>MySQL Database System</span>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                    <svg id="theme-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Mobile Menu -->
+    <nav class="mobile-menu">
+        <div class="mobile-menu-header">
+            <span class="mobile-menu-title">Menu</span>
+            <button class="mobile-close-btn" onclick="closeMobileMenu()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Breadcrumbs Section -->
+        <div class="mobile-nav-section breadcrumbs-section">
+            <div class="mobile-section-header" onclick="toggleMobileSection('nav-section')">
+                <div class="mobile-nav-title">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                    Navigation
+                </div>
+                <svg class="mobile-section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="mobile-section-content" id="nav-section">
+                <a href="../" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                    View All Projects
+                </a>
+                <a href="../?filter=database" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                    </svg>
+                    Database &amp; Backend
+                </a>
+                <a href="../../" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Main Resume
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contents Section -->
+        <div class="mobile-nav-section">
+            <div class="mobile-section-header" onclick="toggleMobileSection('contents-section')">
+                <div class="mobile-nav-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                    </svg>
+                    Contents
+                </div>
+                <svg class="mobile-section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="mobile-section-content open" id="contents-section">
+                <a href="#overview" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Project Overview
+                </a>
+                <a href="#architecture" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                    Database Design &amp; Architecture
+                </a>
+                <a href="#features" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Key Features &amp; Database Logic
+                </a>
+                <a href="#queries" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    </svg>
+                    SQL Query Implementation
+                </a>
+                <a href="#challenges" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                    Challenges &amp; Solutions
+                </a>
+                <a href="#showcase" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Visual Showcase
+                </a>
+                <a href="#lessons" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    Lessons Learned
+                </a>
+                <a href="#future" class="mobile-nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                    Future Improvements
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="article-container">
+        <article class="article-content">
+            <!-- Hero Section -->
+            <header class="article-hero">
+                <div class="article-meta">
+                    <span class="meta-badge">Database &amp; Backend</span>
+                    <div class="meta-divider"></div>
+                    <span>December 2024</span>
+                    <div class="meta-divider"></div>
+                    <span>8 min read</span>
+                </div>
+                
+                <h1 class="article-title">MySQL Database Management System</h1>
+                
+                <p class="article-description">
+                    A comprehensive database design project demonstrating relational modeling, data normalization, and complex query optimization for a multi-tiered corporate workforce management system.
+                </p>
+                
+                <div class="article-actions">
+                    <a href="#showcase" class="btn-primary" onclick="scrollToSection('showcase', event)">
+                        View ERD Diagram →
+                    </a>
+                    <a href="#queries" class="btn-secondary" onclick="scrollToSection('queries', event)">
+                        View Query Results
+                    </a>
+                </div>
+                
+                <div class="tech-stack">
+                    <span class="tech-pill">MySQL</span>
+                    <span class="tech-pill">MySQL Workbench</span>
+                    <span class="tech-pill">SQL</span>
+                    <span class="tech-pill">Database Design</span>
+                    <span class="tech-pill">ERD Modeling</span>
+                </div>
+            </header>
+
+            <!-- Project Overview -->
+            <section class="content-section" id="overview">
+                <h2 class="section-title">Project Overview</h2>
+                <div class="content-text">
+                    <p>This database management project was the culminating assignment for my Database Concepts course, where I applied everything I'd learned about relational database design throughout the semester. The challenge was to create a comprehensive system to manage a fictional company's workforce, tracking employees, departments, projects, and performance evaluations in a way that reflects real business operations.</p>
+                    
+                    <p>The project required me to think through complex organizational relationships: How do you handle employees who both work in departments and manage them? What's the best way to store information for both full-time and part-time workers? How do you track project assignments and performance over time?</p>
+                    
+                    <p>I built the entire system using MySQL Workbench, creating tables that work together seamlessly while maintaining data accuracy and preventing inconsistencies. The final deliverable included a complete database structure, realistic employee and project data, and a set of SQL queries that demonstrate different ways to extract useful business insights from the data.</p>
+                </div>
+            </section>
+
+            <!-- Database Design & Architecture -->
+            <section class="content-section" id="architecture">
+                <h2 class="section-title">Database Design &amp; Architecture</h2>
+                <div class="content-text">
+                    <h3>Understanding the Business Structure</h3>
+                    <p>The first step was mapping out how a real company might organize its workforce. I needed to capture several key relationships:</p>
+                    
+                    <ul>
+                        <li><strong>Employee information</strong> including personal details and whether they work full-time or part-time</li>
+                        <li><strong>Company organization</strong> with departments grouped into larger divisions</li>
+                        <li><strong>Management structure</strong> where certain employees lead departments or divisions</li>
+                        <li><strong>Project work</strong> where employees are assigned to specific projects with start dates, end dates, and performance evaluations</li>
+                    </ul>
+                    
+                    <p>The trickiest part was figuring out how to handle different types of employees. Full-time workers have annual salaries, while part-time workers have hourly rates and maximum weekly hours. Rather than mixing all this information in one table, I created separate tables for each employment type. This keeps the data clean and prevents errors like accidentally giving a part-time worker an annual salary.</p>
+                    
+                    <h3>Entity-Relationship Modeling</h3>
+                    <p>Using MySQL Workbench's visual design tools, I created a diagram that shows how all the database tables connect to each other. This diagram, called an Entity-Relationship Diagram (ERD), serves as the blueprint for the entire system.</p>
+                    
+                    <p>The main components include:</p>
+                    
+                    <ul>
+                        <li><strong>Employee</strong> as the central table containing basic information like name, address, and employment type</li>
+                        <li><strong>Department</strong> and <strong>Division</strong> tables that represent the company's organizational structure</li>
+                        <li><strong>Project</strong> and <strong>Assignment</strong> tables that track work assignments and how well employees performed</li>
+                        <li><strong>Full_Time</strong> and <strong>Part_Time</strong> tables that store employment-specific details like pay information</li>
+                    </ul>
+                    
+                    <p>What makes this design effective is how the tables reference each other through shared ID numbers. For example, each employee record includes a department ID that links to their specific department, and each department record includes an employee ID for whoever manages that department.</p>
+                    
+                    <h3>Table Structure Implementation</h3>
+                    <p>Once the visual design was complete, MySQL Workbench generated the actual database creation code. This process, called forward engineering, transforms the diagram into working database tables with proper data types and relationships.</p>
+                    
+                    <p>Each piece of information needed the right data type: phone numbers became large integers, ZIP codes became fixed-length character fields, and employment type used a special enumerated field that only accepts 'f' for full-time or 'p' for part-time. The database also includes built-in rules that prevent invalid data. For example, you can't delete an employee who manages a department until you assign a new manager.</p>
+                </div>
+            </section>
+
+            <!-- Key Features & Database Logic -->
+            <section class="content-section" id="features">
+                <h2 class="section-title">Key Features &amp; Database Logic</h2>
+                <div class="content-text">
+                    <h3>Smart Employee Type Handling</h3>
+                    <p>One of the most important design decisions was how to handle different employment types. Instead of having one large table with lots of empty fields, I used an inheritance pattern that's both efficient and logical:</p>
+                    
+                    <ul>
+                        <li>The main employee table contains information that applies to everyone (name, address, contact details)</li>
+                        <li>A special field indicates whether each employee is full-time ('f') or part-time ('p')</li>
+                        <li>Separate tables store type-specific information like annual salary for full-time workers or hourly rate for part-time workers</li>
+                    </ul>
+                    
+                    <p>This approach ensures data accuracy. The database structure itself prevents mistakes like assigning both a salary and an hourly rate to the same person.</p>
+                    
+                    <h3>Organizational Hierarchy</h3>
+                    <p>The department and division structure reflects how real companies operate. Employees belong to departments, departments belong to divisions, and both departments and divisions have employee managers. These relationships create a web of connections that the database maintains automatically.</p>
+                    
+                    <p>For example, if you try to delete an employee who manages a department, the database will prevent the deletion until you assign a new manager. This built-in protection keeps the data consistent and prevents organizational charts from breaking.</p>
+                    
+                    <h3>Project Assignment Tracking</h3>
+                    <p>The assignment system goes beyond simple employee-to-project connections. Each assignment includes start and end dates, performance evaluations (pass or fail), and space for additional notes. This creates a historical record of who worked on what projects and how they performed, valuable information for performance reviews and future project planning.</p>
+                </div>
+            </section>
+
+            <!-- SQL Query Implementation -->
+            <section class="content-section" id="queries">
+                <h2 class="section-title">SQL Query Implementation</h2>
+                <div class="content-text">
+                    <h3>Employee Search with Pattern Matching</h3>
+                    <p><strong>Query Purpose:</strong> Find employees by partial name matching for directory lookups or HR searches.</p>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">LIKE Pattern Matching Query</span>
+                        <span class="code-lang">SQL</span>
+                    </div>
+                    <div class="code-content">
+                      <p> <span class="keyword">SELECT</span> <span class="property">emp_id</span>, <span class="property">emp_first</span>, <span class="property">emp_last</span>, <span class="property">emp_email</span>&nbsp;</p>
+                      <p><span class="keyword">FROM</span> <span class="variable">employee</span>&nbsp;</p>
+                      <p><span class="keyword">WHERE</span> <span class="property">emp_first</span> <span class="keyword">LIKE</span> <span class="string">'%Karen%'</span>; </p>
+                    </div>
+                </div>
+                
+                <div class="content-text">
+                    <p>This query uses the LIKE operator with wildcards (%) to find any employee whose first name contains "Karen" anywhere within it. The % symbols mean "match any characters before or after Karen."</p>
+                </div>
+                
+                <div class="query-result">
+                    <div class="query-result-header">Query Result:</div>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>emp_id</th>
+                                <th>emp_first</th>
+                                <th>emp_last</th>
+                                <th>emp_email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Karen</td>
+                                <td>Williams</td>
+                                <td>kwilliams.abc@gmail.com</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="content-text">
+                    <h3>Full-Time Employee Identification</h3>
+                    <p><strong>Query Purpose:</strong> List all employees who are classified as full-time workers.</p>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">EXISTS Subquery</span>
+                        <span class="code-lang">SQL</span>
+                    </div>
+                    <div class="code-content">
+                      <p> <span class="keyword">SELECT</span> <span class="property">emp_id</span>, <span class="property">emp_first</span>, <span class="property">emp_last</span>&nbsp;</p>
+                      <p><span class="keyword">FROM</span> <span class="variable">employee</span>&nbsp;</p>
+                      <p><span class="keyword">WHERE</span> <span class="keyword">EXISTS</span> (&nbsp;</p>
+                      <p>&nbsp; <span class="keyword">SELECT</span> *&nbsp;</p>
+                      <p>&nbsp; <span class="keyword">FROM</span> <span class="variable">full_time</span>&nbsp;</p>
+                      <p>&nbsp; <span class="keyword">WHERE</span> <span class="property">full_time</span>.<span class="property">emp_id</span> = <span class="property">employee</span>.<span class="property">emp_id</span>&nbsp;</p>
+                      <p>); </p>
+                    </div>
+                </div>
+                
+                <div class="content-text">
+                    <p>The EXISTS clause checks whether each employee has a corresponding record in the full_time table. If they do, they're included in the results. This approach efficiently identifies full-time employees without requiring complex table joins.</p>
+                </div>
+                
+                <div class="query-result">
+                    <div class="query-result-header">Query Result:</div>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>emp_id</th>
+                                <th>emp_first</th>
+                                <th>emp_last</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Karen</td>
+                                <td>Williams</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Michael</td>
+                                <td>Scott</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Lucas</td>
+                                <td>Nathans</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="content-text">
+                    <h3>Department Staffing Analysis</h3>
+                    <p><strong>Query Purpose:</strong> Count how many employees work in each department for organizational planning.</p>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">GROUP BY Aggregation</span>
+                        <span class="code-lang">SQL</span>
+                    </div>
+                    <div class="code-content">
+                      <p> <span class="keyword">SELECT</span> <span class="property">dpt_name</span>, <span class="keyword">COUNT</span>(<span class="property">emp_id</span>) <span class="keyword">AS</span> <span class="variable">employee_count</span>&nbsp;</p>
+                      <p><span class="keyword">FROM</span> <span class="variable">department</span>&nbsp;</p>
+                      <p><span class="keyword">GROUP BY</span> <span class="property">dpt_name</span>; </p>
+                    </div>
+                </div>
+                
+                <div class="content-text">
+                    <p>The GROUP BY clause organizes the data by department name, while COUNT tallies how many employees are assigned to each department. This type of summary is essential for understanding resource allocation across the organization.</p>
+                </div>
+                
+                <div class="query-result">
+                    <div class="query-result-header">Query Result:</div>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>dpt_name</th>
+                                <th>employee_count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>sales</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>services</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>finances</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>insurance</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>marketing</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="content-text">
+                    <h3>Average Salary Calculation</h3>
+                    <p><strong>Query Purpose:</strong> Calculate compensation statistics for budgeting and HR analysis.</p>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Built-in Functions</span>
+                        <span class="code-lang">SQL</span>
+                    </div>
+                    <div class="code-content">
+                      <p> <span class="keyword">SELECT</span> <span class="keyword">ROUND</span>(<span class="keyword">AVG</span>(<span class="property">annualsalary</span>), <span class="number">2</span>) <span class="keyword">AS</span> <span class="variable">avg_salary</span>&nbsp;</p>
+                      <p><span class="keyword">FROM</span> <span class="variable">full_time</span>; </p>
+                    </div>
+                </div>
+                
+                <div class="content-text">
+                    <p>This query demonstrates two built-in SQL functions working together: AVG calculates the average of all annual salaries, while ROUND formats the result to two decimal places for currency display. The result provides meaningful financial data for business decision-making.</p>
+                </div>
+                
+                <div class="query-result">
+                    <div class="query-result-header">Query Result:</div>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>avg_salary</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>42567.76</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Challenges & Solutions -->
+            <section class="content-section" id="challenges">
+                <h2 class="section-title">Challenges &amp; Solutions</h2>
+                <div class="content-text">
+                    <h3>Applying Course Concepts to Real Design</h3>
+                    <p>Throughout the Database Concepts course, we learned about normalization, relationships, and SQL syntax in isolation. This project required bringing all those concepts together into a cohesive system. The challenge was translating theoretical knowledge into practical database design decisions.</p>
+                    
+                    <p>For example, understanding that "third normal form" means eliminating redundant data is one thing, but actually deciding whether to separate address information into its own table requires weighing the benefits of normalization against query complexity. I learned to make these decisions based on how the database would actually be used.</p>
+                    
+                    <h3>Balancing Data Organization with Usability</h3>
+                    <p>The final design keeps commonly-used information together (like employee contact details) while separating specialized data (like employment-specific pay information) into dedicated tables. This makes everyday queries straightforward while maintaining data integrity.</p>
+                    
+                    <h3>Understanding Business Relationships</h3>
+                    <p>The most valuable lesson was learning to think about databases in terms of business processes rather than just technical structures. Every table relationship represents a real-world business rule, and every constraint enforces organizational policy.</p>
+                    
+                    <p>For instance, the requirement that every department must have a manager isn't just a database rule, it reflects how companies actually operate. Understanding these business relationships helped me create a database that supports real organizational needs.</p>
+                    
+                    <blockquote>
+                        "This project taught me that effective database design requires understanding both technical concepts and business operations. The best database structure is one that makes business processes easier, not harder."
+                    </blockquote>
+                </div>
+            </section>
+
+            <!-- Visual Showcase -->
+            <section class="content-section" id="showcase">
+                <h2 class="section-title">Visual Showcase</h2>
+                <div class="content-text">
+                    <p>The Entity-Relationship Diagram shows the complete system architecture with all tables, fields, and relationships clearly defined. The color-coded design helps distinguish between different types of entities: main business objects like employees and departments, specialized subtypes like full-time and part-time workers, and linking tables that connect everything together.</p>
+                </div>
+                
+                <div class="image-container screenshot-comparison">
+                    <img data-src="../assets/images/erd-diagram.png" alt="Entity-Relationship Diagram showing complete database structure with color-coded tables and relationships" class="lazy-load">
+                    <div class="image-caption">Complete Entity-Relationship Diagram created in MySQL Workbench</div>
+                </div>
+                
+                <div class="content-text">
+                    <p>The diagram clearly shows how inheritance is handled through the employee type discriminator and separate subtype tables for full-time and part-time workers. The assignment table demonstrates a many-to-many relationship with additional attributes for tracking project performance over time.</p>
+                </div>
+            </section>
+
+            <!-- Lessons Learned -->
+            <section class="content-section" id="lessons">
+                <h2 class="section-title">Lessons Learned</h2>
+                <div class="content-text">
+                    <h3>Database Design Reflects Business Logic</h3>
+                    <p>Before this project, I thought databases were purely technical: tables, fields, and relationships. I learned that effective database design requires understanding how businesses actually operate. Every connection between tables represents a real business relationship, and every rule enforced by the database reflects organizational policy.</p>
+                    
+                    <p>This understanding changed how I approach all system design work. Now I always start by understanding the business requirements and user needs before thinking about technical implementation.</p>
+                    
+                    <h3>SQL is a Business Intelligence Tool</h3>
+                    <p>Writing queries that answered practical questions like average salaries and department staffing levels showed me that SQL is more than just a programming language. It's a tool for transforming raw data into business insights that help organizations make informed decisions.</p>
+                    
+                    <p>The queries I wrote are exactly the types of analysis that HR departments, finance teams, and managers need for day-to-day operations and strategic planning.</p>
+                    
+                    <h3>Visual Design Improves Understanding</h3>
+                    <p>Creating the Entity-Relationship Diagram before writing any code helped me understand the system as a whole. The visual representation made it easier to spot potential issues and ensure that all the business relationships made sense.</p>
+                    
+                    <p>This experience reinforced the value of planning and design in all development work. Taking time to visualize the solution before implementation leads to better results.</p>
+                    
+                    <h3>Data Structure Enforces Quality</h3>
+                    <p>Implementing proper constraints and relationships taught me that databases can actively maintain data quality. Rather than relying on application code to prevent errors, the database structure itself ensures consistency and prevents invalid information from being stored.</p>
+                    
+                    <p>This defensive approach to data management has influenced how I think about error prevention and system reliability in all my technical work.</p>
+                </div>
+            </section>
+
+            <!-- Future Improvements -->
+            <section class="content-section" id="future">
+                <h2 class="section-title">Future Improvements</h2>
+                <div class="content-text">
+                    <p>While this project fulfilled the course requirements, there are several enhancements that would make it more suitable for real-world use:</p>
+                    
+                    <h3>Enhanced Employee Management</h3>
+                    <ul>
+                        <li><strong>Historical records</strong> for salary changes and department transfers</li>
+                        <li><strong>Performance review system</strong> that builds on the existing assignment evaluation framework</li>
+                        <li><strong>Skills tracking</strong> for better project assignment decisions</li>
+                    </ul>
+                    
+                    <h3>System Integration</h3>
+                    <ul>
+                        <li><strong>Web interface</strong> development using my frontend skills to make the database accessible through a browser</li>
+                        <li><strong>Basic reporting</strong> for common business questions like employee counts and project status</li>
+                        <li><strong>Data export</strong> capabilities for sharing information with other business systems</li>
+                    </ul>
+                    
+                    <p>This database foundation provides a solid starting point for building workforce management applications that could help organizations track and organize their human resources more effectively.</p>
+                </div>
+            </section>
+
+            <!-- Project Navigation -->
+            <div class="project-nav">
+                <div class="nav-item">
+                    <div class="nav-label">Previous Project</div>
+                    <a href="../ui-ux-design/wireframe-design" class="nav-title">All American Inc. Wireframe</a>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-label">Back to</div>
+                    <a href="../" class="nav-title">All Projects</a>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-label">Next Project</div>
+                    <a href="../web-development/project-showcase" class="nav-title">Project Showcase Website</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Sidebar Table of Contents -->
+        <aside class="article-sidebar">
+            <div class="toc">
+                <h3 class="toc-title">Contents</h3>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <a href="#overview" class="toc-link">Project Overview</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#architecture" class="toc-link">Database Design &amp; Architecture</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#features" class="toc-link">Key Features &amp; Database Logic</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#queries" class="toc-link">SQL Query Implementation</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#challenges" class="toc-link">Challenges &amp; Solutions</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#showcase" class="toc-link">Visual Showcase</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#lessons" class="toc-link">Lessons Learned</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#future" class="toc-link">Future Improvements</a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? null : 'dark';
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (newTheme) {
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', 'dark');
+                themeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                `;
+            } else {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                `;
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                `;
+            }
+        }
+
+        // Mobile Menu Management
+        function toggleMobileMenu() {
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            const menu = document.querySelector('.mobile-menu');
+            
+            overlay.classList.add('active');
+            menu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            const menu = document.querySelector('.mobile-menu');
+            
+            overlay.classList.remove('active');
+            menu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function toggleMobileSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const header = content.previousElementSibling;
+            const arrow = header.querySelector('.mobile-section-arrow');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Lazy Loading Implementation
+        function initializeLazyLoading() {
+            const lazyImages = document.querySelectorAll('img.lazy-load');
+            
+            // Fallback for browsers without IntersectionObserver
+            if (!('IntersectionObserver' in window)) {
+                lazyImages.forEach(img => {
+                    loadImage(img);
+                });
+                return;
+            }
+            
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        loadImage(img);
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                // Load image when it's 50px away from viewport
+                rootMargin: '50px 0px',
+                threshold: 0.01
+            });
+            
+            lazyImages.forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        function loadImage(img) {
+            // Show loading state
+            img.classList.add('loading');
+            
+            // Create a new image to preload
+            const imageLoader = new Image();
+            
+            imageLoader.onload = function() {
+                // Image loaded successfully
+                img.src = img.dataset.src;
+                img.classList.remove('loading');
+                img.classList.add('loaded');
+                
+                // Remove the data-src attribute as it's no longer needed
+                img.removeAttribute('data-src');
+            };
+            
+            imageLoader.onerror = function() {
+                // Image failed to load
+                img.classList.remove('loading');
+                img.alt = 'Image failed to load: ' + img.alt;
+                console.error('Failed to load image:', img.dataset.src);
+            };
+            
+            // Start loading the image
+            imageLoader.src = img.dataset.src;
+        }
+
+        // Table of Contents Active State
+        function updateTocActiveState() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link, .mobile-nav-link[href^="#"]');
+            const scrollPos = window.pageYOffset + 150;
+            
+            let activeSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    activeSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + activeSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Smooth Scrolling for TOC Links
+        function initializeTocScrolling() {
+            const tocLinks = document.querySelectorAll('.toc-link, .mobile-nav-link[href^="#"]');
+            
+            tocLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        const offsetTop = targetSection.offsetTop - 100;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu after clicking TOC link
+                        closeMobileMenu();
+                    }
+                });
+            });
+        }
+
+        // Reading Progress
+        function updateReadingProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const article = document.querySelector('.article-content');
+            const scrollTop = window.pageYOffset;
+            const articleHeight = article.offsetHeight;
+            const windowHeight = window.innerHeight;
+            const maxScroll = articleHeight - windowHeight;
+            const progress = Math.min((scrollTop / maxScroll) * 100, 100);
+            
+            progressBar.style.width = progress + '%';
+        }
+
+        // Smooth scroll to section function
+        function scrollToSection(sectionId, event) {
+            event.preventDefault();
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                const offsetTop = targetSection.offsetTop - 100;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Initialize Everything
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            initializeTocScrolling();
+            initializeLazyLoading();
+            
+            // Handle URL filter parameters for breadcrumb navigation
+            handleUrlFilters();
+            
+            // Set initial arrow states for open sections
+            document.querySelectorAll('.mobile-section-content.open').forEach(content => {
+                const header = content.previousElementSibling;
+                const arrow = header.querySelector('.mobile-section-arrow');
+                if (arrow) {
+                    arrow.style.transform = 'rotate(180deg)';
+                }
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                const menu = document.querySelector('.mobile-menu');
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                
+                if (menu && menu.classList.contains('active') && 
+                    !menu.contains(e.target) && 
+                    !menuBtn.contains(e.target)) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Throttled scroll handler for performance
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateReadingProgress();
+                        updateTocActiveState();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            // Initial call to set correct states
+            updateReadingProgress();
+            updateTocActiveState();
+        });
+
+        // Handle URL filter parameters for breadcrumb navigation
+        function handleUrlFilters() {
+            // Check if we're on a projects page and if there are filter parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const filterParam = urlParams.get('filter');
+            
+            if (filterParam) {
+                // If we're on the projects page, apply the filter
+                if (window.location.pathname.includes('/projects/') && !window.location.pathname.includes('.html')) {
+                    // We're on the main projects page, apply the filter
+                    if (typeof setActiveFilter === 'function') {
+                        setActiveFilter(filterParam);
+                    } else if (typeof filterProjects === 'function') {
+                        // Alternative function name that might exist
+                        filterProjects(filterParam);
+                        // Also update the filter tag to show as active
+                        const filterTags = document.querySelectorAll('.filter-tag');
+                        filterTags.forEach(tag => {
+                            tag.classList.remove('active');
+                            if (tag.dataset.filter === filterParam) {
+                                tag.classList.add('active');
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        // Message for projects page filter handling
+        function handleProjectsPageFilter() {
+            // This function will be called by the projects page to handle filters
+            const urlParams = new URLSearchParams(window.location.search);
+            const filterParam = urlParams.get('filter');
+            return filterParam;
+        }
+    </script>
+</body>
+</html>
