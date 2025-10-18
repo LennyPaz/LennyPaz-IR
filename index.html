@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://yourdomain.com/preview-image.png">
 
 <!-- Optimized favicon setup -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='https://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
 
 <style>
 /* CSS Variables for consistent theming */
@@ -872,7 +872,7 @@ body {
 }
 
 /* Add external link icon for clarity */
-.project-title a[href^="http"]::after {
+.project-title a[href^="https"]::after {
   content: ' ↗';
   font-size: 12px;
   opacity: 0.7;
@@ -3174,7 +3174,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Track external link clicks
-  document.querySelectorAll('a[href^="http"]').forEach(link => {
+  document.querySelectorAll('a[href^="https"]').forEach(link => {
     link.addEventListener('click', () => trackEvent('external_link_click', { url: link.href }));
   });
 
@@ -3213,3 +3213,4 @@ window.addEventListener('popstate', (e) => {
 </script>
 </body>
 </html>
+
